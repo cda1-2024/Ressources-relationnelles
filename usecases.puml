@@ -1,0 +1,57 @@
+@startuml
+:Super Administrateur: as sadmin
+:Administrateur: as admin
+:Modérateur: as mod
+:Citoyen connecté: as user
+:Citoyen: as visit
+
+sadmin --> (Créer un compte Sadmin\n Admin et modérateur)
+
+adminad as (Afficher le dash board des stats)
+
+admin --> (Ajouter / editer une ressource)
+admin --> (Supprimer / suspendre une ressource)
+admin --> (Ajouter / éditer une catégorie)
+admin --> (Supprimer une catégorie)
+admin --> (Lister / filtrer les ressources)
+admin --> (Désactivation / activation des comptes user)
+admin --> adminad
+adminad .> (Filtrer les stats) : extend
+adminad .> (Exporter les stats) : extend
+
+mod --> (Modérer les commentaires)
+mod --> (validation d'une ressource pour la publication)
+
+user --> (Ajouter un commentaire sur une ressource)
+user --> (Réponse à un commentaire)
+user --> (Création / édition d'une ressource)
+' TODO déplacer ca dans le visteur ???
+user --> (Partage d'une publication)
+' TODO end
+user --> (Ajouter / supprimer une\nressource de ses favoris)
+user --> (Indiquer une ressource comme\n exploitée / non exploitée)
+user --> (Mettre de côté une ressource / Annuler)
+' TODO ??? quesaco
+user --> (Afficher un tableau de bord de progression)
+user --> (Démarrer une ressource\nde type Activité/Jeu)
+user --> (Inviter d’autres participants)
+user --> (Echanger des messages dans\nle cadre de la ressource avec\nles autres participants)
+' TODO end
+
+(Filtrer / trier les ressources) as visitft
+(Afficher le contenu ressources) as visitac
+(Lister les ressources / ressources restreintes) as visitlr
+
+visit --> (Créer un compte)
+visit --> visitft
+visitlr .> visitft: extend
+visit --> visitlr
+visitlr .> visitac: extend
+visit --> visitac
+
+
+@enduml
+
+' todo include (Partage d'une publication) a partir d'une vue et de la liste
+' include voir la ressource pour commenter
+' partir d'un commentaire pour répondre
