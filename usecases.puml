@@ -52,8 +52,8 @@ user --> userac
 user --> userrc
 user --> userdr
 user --> userli
-userdr ..> (Inviter d’autres participants) : extend
-userdr ..> (Echanger des messages dans\nle cadre de la ressource avec\nles autres participants) : extend
+userdr ..> (Inviter d’autres participants)
+userdr ..> (Echanger des messages dans\nle cadre de la ressource avec\nles autres participants)
 ' TODO ??? quesaco
 user --> (Afficher un tableau\nde bord de progression)
 ' TODO end
@@ -67,15 +67,15 @@ user --> (Voir un dash board pour les\nstats de ses publications)
 (Afficher le contenu ressources) as visitac
 (Lister les ressources /\n ressources restreintes) as visitlr
 (Partage d'une publication) as visitpp
-visitac ..> userac : extend
-visitac ..> userrc : extend
-visitac ..> userli : extend
-visitft ..> visitpp : extend
-visitac ..> visitpp : extend
+visitac ..> userac
+visitac ..> userrc
+visitac ..> userli
+visitft ..> visitpp
+visitac ..> visitpp
 visit --> (Créer un compte)
-visitlr ..> visitft : extend
+visitlr ..> visitft
 visit --> visitlr
-visitlr ..> visitac : extend
+visitlr ..> visitac
 legend bottom right
     | Syntax | Type |
     | - - > | Extend |
