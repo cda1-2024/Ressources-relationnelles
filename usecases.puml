@@ -1,6 +1,6 @@
 @startuml
 
-'!theme bluegray
+!theme bluegray
 
 skinparam ArrowHeadColor black
 skinparam ArrowColor black
@@ -10,8 +10,7 @@ skinparam actorStyle awesome
 :Super Administrateur: as sadmin #Red/Yellow
 :Administrateur: as admin #Blue/Green
 :Modérateur: as mod #Purple/Pink
-:Citoyen connecté: as user #Turquoise/Coral
-:Citoyen: as visit #Navy/Orange
+
 
 sadmin --> (Créer un compte Sadmin\n Admin et modérateur)
 
@@ -28,6 +27,19 @@ adminad ..> (Exporter les stats) : extend
 
 mod --> (Modérer les commentaires)
 mod --> (validation d'une ressource\npour la publication)
+
+
+newpage
+
+!theme bluegray
+
+skinparam ArrowHeadColor black
+skinparam ArrowColor black
+skinparam Color black
+skinparam actorStyle awesome
+
+:Citoyen connecté: as user #Turquoise/Coral
+:Citoyen: as visit #Navy/Orange
 
 (Ajouter un commentaire\nsur une ressource) as userac
 (Réponse à un commentaire) as userrc
