@@ -13,14 +13,6 @@ skinparam actorStyle awesome
 :Citoyen connecté: as user #Turquoise/Coral
 :Citoyen: as visit #Navy/Orange
 
-
-
-!define SadminColor #Red/Yellow
-!define AdminColor #Blue/Green
-!define ModColor #Purple/Pink
-!define UserColor #Turquoise/Coral
-!define VisitColor #Navy/Orange
-
 sadmin --> (Créer un compte Sadmin\n Admin et modérateur)
 
 (Afficher le dash board des stats) as adminad
@@ -39,13 +31,13 @@ mod --> (validation d'une ressource\npour la publication)
 
 (Ajouter un commentaire\nsur une ressource) as userac
 (Réponse à un commentaire) as userrc
+(Démarrer une ressource\nde type Activité/Jeu) as userdr
 user --> userac
 user ---> userrc
 user --> (Création / édition d'une ressource)
 user ---> (Ajouter / supprimer une\nressource de ses favoris)
 user --> (Indiquer une ressource comme\n exploitée / non exploitée)
 user ---> (Mettre de côté une\nressource / Annuler)
-(Démarrer une ressource\nde type Activité/Jeu) as userdr
 user --> userdr
 userdr ..> (Inviter d’autres participants) : extend
 userdr ..> (Echanger des messages dans\nle cadre de la ressource avec\nles autres participants) : extend
@@ -56,7 +48,7 @@ user --> (Afficher un tableau\nde bord de progression)
 
 (Filtrer / trier les ressources) as visitft
 (Afficher le contenu ressources) as visitac
-(Lister les ressources /\nressources restreintes) as visitlr
+(Lister les ressources /\n ressources restreintes) as visitlr
 (Partage d'une publication) as visitpp
 visitac ..> userac : extend
 visitac ..> userrc : extend
@@ -67,9 +59,4 @@ visit --> (Créer un compte)
 visitlr ..> visitft : extend
 visit --> visitlr
 visitlr ..> visitac : extend
-
-
-
 @enduml
-
-' faire un dash board pour voir les stats de ses publications
