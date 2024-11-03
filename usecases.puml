@@ -1,6 +1,7 @@
 @startuml
 
-!theme bluegray
+!theme sunlust
+
 
 skinparam ArrowHeadColor black
 skinparam ArrowColor black
@@ -31,7 +32,7 @@ mod --> (validation d'une ressource\npour la publication)
 
 newpage
 
-!theme bluegray
+!theme sunlust
 
 skinparam ArrowHeadColor black
 skinparam ArrowColor black
@@ -41,22 +42,26 @@ skinparam actorStyle awesome
 :Citoyen connecté: as user #Turquoise/Coral
 :Citoyen: as visit #Navy/Orange
 
+rectangle "Doit se connecter" {
 (Ajouter un commentaire\nsur une ressource) as userac
 (Réponse à un commentaire) as userrc
+(Mettre un like sur une ressource) as userli
+}
 (Démarrer une ressource\nde type Activité/Jeu) as userdr
 user --> userac
-user ---> userrc
-user --> (Création / édition d'une ressource)
-user ---> (Ajouter / supprimer une\nressource de ses favoris)
-user --> (Indiquer une ressource comme\n exploitée / non exploitée)
-user ---> (Mettre de côté une\nressource / Annuler)
+user --> userrc
 user --> userdr
+user --> userli
 userdr ..> (Inviter d’autres participants) : extend
 userdr ..> (Echanger des messages dans\nle cadre de la ressource avec\nles autres participants) : extend
-user --> (Voir un dash board pour les\nstats de ses publications)
 ' TODO ??? quesaco
 user --> (Afficher un tableau\nde bord de progression)
 ' TODO end
+user ---> (Création / édition d'une ressource)
+user ---> (Ajouter / supprimer une\nressource de ses favoris)
+user --> (Indiquer une ressource comme\n exploitée / non exploitée)
+user ---> (Mettre de côté une\nressource / Annuler)
+user --> (Voir un dash board pour les\nstats de ses publications)
 
 (Filtrer / trier les ressources) as visitft
 (Afficher le contenu ressources) as visitac
@@ -64,11 +69,15 @@ user --> (Afficher un tableau\nde bord de progression)
 (Partage d'une publication) as visitpp
 visitac ..> userac : extend
 visitac ..> userrc : extend
-visitac ..> (Mettre un like sur une ressource) : extend
+visitac ..> userli : extend
 visitft ..> visitpp : extend
 visitac ..> visitpp : extend
 visit --> (Créer un compte)
 visitlr ..> visitft : extend
 visit --> visitlr
 visitlr ..> visitac : extend
+legend bottom right
+    | Syntax | Type |
+    | - - > | Extend |
+endlegend
 @enduml
