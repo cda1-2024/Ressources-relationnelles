@@ -1,3 +1,5 @@
+*.env
+
 #Docker mounted volume
 /data/db
 
