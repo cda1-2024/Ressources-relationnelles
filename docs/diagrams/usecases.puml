@@ -42,16 +42,14 @@ skinparam actorStyle awesome
 :Citoyen connecté: as user #Turquoise/Coral
 :Citoyen: as visit #Navy/Orange
 
-rectangle "Doit se connecter" {
+rectangle "Doit se connecter" as SeCo {
 (Ajouter un commentaire\nsur une ressource) as userac
 (Réponse à un commentaire) as userrc
 (Mettre un like sur une ressource) as userli
 }
 (Démarrer une ressource\nde type Activité/Jeu) as userdr
-user --> userac
-user --> userrc
+user --> SeCo
 user --> userdr
-user --> userli
 userdr ..> (Inviter d’autres participants)
 userdr ..> (Echanger des messages dans\nle cadre de la ressource avec\nles autres participants)
 ' TODO ??? quesaco
@@ -67,9 +65,7 @@ user --> (Voir un dash board pour les\nstats de ses publications)
 (Afficher le contenu ressources) as visitac
 (Lister les ressources /\n ressources restreintes) as visitlr
 (Partage d'une publication) as visitpp
-visitac ..> userac
-visitac ..> userrc
-visitac ..> userli
+visitac ..> SeCo
 visitft ..> visitpp
 visitac ..> visitpp
 visit --> (Créer un compte)
