@@ -30,14 +30,60 @@ class Photo{
     -url: string
 }
 
-class Activite{
-    -reponse: string
+class Quizz{
+    -tempsLimite: time
+}
+
+class Question{
+    -question: string
+    -option1: string
+    -option2: string
+    -option3: string
+    -option4: string
+}
+
+class VraiFaux{
+    -question: string
+    -reponse: boolean
+}
+
+class Anagramme{
+    -tempsLimite: time
+}
+
+class MotMelange{
+    -mot: string
+    -motMelange: string
+}
+
+class Sondage{
+    -question: string
+    -option1: string
+    -scoreOption1: int
+    -option2: string
+    -scoreOption2: int
+    -option3: string
+    -scoreOption3: int
+    -option4: string
+    -scoreOption4: int
+}
+
+class Motus{
+    -mot: string
+}
+
+class Realisation{
+    -datetimeCreation: datetime
+    -tempsRealisation: time
+    -reussite: boolean
+    -score: string
 }
 
 class Categorie{
     -id: int
     -nom: string
     -icone: string
+    -couleur: string
     -datetimeCreation: datetime
     -deleted: boolean
 }
@@ -49,58 +95,19 @@ class Commentaire{
     -deleted: boolean
 }
 
-' class Favoris{
-'     -datetimeCreation: datetime
-' }
-
-' class APlusTard{
-'     -datetimeCreation: datetime
-' }
-
 class ListeSauveragardee{
     - isFavoris: boolean
     - isAPlusTard: boolean
 }
 
-
-class Realisation{
-    -datetimeCreation: datetime
-    -tempsRealisation: time
-}
-
-
 Ressource <|-- Video
 Ressource <|-- Photo
 Ressource <|-- Activite
 
-' ' Besoin des Categorie
-' Categorie "0..*" -- "1..1" User : est crée par
-
-' ' Besoin des ressources
-' Ressource "0..*" -- "1..1" Categorie : appartient à
-' Ressource "0..*" -- "1..1" User : est crée par
-' Ressource "0..*" -- "1..1" User : est validée par
-
-' ' Besoin des commentaires
-' Commentaire "0..*" -- "1..1" User : est écrit par
-' Commentaire "0..*" -- "1..1" Commentaire : est une réponse à
-' Commentaire "0..*" -- "1..1" Ressource : est écrit sur
-
-' ' Besoin des favoris
-' ' Favoris "0..*" -- "1..1" User : est mit en favoris par
-' ' Favoris "0..*" -- "1..1" Ressource : est mit en favoris
-
-' ' Besoin des mit en plus tard
-' ' APlusTard "0..*" -- "1..1" User : est mit en plus tard par
-' ' APlusTard "0..*" -- "1..1" Ressource : est mit en plus tard
-
-' ' Besoin des listes sauvegardées
-' ListeSauveragardee "0..*" -- "1..1" User : est sauvegardée par
-' ListeSauveragardee "0..*" -- "1..1" Ressource : est sauvegardée
-
-' ' Besoin des réalisations
-' Realisation "0..*" -- "1..1" User : est réalisé par
-' Realisation "0..*" -- "1..1" Activite : est réalisé
+Activite <|-- Quizz
+Activite <|-- Sondage
+Activite <|-- Motus
+Activite <|-- Anagramme
 
 User "1..1" -- "0..*" Commentaire : écrit
 User "1..1" -- "0..*" Commentaire : modère
@@ -117,7 +124,11 @@ Categorie "1..1" -- "0..*" Ressource : appartient à
 
 ListeSauveragardee "*0..*" -- "1..1" Ressource : est sauvegardée
 
-Realisation "0..*" -- "1..1" Activite : est réalisée
+Quizz "1..1" -- "0..*" Question : contient
+Quizz "1..1" -- "0..*" VraiFaux : contient
 
+Anagramme "1..1" -- "0..*" MotMelange : contient
+
+Realisation "0..*" -- "1..1" Activite : est réalisée
 
 @enduml
