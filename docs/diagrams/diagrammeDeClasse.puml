@@ -1,0 +1,134 @@
+@startuml diagrammeDeClasse
+
+class User {
+    -id: int
+    -login: string
+    -password: string
+    -roles: array
+    -banned: boolean
+    -createdAt: datetime
+    -updatedAt: datetime
+}
+
+abstract class Ressource{
+    -id: int
+    -titre: string
+    -contenu: string
+    -datetimeCreation: datetime
+    -validationAdmin: boolean
+    -datetimeValidationAdmin: datetime
+    -estRestreint: boolean
+    -suspendu: boolean
+    -deleted: boolean
+}
+
+class Video{
+    -url: string
+}
+
+class Photo{
+    -url: string
+}
+
+class Quizz{
+    -tempsLimite: time
+}
+
+class Question{
+    -question: string
+    -option1: string
+    -option2: string
+    -option3: string
+    -option4: string
+}
+
+class VraiFaux{
+    -question: string
+    -reponse: boolean
+}
+
+class Anagramme{
+    -tempsLimite: time
+}
+
+class MotMelange{
+    -mot: string
+    -motMelange: string
+}
+
+class Sondage{
+    -question: string
+    -option1: string
+    -scoreOption1: int
+    -option2: string
+    -scoreOption2: int
+    -option3: string
+    -scoreOption3: int
+    -option4: string
+    -scoreOption4: int
+}
+
+class Motus{
+    -mot: string
+}
+
+class Realisation{
+    -datetimeCreation: datetime
+    -tempsRealisation: time
+    -reussite: boolean
+    -score: string
+}
+
+class Categorie{
+    -id: int
+    -nom: string
+    -icone: string
+    -couleur: string
+    -datetimeCreation: datetime
+    -deleted: boolean
+}
+
+class Commentaire{
+    -id: int
+    -message: string
+    -datetimeCreation: datetime
+    -deleted: boolean
+}
+
+class ListeSauveragardee{
+    - isFavoris: boolean
+    - isAPlusTard: boolean
+}
+
+Ressource <|-- Video
+Ressource <|-- Photo
+Ressource <|-- Activite
+
+Activite <|-- Quizz
+Activite <|-- Sondage
+Activite <|-- Motus
+Activite <|-- Anagramme
+
+User "1..1" -- "0..*" Commentaire : écrit
+User "1..1" -- "0..*" Commentaire : modère
+User "1..1" -- "0..*" Ressource : crée
+User "1..1" -- "0..*" Ressource : valide
+User "1..1" -- "0..*" ListeSauveragardee : sauvegarde
+User "1..1" -- "0..*" Realisation : réalise
+User "1..1" -- "0..*" Categorie : crée
+
+Commentaire "1..1" -- "0..1" Commentaire : répond
+Commentaire "0..*" -- "1..1" Ressource : est écrit sur
+
+Categorie "1..1" -- "0..*" Ressource : appartient à
+
+ListeSauveragardee "*0..*" -- "1..1" Ressource : est sauvegardée
+
+Quizz "1..1" -- "0..*" Question : contient
+Quizz "1..1" -- "0..*" VraiFaux : contient
+
+Anagramme "1..1" -- "0..*" MotMelange : contient
+
+Realisation "0..*" -- "1..1" Activite : est réalisée
+
+@enduml
