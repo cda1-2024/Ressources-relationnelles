@@ -4,7 +4,7 @@ class User {
     -id: int
     -login: string
     -password: string
-    -role: array
+    -roles: array
     -banned: boolean
     -createdAt: datetime
     -updatedAt: datetime
@@ -17,6 +17,7 @@ abstract class Ressource{
     -datetimeCreation: datetime
     -validationAdmin: boolean
     -datetimeValidationAdmin: datetime
+    -estRestreint: boolean
     -suspendu: boolean
     -deleted: boolean
 }
