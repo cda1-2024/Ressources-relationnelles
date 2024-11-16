@@ -122,7 +122,7 @@ Commentaire "0..*" -- "1..1" Ressource : est écrit sur
 
 Categorie "1..1" -- "0..*" Ressource : appartient à
 
-ListeSauveragardee "*0..*" -- "1..1" Ressource : est sauvegardée
+ListeSauveragardee "0..*" -- "1..1" Ressource : est sauvegardée
 
 Quizz "1..1" -- "0..*" Question : contient
 Quizz "1..1" -- "0..*" VraiFaux : contient
