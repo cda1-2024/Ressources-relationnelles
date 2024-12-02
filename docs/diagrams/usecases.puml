@@ -22,12 +22,16 @@ admin --> (Ajouter / éditer une catégorie)
 admin ---> (Supprimer une catégorie)
 admin --> (Lister / filtrer toutes les ressources)
 admin ---> (Désactivation / activation des comptes user)
+admin --> (Lister les utilisateurs)
 admin --> adminad
 adminad ..> (Filtrer les stats) : extend
 adminad ..> (Exporter les stats) : extend
 
 mod --> (Modérer les commentaires)
-mod --> (validation d'une ressource\npour la publication)
+mod ---> (Validation d'une ressource\npour la publication)
+mod --> (Afficher les signalements dans un dash board)
+mod ---> (Bannir un utilisateur signalé)
+mod --> (Signaler comme lu le signalement)
 
 
 newpage
@@ -49,20 +53,21 @@ rectangle "Doit se connecter" as SeCo {
 }
 (Démarrer une ressource\nde type Activité/Jeu) as userdr
 user --> SeCo
-user --> userdr
+user ---> userdr
 userdr ..> (Inviter d’autres participants)
-userdr ..> (Echanger des messages dans\nle cadre de la ressource avec\nles autres participants)
-' TODO ??? quesaco
-user --> (Afficher un tableau\nde bord de progression)
-' TODO end
-user ---> (Création / édition d'une ressource)
-user ---> (Ajouter / supprimer une\nressource de ses favoris)
-user --> (Indiquer une ressource comme\n exploitée / non exploitée)
-user ---> (Mettre de côté une\nressource / Annuler)
-user --> (Voir un dash board pour les\nstats de ses publications)
+userdr ..> (Echanger des messages dans le cadre de la ressource avec les autres participants)
+
+user --> (Création / édition d'une ressource)
+user --> (Ajouter / retirer une\nressource de ses favoris)
+user ---> (Indiquer une \n ressource comme \n exploitée / non exploitée)
+user --> (Mettre de côté une\nressource / Annuler)
+user ----> (Voir un dash board pour les\nstats de ses publications)
+user ---> (Modifier ses informations de connexion)
+user --> (Ajouter une photo de profil)
+user ---> (Signaler un utilisateur)
 
 (Filtrer / trier les ressources) as visitft
-(Afficher le contenu ressources) as visitac
+(Afficher le contenu \n d'une ressources) as visitac
 (Lister les ressources /\n ressources restreintes) as visitlr
 (Partage d'une publication) as visitpp
 visitac ..> SeCo
