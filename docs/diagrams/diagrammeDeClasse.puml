@@ -100,6 +100,14 @@ class ListeSauveragardee{
     - isAPlusTard: boolean
 }
 
+class Signalement{
+    -id: int
+    -raison: str
+    -contenu: text
+    -commentaireModerateur: text
+    -traité: bool
+}
+
 Ressource <|-- Video
 Ressource <|-- Photo
 Ressource <|-- Activite
@@ -108,6 +116,10 @@ Activite <|-- Quizz
 Activite <|-- Sondage
 Activite <|-- Motus
 Activite <|-- Anagramme
+
+User "1..1" -- "0..*" Signalement : envoi
+User "1..1" -- "0..*" Signalement : concerne
+User "1..1" -- "0..*" Signalement : gère
 
 User "1..1" -- "0..*" Commentaire : écrit
 User "1..1" -- "0..*" Commentaire : modère
