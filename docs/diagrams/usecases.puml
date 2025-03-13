@@ -54,8 +54,8 @@ rectangle "Doit se connecter" as SeCo {
 (Démarrer une ressource\nde type Activité/Jeu) as userdr
 user --> SeCo
 user ---> userdr
-userdr ..> (Inviter d’autres participants)
-userdr ..> (Echanger des messages dans le cadre de la ressource avec les autres participants)
+userdr ..> (Inviter d’autres participants) : extend
+userdr ..> (Echanger des messages dans le cadre de la ressource avec les autres participants) : extend
 
 user --> (Création / édition d'une ressource)
 user --> (Ajouter / retirer une\nressource de ses favoris)
@@ -66,19 +66,22 @@ user ---> (Modifier ses informations de connexion)
 user --> (Ajouter une photo de profil)
 user ---> (Signaler un utilisateur)
 
-(Filtrer / trier les ressources) as visitft
+(Filtrer les ressources) as visitf
+(Trier les ressources) as visitt
 (Afficher le contenu \n d'une ressources) as visitac
 (Lister les ressources /\n ressources restreintes) as visitlr
 (Partage d'une publication) as visitpp
-visitac ..> SeCo
-visitft ..> visitpp
-visitac ..> visitpp
-visit --> (Créer un compte)
-visitlr ..> visitft
+(Créer un compte) as creer
+
+visitt .> visitpp : extend
+visitf .> visitpp : extend
+visitac ..> visitpp : extend
+visit -> creer
+visitlr ..> visitt : extend
+visitlr ..> visitf : extend
 visit --> visitlr
-visitlr ..> visitac
-legend bottom right
-    | Syntax | Type |
-    | - - > | Extend |
-endlegend
+visitlr ..> visitac : extend
+SeCo .> creer : include
+visitac .> SeCo : extend
+'todo verifier si il faut séparer lister et filtrer
 @enduml
