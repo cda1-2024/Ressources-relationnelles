@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, ManyToOne } from 'typeorm';
 import { Ressource } from './ressource.model';
+import { User } from './user.model';
 
 @Entity('Categories')
 export class Category {
@@ -21,6 +22,10 @@ export class Category {
   @CreateDateColumn()
   createdAt: Date;
 
-  @OneToMany(() => Ressource, (ressource) => ressource.category)
-    ressources: Ressource[]
+  @OneToMany(() => Ressource, (ressource) => ressource.category,
+  { nullable: true })
+  ressources: Ressource[]
+
+  @ManyToOne(() => User, (user) => user.modifiedCategories)
+  lastAutor: User;
 }

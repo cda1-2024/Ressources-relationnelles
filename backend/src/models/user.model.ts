@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Comment } from './comment.model';
+import { Category } from './category.model';
+import { Event } from './event.model';
+import { Ressource } from './ressource.model';
+import { SavedRessource } from './savedRessource.model';
+import { ConsultedRessource } from './consultedRessource.model';
+import { EventParticipation } from './eventParticipation.model';
 
 export enum UserRole {
   SUPERADMIN = "superAdmin",
@@ -46,4 +53,36 @@ export class User {
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
+
+  @OneToMany(() => Comment, (comment) => comment.autor, 
+    { nullable: true })
+      comments: Comment[]
+  
+  @OneToMany(() => Category, (category) => category.lastAutor,
+    { nullable: true })
+    modifiedCategories: Category[]
+
+  @OneToMany(() => Event, (event) => event.manager,
+  { nullable: true })
+  createdEvents: Event[]
+
+  @OneToMany(() => Ressource, (ressource) => ressource.creator,
+  { nullable: true })
+  createdRessources: Ressource[]
+
+  @OneToMany(() => Ressource, (ressource) => ressource.validator,
+  { nullable: true })
+  validatedRessources: Ressource[]
+
+  @OneToMany(() => SavedRessource, (savedRessources) => savedRessources.user, 
+  { nullable: true })
+  savedRessources: SavedRessource[]
+
+  @OneToMany(() => ConsultedRessource, (consultedRessources) => consultedRessources.user, 
+  { nullable: true })
+  consultedRessources: ConsultedRessource[]
+
+  @OneToMany(() => EventParticipation, (eventParticipation) => eventParticipation.user, 
+  { nullable: true })
+  eventParticipations: EventParticipation[]
 }
