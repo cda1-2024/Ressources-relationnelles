@@ -1,6 +1,15 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
-@Entity('users') // Nom de la table
+export enum UserRole {
+  SUPERADMIN = "superAdmin",
+  ADMIN = "admin",
+  MODERATOR = "moderator",
+  USER = "user",
+  VISITOR = "visitor",
+}
+
+@Entity('Users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -8,18 +17,33 @@ export class User {
   @Column({ unique: true, length: 100 })
   email: string;
 
-  @Column({ length: 60 })
-  firstName: string;
+  @Column({ unique: true, length: 60 })
+  username: string;
 
-  @Column({ length: 50 })
-  lastName: string;
+  @Column({ select: false })
+  password: string;
 
-  @Column({ default: true })
-  isActive: boolean;
+  @Column({ default: false })
+  banned: boolean;
+
+  @Column({ default: false })
+  disabled: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({
+    type: "enum",
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  role: UserRole
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
 }

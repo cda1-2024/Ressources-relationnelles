@@ -1,4 +1,10 @@
 import * as dotenv from 'dotenv';
+import { Category } from 'src/models/category.model';
+import { Event } from 'src/models/event.model';
+import { EventType } from 'src/models/eventType.model';
+import { Ressource } from 'src/models/ressource.model';
+import { RessourceType } from 'src/models/ressourceType.model';
+import { User } from 'src/models/user.model';
 import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
@@ -11,7 +17,7 @@ export const AppDataSource = new DataSource({
   username: process.env.MARIADB_USER,
   password: process.env.MARIADB_PASSWORD,
   database: process.env.MARIADB_DATABASE,
-  entities: ["src/models/user.model.ts"],
+  entities: [User, Category, Comment, Event, EventType, Ressource, RessourceType],
   migrations: ['src/migrations/*.ts'],
   namingStrategy: new SnakeNamingStrategy(),
   synchronize: false,
