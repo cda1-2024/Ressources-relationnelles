@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Ressource } from './ressource.model';
 import { User } from './user.model';
+import { UserReport } from './userReport.model';
 
 @Entity('Comments')
 export class Comment {
@@ -29,4 +30,8 @@ export class Comment {
   @OneToMany(() => Comment, (comment) => comment.parentComment, 
   { nullable: true })
   childComments: Comment[]
+
+  @OneToMany(() => UserReport, (userReport) => userReport.reportedComment, 
+  { nullable: true })
+  userReports: UserReport[]
 }

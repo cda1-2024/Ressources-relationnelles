@@ -1,6 +1,7 @@
 import { Entity, Column, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from './user.model';
 import { Event } from './event.model';
+import { Comment } from './comment.model';
 
 export enum ReportReason {
   SUPERADMIN = "superAdmin",
@@ -34,11 +35,14 @@ export class UserReport {
   })
   ressourceType: ReportReason
 
-  @ManyToOne(() => Event, (event) => event.eventParticipations, 
+  @ManyToOne(() => User, (user) => user.reporters, 
   { nullable: true })
-  event: Event;
+  reportedUser: User;
 
-  @ManyToOne(() => User, (user) => user.eventParticipations, 
+  @ManyToOne(() => User, (user) => user.reportedUsers)
+  reporter: User;
+
+  @ManyToOne(() => Comment, (comment) => comment.userReports, 
   { nullable: true })
-  user: User;
+  reportedComment: Comment;
 }

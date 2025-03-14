@@ -3,11 +3,9 @@ import { User } from './user.model';
 import { EventParticipation } from './eventParticipation.model';
 
 export enum EventType {
-  SUPERADMIN = "superAdmin",
-  ADMIN = "admin",
-  MODERATOR = "moderator",
-  USER = "user",
-  VISITOR = "visitor",
+  MORPION = "morpion",
+  MOTUS = "motus",
+  SONDAGE = "sondage"
 }
 
 @Entity('Events')
@@ -32,8 +30,7 @@ export class Event {
 
   @Column({
     type: "enum",
-    enum: EventType,
-    default: EventType.USER,
+    enum: EventType
   })
   eventType: EventType
 

@@ -7,6 +7,7 @@ import { Ressource } from './ressource.model';
 import { SavedRessource } from './savedRessource.model';
 import { ConsultedRessource } from './consultedRessource.model';
 import { EventParticipation } from './eventParticipation.model';
+import { UserReport } from './userReport.model';
 
 export enum UserRole {
   SUPERADMIN = "superAdmin",
@@ -20,6 +21,9 @@ export enum UserRole {
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ unique: true, length: 100, nullable: true })
+  uuid: string;
 
   @Column({ unique: true, length: 100 })
   email: string;
@@ -85,4 +89,12 @@ export class User {
   @OneToMany(() => EventParticipation, (eventParticipation) => eventParticipation.user, 
   { nullable: true })
   eventParticipations: EventParticipation[]
+
+  @OneToMany(() => UserReport, (userReport) => userReport.reportedUser, 
+  { nullable: true })
+  reporters: UserReport[]
+
+  @OneToMany(() => UserReport, (userReport) => userReport.reporter, 
+  { nullable: true })
+  reportedUsers: UserReport[]
 }
