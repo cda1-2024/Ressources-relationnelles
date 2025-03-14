@@ -10,3 +10,9 @@ revmig:
 	npm run typeorm:revert-migrations
 fixtures:
 	npm run fixtures:apply
+drop:
+	npm run typeorm:drop-schema
+reset:
+	make drop
+	make runmig
+	make fixtures

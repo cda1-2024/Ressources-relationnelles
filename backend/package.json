@@ -22,6 +22,7 @@
     "typeorm:create-migration": "npm run typeorm -- migration:generate -d ./src/configuration/data-source.ts ./src/migrations/migration",
     "typeorm:run-migrations": "npm run typeorm -- migration:run -d src/configuration/data-source.ts",
     "typeorm:revert-migrations": "npm run typeorm -- migration:revert -d src/configuration/data-source.ts",
+    "typeorm:drop-schema": "npm run typeorm schema:drop -- -d src/configuration/data-source.ts",
     "fixtures": "fixtures-ts-node-commonjs -d src/configuration/data-source.ts",
     "fixtures:apply": "npm run fixtures load ./src/fixtures/"
   },
