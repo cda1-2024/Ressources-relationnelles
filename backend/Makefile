@@ -8,5 +8,5 @@ runmig:
 	npm run typeorm:run-migrations
 revmig:
 	npm run typeorm:revert-migrations
-fixture:
-	npm run fixture:apply
+fixtures:
+	npm run fixtures:apply
