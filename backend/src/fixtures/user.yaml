@@ -1,0 +1,10 @@
+entity: User
+processor: ../processor/UserProcessor
+items:
+  user{1..50}:
+    firstName: '{{name.firstName}}'
+    lastName: '{{name.lastName}}'
+    email: '{{internet.email}}'
+    isActive: true
+    createdAt: '{{date.past}}'
+    updatedAt: '{{date.recent}}'
