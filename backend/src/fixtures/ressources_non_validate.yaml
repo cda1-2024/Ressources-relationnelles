@@ -1,0 +1,12 @@
+entity: Ressources
+processor: ./processor/RessourceProcessor
+items:
+  ressources_non_validate{21..50}:
+    id: ($current)
+    title: '{{lorem.sentence}}'
+    contentText: '{{lorem.sentences}}'
+    # TODO mettre autre chose
+    contentLink: 'TODO_A_AJOUTER'
+    createdAt: '{{date.past}}'
+    creator: '@user*'
+    category: '@category*'

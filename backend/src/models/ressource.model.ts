@@ -50,7 +50,7 @@ export class Ressource {
   @Column({ default: false })
   adminValidation: boolean;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'datetime', nullable: true })
   dateTimeValidation: Date;
 
   @Column({

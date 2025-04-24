@@ -1,7 +1,18 @@
 help:
-	@echo cmig: create migration
-	@echo runmig: run migration
-	@echo revmig: revert migration
+	@echo cmig:
+	@echo 	npm run typeorm:create-migration
+	@echo runmig:
+	@echo 	npm run typeorm:run-migrations
+	@echo revmig:
+	@echo 	npm run typeorm:revert-migrations
+	@echo fixtures:
+	@echo 	npm run fixtures:apply
+	@echo drop:
+	@echo 	npm run typeorm:drop-schema
+	@echo reset:
+	@echo 	make drop
+	@echo 	make runmig
+	@echo 	make fixtures
 cmig:
 	npm run typeorm:create-migration
 runmig:
