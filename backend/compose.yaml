@@ -13,3 +13,15 @@ services:
     env_file: ".env"
     volumes:
       - './data/db/:/var/lib/mysql'
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - '8080:80'
+    container_name: phpmyadmin
+    networks:
+      - internal
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+    depends_on:
+      - database

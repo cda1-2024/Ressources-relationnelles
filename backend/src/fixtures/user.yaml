@@ -1,0 +1,12 @@
+entity: User
+processor: ./processor/UserProcessor
+items:
+  user{1..50}:
+    id: ($current)
+    password: test
+    username: '{{person.firstName}}'
+    lastName: '{{person.lastName}}'
+    email: '{{internet.email}}'
+    isActive: true
+    createdAt: '{{date.past}}'
+    updatedAt: '{{date.recent}}'
