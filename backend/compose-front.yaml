@@ -7,7 +7,7 @@ services:
     image: 'mariadb'
     ports:
       - '3306:3306'
-    container_name: db
+    container_name: database
     networks:
       - internal
     env_file: "front.env"
@@ -28,7 +28,7 @@ services:
     networks:
       - internal
     environment:
-      - PMA_HOST=db
+      - PMA_HOST=database
       - PMA_PORT=3306
     depends_on:
       - database
