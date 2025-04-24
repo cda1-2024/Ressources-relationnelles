@@ -6,54 +6,18 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { profile } from 'console';
-import { CreateUserDto } from 'src/dto/user/cerate-user.dto';
 import { UpdateAccountDto } from 'src/dto/user/update-account.dto';
 import { UpdateUserDto } from 'src/dto/user/update-user.dto';
 
 @ApiTags('Users')
-@Controller('users')
+@Controller('api/users')
 export class UserController {
-  //Créer un utilisateur
-
-  @Post('/')
-  @ApiOperation({
-    summary: 'Créer un utilisateur',
-    description:
-      'Créer un utilisateur avec un email, un surnom et un mot de passe / ou un service de connexion',
-  })
-  @ApiBody({
-    type: CreateUserDto,
-    description: 'Structure du json pour créer un utilisateur',
-  })
-  @ApiResponse({
-    status: 201,
-    description: "L'utilisateur a été créé avec succès",
-    schema: {
-      example: {
-        token:
-          'Jwtjkesgenvkgzeqegr065ev1f5ezge6g5156G4ZH1Z5364HAG0235H4ZH02H3S4H203DB4DF3B0F2',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 400,
-    description: "La création de l'utilisateur a échoué",
-    schema: {
-      example: {
-        status: 'error',
-        message: "L'email est déjà utilisé",
-      },
-    },
-  })
-  async create(@Body() createUserDto: CreateUserDto) {}
-
   //Récupérer la liste utilisateurs
   @Get('/')
   @ApiOperation({
-    summary: "Récupérer la liste d'utilisateurs | Admin",
+    summary: "Récupérer la liste d'utilisateurs",
     description:
-      "Récupérer la liste d'utilisateurs en fonction des critères fournis, cette route peut être utilisé que par un administrateur",
+      "Récupérer la liste d'utilisateurs en fonction des critères fournis",
   })
   @ApiQuery({ name: 'id', required: false, type: Number })
   @ApiQuery({ name: 'uuid', required: false, type: String })
@@ -157,7 +121,6 @@ export class UserController {
     return null;
   }
 
-  // Mettre à jour un utilisateur - use by admin
   @Put('/:id')
   @ApiOperation({
     summary: 'Modifier un utilisateur | Admin',
@@ -259,7 +222,6 @@ export class UserController {
     type: UpdateAccountDto,
     description: 'Structure du JSON pour mettre son compte',
   })
-  @ApiQuery({ name: 'id', required: false, type: Number })
   @ApiResponse({
     status: 200,
     description: 'Compte mis à jour avec succès',

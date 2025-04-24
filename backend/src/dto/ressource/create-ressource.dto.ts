@@ -17,24 +17,17 @@ export class CreateRessourceDto {
     example: 'www.youtube.com/watch?v=123456',
     description: 'Contenu de la ressource',
   })
-  content: string;
+  content_link: string;
 
   @ApiProperty({
-    example: 'Art',
+    example: 1,
     description: 'La catégorie de la ressource',
   })
-  category: String;
+  category: Number;
 
   @ApiProperty({
-    example: 'restricted',
+    example: 1,
     description: 'La visibilité de la ressource',
   })
-  visibilty: String;
-
-  @ApiProperty({
-    example: 'draft',
-    description: 'L\'état de la ressource',
-  })
-  state: String;
-
+  visibilty: Number;
 }
