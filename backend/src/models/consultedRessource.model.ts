@@ -14,9 +14,6 @@ export class ConsultedRessource {
   @Column({ type: 'datetime' })
   dateTimeConsult: Date;
 
-  @Column({ default: false })
-  like: boolean;
-
   @ManyToOne(() => Ressource, (ressource) => ressource.consultedRessources, 
   { nullable: true })
   ressource: Ressource;

@@ -40,6 +40,15 @@ export class User {
   @Column({ default: false })
   disabled: boolean;
 
+  @Column({ default: "", length: 100 })
+  city: string;
+
+  @Column({ default: "", length: 100 })
+  region: string;
+
+  @Column({ default: "", length: 100 })
+  country: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
