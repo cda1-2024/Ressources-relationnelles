@@ -11,11 +11,12 @@ import { UserReport } from '../models/userReport.model';
 import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
+//TODO: à voir
 dotenv.config();
 
 export const AppDataSource = new DataSource({
-  type: 'mariadb',
-  host: "localhost",
+  type: process.env.DB_TYPE as any,
+  host: process.env.MARIADB_HOST,
   port: Number(process.env.MARIADB_PORT),
   username: process.env.MARIADB_USER,
   password: process.env.MARIADB_PASSWORD,
