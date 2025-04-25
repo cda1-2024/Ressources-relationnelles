@@ -8,9 +8,9 @@ import { Ressource } from '../models/ressource.model';
 import { SavedRessource } from '../models/savedRessource.model';
 import { User } from '../models/user.model';
 import { UserReport } from '../models/userReport.model';
+import { SearchedStats } from '../models/searchStats.model';
 import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { SearchedStats } from 'src/models/searchStats.model';
 
 //TODO: à voir
 dotenv.config();
