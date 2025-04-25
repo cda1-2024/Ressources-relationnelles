@@ -21,7 +21,7 @@ services:
     networks:
       - internal
     environment:
-      - PMA_HOST=db
+      - PMA_HOST=database
       - PMA_PORT=3306
     depends_on:
       - database
