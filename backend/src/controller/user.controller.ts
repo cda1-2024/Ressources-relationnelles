@@ -8,10 +8,14 @@ import {
 } from '@nestjs/swagger';
 import { UpdateAccountDto } from 'src/dto/user/update-account.dto';
 import { UpdateUserDto } from 'src/dto/user/update-user.dto';
+import { AuthService } from 'src/services/auth.service';
+import find from './../../node_modules/obliterator/find.d';
+import { UserService } from './../services/user.service';
 
 @ApiTags('Users')
 @Controller('api/users')
 export class UserController {
+  constructor(private readonly userService: UserService) {}
   //Récupérer la liste utilisateurs
   @Get('/')
   @ApiOperation({
@@ -65,12 +69,12 @@ export class UserController {
       },
     },
   })
-  findUser(): null {
-    return null;
+  GetUsers(): Record<string, any> {
+    return this.userService.findAll();
   }
 
   //Récupérer un utilisateur
-  @Get('/identifier')
+  @Get('/:id')
   @ApiOperation({
     summary: 'Récupérer un utilisateur',
     description: 'Récupérer un utilisateur par son mail, UUID, username',
@@ -117,8 +121,8 @@ export class UserController {
       },
     },
   })
-  findUserClassic(): null {
-    return null;
+  getUserById(id: number): any {
+    return this.userService.findById(id);
   }
 
   @Put('/:id')
@@ -174,44 +178,6 @@ export class UserController {
     return null;
   }
 
-  // Se connecter un utilisateur
-  @Post('/login')
-  @ApiOperation({
-    summary: 'Se connecter un utilisateur',
-    description:
-      'Se connecter un utilisateur avec un email ou un UUID et un type de service',
-  })
-  @ApiBody({
-    schema: {
-      example: {
-        email: 'example@gmail.com',
-        password: 'Compelx48916#.',
-        uuid: 'UU_15efz',
-        type_service: 'Google',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 200,
-    description: "L'utilisateur s'est connecté avec succès",
-    schema: {
-      example: {
-        token:
-          'Jwtjkesgenvkgzeqegr065ev1f5ezge6g5156G4ZH1Z5364HAG0235H4ZH02H3S4H203DB4DF3B0F2',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 400,
-    description: "La connexion de l'utilisateur a échoué",
-    schema: {
-      example: {
-        status: 'error',
-        message: "L'email ou le mot de passe est incorrect",
-      },
-    },
-  })
-  async login(@Body() loginDto: {}) {}
 
   @Put('/myAccount')
   @ApiOperation({

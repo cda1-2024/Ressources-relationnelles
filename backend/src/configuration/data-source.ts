@@ -15,14 +15,14 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
-  type: process.env.DB_TYPE as any,
+  type: 'mariadb',
   host: process.env.MARIADB_HOST,
   port: Number(process.env.MARIADB_PORT),
   username: process.env.MARIADB_USER,
   password: process.env.MARIADB_PASSWORD,
   database: process.env.MARIADB_DATABASE,
   entities: [User, Category, Comment, Event, Ressource, SavedRessource, ConsultedRessource, UserReport, EventParticipation],
-  migrations: ['src/migrations/*.ts'],
+  migrations: ['dist/migrations/*.js'],
   namingStrategy: new SnakeNamingStrategy(),
   synchronize: false,
 });

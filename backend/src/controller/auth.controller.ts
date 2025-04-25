@@ -2,12 +2,14 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { loginUserServiceDto } from 'src/dto/user/login-service-user.dto';
 import { RegisterUserDto } from 'src/dto/user/register-user.dto';
-import { LoginUserDto } from './../dto/user/login-user.dto';
+import { LoginUserDto } from '../dto/user/login-user.dto';
+import { AuthService } from 'src/services/auth.service';
 
 @ApiTags('Authentification')
 @Controller('api/auth')
 export class AuthController {
-  // Register
+  constructor(private authService: AuthService) {}
+
   @Post('/register')
   @ApiOperation({
     summary: 'Créer un utilisateur',
@@ -71,8 +73,11 @@ export class AuthController {
       },
     },
   })
-  login(@Body() loginUserDto: LoginUserDto): null {
-    return null;
+  login(@Body() loginUserDto: LoginUserDto): Record<string, any> {
+    return this.authService.login(
+      loginUserDto.identifier,
+      loginUserDto.password,
+    );
   }
 
   @Post('loginByService')
