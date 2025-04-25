@@ -2,7 +2,7 @@ entity: User
 processor: ./processor/UserProcessor
 items:
   user{1..50}:
-    id: ($current)
+    index: ($current)
     password: test
     username: '{{person.firstName}}'
     lastName: '{{person.lastName}}'

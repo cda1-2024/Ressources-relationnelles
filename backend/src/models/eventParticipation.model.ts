@@ -5,11 +5,11 @@ import { Event } from './event.model';
 
 @Entity('Event_Participations')
 export class EventParticipation {
-  @PrimaryColumn()
-  userId: number
+  @PrimaryColumn('uuid')
+  userId: string
 
-  @PrimaryColumn()
-  eventId: number
+  @PrimaryColumn('uuid')
+  eventId: string
 
   @Column({ type: 'datetime' })
   dateTimeParticipation: Date;

@@ -2,7 +2,7 @@ entity: Ressources
 processor: ./processor/RessourceProcessor
 items:
   ressources_validate{1..20}:
-    id: ($current)
+    index: ($current)
     title: '{{lorem.sentence}}'
     contentText: '{{lorem.sentences}}'
     # TODO mettre autre chose

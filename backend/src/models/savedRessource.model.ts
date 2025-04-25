@@ -5,11 +5,11 @@ import { Ressource } from './ressource.model';
 
 @Entity('Saved_Ressources')
 export class SavedRessource {
-  @PrimaryColumn()
-  userId: number
+  @PrimaryColumn('uuid')
+  userId: string
 
-  @PrimaryColumn()
-  ressourceId: number
+  @PrimaryColumn('uuid')
+  ressourceId: string
 
   @Column({ default: false })
   isFavorite: boolean;

@@ -9,13 +9,13 @@ export default class UserProcessor implements IProcessor<User> {
 
   postProcess(name: string, object: { [key: string]: any }): void {
     object.username = `${object.username}${Math.floor(Math.random() * (9999 - 1000) + 1000)}`;
-    if (object.id == 1) {
+    if (object.index == 1) {
       object.role = UserRole.VISITOR;
-    } else if (object.id >= 2 && object.id <= 3) {
+    } else if (object.index >= 2 && object.index <= 3) {
       object.role = UserRole.SUPERADMIN;
-    } else if (object.id >= 4 && object.id <= 5) {
+    } else if (object.index >= 4 && object.index <= 5) {
       object.role = UserRole.ADMIN;
-    } else if (object.id >= 6 && object.id <= 15) {
+    } else if (object.index >= 6 && object.index <= 15) {
       object.role = UserRole.MODERATOR;
     } else {
       object.role = UserRole.USER;
