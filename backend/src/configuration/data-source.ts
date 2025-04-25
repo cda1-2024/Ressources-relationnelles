@@ -16,7 +16,7 @@ import { SearchedStats } from 'src/models/searchStats.model';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
-  type: "mariadb",
+  type: 'mariadb',
   host: process.env.MARIADB_HOST,
   port: Number(process.env.MARIADB_PORT),
   username: process.env.MARIADB_USER,
