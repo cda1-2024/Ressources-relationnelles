@@ -74,6 +74,9 @@ export class Ressource {
   })
   state: State;
 
+  @Column({ default: 0 })
+  like: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
