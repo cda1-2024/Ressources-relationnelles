@@ -10,8 +10,8 @@ export enum EventType {
 
 @Entity('Events')
 export class Event {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ length: 100 })
   title: string;

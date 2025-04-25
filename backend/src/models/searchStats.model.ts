@@ -5,8 +5,8 @@ export class SearchedStats {
   @PrimaryColumn()
     search: string;
 
-  @PrimaryColumn()
-    userId: number;
+  @PrimaryColumn('uuid')
+    userId: string;
 
   @Column({ type: 'datetime' })
     dateTimeSearch: Date;

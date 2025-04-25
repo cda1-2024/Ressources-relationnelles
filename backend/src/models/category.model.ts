@@ -4,8 +4,8 @@ import { User } from './user.model';
 
 @Entity('Categories')
 export class Category {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ length: 50 })
   name: string;

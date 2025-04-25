@@ -1,6 +1,5 @@
 import { Entity, Column, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from './user.model';
-import { Event } from './event.model';
 import { Comment } from './comment.model';
 
 export enum ReportReason {
@@ -13,11 +12,11 @@ export enum ReportReason {
 
 @Entity('User_Report')
 export class UserReport {
-  @PrimaryColumn()
-  reporterId: number
+  @PrimaryColumn('uuid')
+  reporterId: string
 
-  @PrimaryColumn()
-  reportedUserId: number
+  @PrimaryColumn('uuid')
+  reportedUserId: string
 
   @Column({ type: 'longtext' })
   content: string;
