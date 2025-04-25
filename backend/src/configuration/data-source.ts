@@ -15,7 +15,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
-  type: process.env.DB_TYPE as any,
+  type: 'mariadb',
   host: process.env.MARIADB_HOST,
   port: Number(process.env.MARIADB_PORT),
   username: process.env.MARIADB_USER,
