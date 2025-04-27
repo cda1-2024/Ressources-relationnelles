@@ -1,13 +1,18 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { loginUserServiceDto } from 'src/dto/user/login-service-user.dto';
 import { RegisterUserDto } from 'src/dto/user/register-user.dto';
-import { LoginUserDto } from './../dto/user/login-user.dto';
+import { LoginUserDto } from '../dto/user/login-user.dto';
+import { AuthService } from 'src/services/auth.service';
+import { UserRole } from 'src/models/user.model';
+import { ok } from 'assert';
+import { access } from 'fs';
 
 @ApiTags('Authentification')
 @Controller('api/auth')
 export class AuthController {
-  // Register
+  constructor(private authService: AuthService) {}
+
   @Post('/register')
   @ApiOperation({
     summary: 'Créer un utilisateur',
@@ -33,13 +38,24 @@ export class AuthController {
     description: "La création de l'utilisateur a échoué",
     schema: {
       example: {
-        status: 'error',
-        message: "L'email est déjà utilisé ou les données sont invalides",
+        message: {
+          email: [
+            "L'email doit être une adresse email valide",
+            "L'email ne doit pas être vide",
+          ],
+          password: [
+            'Le mot de passe ne doit pas être vide',
+            'Le mot de passe doit contenir au moins 8 caractères, y compris des lettres, des chiffres et des caractères spéciaux',
+          ],
+        },
+        error: 'Bad Request',
+        statusCode: 400,
       },
     },
   })
-  RegisterUser(@Body() registerUserDto: RegisterUserDto): null {
-    return null;
+  async register(@Body() registerUserDto: RegisterUserDto) {
+    const result = await this.authService.register(registerUserDto);
+    return result;
   }
 
   @Post('/login')
@@ -68,11 +84,16 @@ export class AuthController {
       example: {
         status: 'error',
         message: 'Le mot de passe ou identifiant sont incorrect',
+        statusCode: 401,
       },
     },
   })
-  login(@Body() loginUserDto: LoginUserDto): null {
-    return null;
+  async login(@Body() loginDto: LoginUserDto) {
+    const accessToken = await this.authService.login(
+      loginDto.identifier,
+      loginDto.password,
+    );
+    return { accessToken };
   }
 
   @Post('loginByService')

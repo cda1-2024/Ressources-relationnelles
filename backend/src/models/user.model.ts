@@ -1,4 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  BeforeInsert,
+  OneToMany,
+  BeforeUpdate,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Comment } from './comment.model';
 import { Category } from './category.model';
@@ -10,11 +19,11 @@ import { EventParticipation } from './eventParticipation.model';
 import { UserReport } from './userReport.model';
 
 export enum UserRole {
-  SUPERADMIN = "superAdmin",
-  ADMIN = "admin",
-  MODERATOR = "moderator",
-  USER = "user",
-  VISITOR = "visitor",
+  SUPERADMIN = 'superAdmin',
+  ADMIN = 'admin',
+  MODERATOR = 'moderator',
+  USER = 'user',
+  VISITOR = 'visitor',
 }
 
 @Entity('Users')
@@ -56,54 +65,75 @@ export class User {
   updatedAt: Date;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: UserRole,
     default: UserRole.USER,
   })
-  role: UserRole
+  role: UserRole;
 
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
 
-  @OneToMany(() => Comment, (comment) => comment.autor, 
-    { nullable: true })
-      comments: Comment[]
-  
-  @OneToMany(() => Category, (category) => category.lastAutor,
-    { nullable: true })
-    modifiedCategories: Category[]
+  @BeforeInsert()
+  async setDateCreatedAT() {
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+  }
 
-  @OneToMany(() => Event, (event) => event.manager,
-  { nullable: true })
-  createdEvents: Event[]
+  @BeforeUpdate()
+  setDateUpdateUser() {
+    this.updatedAt = new Date();
+  }
 
-  @OneToMany(() => Ressource, (ressource) => ressource.creator,
-  { nullable: true })
-  createdRessources: Ressource[]
+  @OneToMany(() => Comment, (comment) => comment.autor, { nullable: true })
+  comments: Comment[];
 
-  @OneToMany(() => Ressource, (ressource) => ressource.validator,
-  { nullable: true })
-  validatedRessources: Ressource[]
+  @OneToMany(() => Category, (category) => category.lastAutor, {
+    nullable: true,
+  })
+  modifiedCategories: Category[];
 
-  @OneToMany(() => SavedRessource, (savedRessources) => savedRessources.user, 
-  { nullable: true })
-  savedRessources: SavedRessource[]
+  @OneToMany(() => Event, (event) => event.manager, { nullable: true })
+  createdEvents: Event[];
 
-  @OneToMany(() => ConsultedRessource, (consultedRessources) => consultedRessources.user, 
-  { nullable: true })
-  consultedRessources: ConsultedRessource[]
+  @OneToMany(() => Ressource, (ressource) => ressource.creator, {
+    nullable: true,
+  })
+  createdRessources: Ressource[];
 
-  @OneToMany(() => EventParticipation, (eventParticipation) => eventParticipation.user, 
-  { nullable: true })
-  eventParticipations: EventParticipation[]
+  @OneToMany(() => Ressource, (ressource) => ressource.validator, {
+    nullable: true,
+  })
+  validatedRessources: Ressource[];
 
-  @OneToMany(() => UserReport, (userReport) => userReport.reportedUser, 
-  { nullable: true })
-  reporters: UserReport[]
+  @OneToMany(() => SavedRessource, (savedRessources) => savedRessources.user, {
+    nullable: true,
+  })
+  savedRessources: SavedRessource[];
 
-  @OneToMany(() => UserReport, (userReport) => userReport.reporter, 
-  { nullable: true })
-  reportedUsers: UserReport[]
+  @OneToMany(
+    () => ConsultedRessource,
+    (consultedRessources) => consultedRessources.user,
+    { nullable: true },
+  )
+  consultedRessources: ConsultedRessource[];
+
+  @OneToMany(
+    () => EventParticipation,
+    (eventParticipation) => eventParticipation.user,
+    { nullable: true },
+  )
+  eventParticipations: EventParticipation[];
+
+  @OneToMany(() => UserReport, (userReport) => userReport.reportedUser, {
+    nullable: true,
+  })
+  reporters: UserReport[];
+
+  @OneToMany(() => UserReport, (userReport) => userReport.reporter, {
+    nullable: true,
+  })
+  reportedUsers: UserReport[];
 }
