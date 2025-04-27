@@ -25,4 +25,5 @@ export const AppDataSource = new DataSource({
   migrations: ['dist/migrations/*.js'],
   namingStrategy: new SnakeNamingStrategy(),
   synchronize: false,
+  logging: true,
 });

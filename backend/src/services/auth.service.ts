@@ -1,6 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { RegisterUserDto } from './../dto/user/register-user.dto';
+import { User } from 'src/models/user.model';
+import { IsNotEmpty } from 'class-validator';
+import { ValidationException } from 'src/helper/validationException';
 
 @Injectable()
 export class AuthService {
@@ -9,20 +14,56 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(
-    identifier: string,
-    password: string,
-  ): Promise<{ access_token: string }> {
+  async login(identifier: string, password: string): Promise<string> {
     const user = await this.usersService.findUserByIdentifier(identifier);
-    console.log(user);
-    console.log('refresh');
-    if (user?.password !== password) {
-      throw new UnauthorizedException();
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException('Identifiants invalides');
     }
-    //To do add link picture to user
-    const payload = { sub: user.id, username: user.username, role: user.role };
+
+    const payload = {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+    };
+
+    return this.jwtService.signAsync(payload);
+  }
+
+  async register(
+    UserNew: RegisterUserDto,
+  ): Promise<{ accessToken: string}> {
+    const errors: Record<string, string> = {};
+    const existingUserByUsername = await this.usersService.findUserByUsername(
+      UserNew.username,
+    );
+
+    if (existingUserByUsername) {
+      errors['username'] = 'Cet username est déjà utilisé';
+    }
+
+    const existingUserByEmail = await this.usersService.findUserByEmail(
+      UserNew.email,
+    );
+
+    if (existingUserByEmail) {
+      errors['email'] = 'Cet email est déjà utilisé';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      throw new ValidationException(errors);
+    }
+
+    const UserDB = await this.usersService.createUser(UserNew);
+
+    const payload = {
+      id: UserDB.id,
+      username: UserDB.username,
+      role: UserDB.role,
+    };
+
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      accessToken: await this.jwtService.signAsync(payload),
     };
   }
 }

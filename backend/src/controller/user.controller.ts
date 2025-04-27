@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
 import {
   ApiBody,
   ApiOperation,
@@ -8,9 +8,8 @@ import {
 } from '@nestjs/swagger';
 import { UpdateAccountDto } from 'src/dto/user/update-account.dto';
 import { UpdateUserDto } from 'src/dto/user/update-user.dto';
-import { AuthService } from 'src/services/auth.service';
-import find from './../../node_modules/obliterator/find.d';
 import { UserService } from './../services/user.service';
+import { User } from 'src/models/user.model';
 
 @ApiTags('Users')
 @Controller('api/users')
@@ -70,10 +69,9 @@ export class UserController {
     },
   })
   GetUsers(): Record<string, any> {
-    return this.userService.findAll();
+    return this.userService.findUserAll();
   }
 
-  //Récupérer un utilisateur
   @Get('/:id')
   @ApiOperation({
     summary: 'Récupérer un utilisateur',
@@ -121,8 +119,13 @@ export class UserController {
       },
     },
   })
-  getUserById(id: number): any {
-    return this.userService.findById(id);
+  async getUserById( @Param() params): Promise<User | { status: string; message: string }> {
+    const id : number = params.id;
+    const user: User | null = await this.userService.findUserById(id);
+    if (!user) {
+    throw new NotFoundException("L'utilisateur n'a pas été trouvé");
+    }
+    return user;
   }
 
   @Put('/:id')
@@ -177,7 +180,6 @@ export class UserController {
   updateUser(): null {
     return null;
   }
-
 
   @Put('/myAccount')
   @ApiOperation({

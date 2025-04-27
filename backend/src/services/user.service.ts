@@ -10,13 +10,55 @@ export class UserService {
   constructor(@InjectRepository(User) usersRepository: Repository<User>) {
     this.usersRepository = usersRepository;
   }
-  async findAll(): Promise<User[]> {
+
+  async findUserAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
+
   async findUserByIdentifier(identifier: string): Promise<User | null> {
-    return this.usersRepository.findOneBy({email: identifier});
+    return this.usersRepository.findOne({
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        password: true,
+        role: true,
+      },
+      where: [{ email: identifier }, { username: identifier }],
+    });
   }
-  async findById(id: number): Promise<User | null> {
+  async findUserByUsername(username: string): Promise<User | null> {
+    return this.usersRepository.findOne({
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        password: true,
+        role: true,
+      },
+      where: [{ username: username }],
+    });
+  }
+
+  async findUserByEmail(email: string): Promise<User | null> {
+    return this.usersRepository.findOne({
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        password: true,
+        role: true,
+      },
+      where: [{ email: email }],
+    });
+  }
+
+  async findUserById(id: number): Promise<User | null> {
     return this.usersRepository.findOneBy({ id: id });
+  }
+
+  async createUser(user: Partial<User>): Promise<User> {
+    const newUser = this.usersRepository.create(user);
+    return this.usersRepository.save(newUser);
   }
 }
