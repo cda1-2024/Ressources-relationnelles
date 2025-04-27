@@ -8,6 +8,7 @@ import { Ressource } from '../models/ressource.model';
 import { SavedRessource } from '../models/savedRessource.model';
 import { User } from '../models/user.model';
 import { UserReport } from '../models/userReport.model';
+import { SearchedStats } from '../models/searchStats.model';
 import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
@@ -21,8 +22,8 @@ export const AppDataSource = new DataSource({
   username: process.env.MARIADB_USER,
   password: process.env.MARIADB_PASSWORD,
   database: process.env.MARIADB_DATABASE,
-  entities: [User, Category, Comment, Event, Ressource, SavedRessource, ConsultedRessource, UserReport, EventParticipation],
-  migrations: ['dist/migrations/*.js'],
+  entities: [User, Category, Comment, Event, Ressource, SavedRessource, ConsultedRessource, UserReport, EventParticipation, SearchedStats],
+  migrations: ['dist/migrations/*.ts'],
   namingStrategy: new SnakeNamingStrategy(),
   synchronize: false,
   logging: true,

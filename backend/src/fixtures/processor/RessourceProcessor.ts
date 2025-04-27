@@ -13,7 +13,7 @@ export default class RessourceProcessor implements IProcessor<Ressource> {
   // }
 
   postProcess(name: string, object: { [key: string]: any }): void {
-    let id = object.id;
+    let id = object.index;
     // Select the type of the ressource
     let types = Object.values(RessourceType);
     let lenghtType = types.length;

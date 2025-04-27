@@ -35,8 +35,8 @@ export enum State {
 
 @Entity('Ressources')
 export class Ressource {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ length: 100 })
   title: string;
@@ -73,6 +73,9 @@ export class Ressource {
     default: State.DRAFT,
   })
   state: State;
+
+  @Column({ default: 0 })
+  like: number;
 
   @CreateDateColumn()
   createdAt: Date;

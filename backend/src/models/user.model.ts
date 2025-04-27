@@ -28,11 +28,11 @@ export enum UserRole {
 
 @Entity('Users')
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ unique: true, length: 100, nullable: true })
-  uuid: string;
+  uuidGoogle: string;
 
   @Column({ unique: true, length: 100 })
   email: string;
@@ -48,6 +48,15 @@ export class User {
 
   @Column({ default: false })
   disabled: boolean;
+
+  @Column({ default: "", length: 100 })
+  city: string;
+
+  @Column({ default: "", length: 100 })
+  region: string;
+
+  @Column({ default: "", length: 100 })
+  country: string;
 
   @CreateDateColumn()
   createdAt: Date;

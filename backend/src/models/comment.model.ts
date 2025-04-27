@@ -5,8 +5,8 @@ import { UserReport } from './userReport.model';
 
 @Entity('Comments')
 export class Comment {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'longtext' })
   message: string;
