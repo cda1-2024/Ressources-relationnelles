@@ -19,7 +19,6 @@ import { EventParticipation } from './eventParticipation.model';
 import { UserReport } from './userReport.model';
 
 export enum UserRole {
-  SUPERADMIN = "superAdmin",
   SUPERADMIN = 'superAdmin',
   ADMIN = 'admin',
   MODERATOR = 'moderator',
