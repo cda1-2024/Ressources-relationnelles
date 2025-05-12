@@ -4,6 +4,7 @@ export class CollectRessourceDto {
   @ApiProperty({
     example: 'Bookmark',
     description: "Type de sauvegarde",
+    required: true,
   })
-  type: string;
+  readonly type: string;
 }

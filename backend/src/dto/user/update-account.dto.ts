@@ -14,7 +14,7 @@ export class UpdateAccountDto {
     example: 'http://image1-1',
     description: "Phtoto de profil de l'utilisateur",
   })
-  profile_piccture: string;
+  profile_picture: string;
 
   @ApiProperty({
     example: 'I am user',

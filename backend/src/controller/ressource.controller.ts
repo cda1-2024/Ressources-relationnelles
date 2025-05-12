@@ -1,22 +1,48 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+} from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
   ApiBody,
+  ApiCreatedResponse,
+  ApiExtraModels,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { CollectRessourceDto } from 'src/dto/ressource/collect-ressource.dto';
 import { CreateRessourceDto } from 'src/dto/ressource/create-ressource.dto';
+import { FilterRessourceDto } from 'src/dto/ressource/filter-ressource.dto';
+import { FullRessourceResponseDto } from 'src/dto/ressource/full-ressource-response.dto';
+import {
+  RessourceListResponseDto,
+  RessourceResponseDto,
+} from 'src/dto/ressource/ressource-response.dto';
 import { UpdateRessourceDto } from 'src/dto/ressource/update-ressource.dto';
+import { ValidateRessourceDto } from 'src/dto/ressource/validate-ressource.dto';
+import { RessourceService } from 'src/services/ressource/ressource.service';
 
 @ApiTags('Ressources')
 @Controller('api/ressources')
 export class RessrouceController {
+  constructor(private readonly ressourceService: RessourceService) {}
   //Créer un ressource
   @Post('/')
   @ApiOperation({
-    summary: 'Créer un ressource',
+    summary: 'Créer une ressource',
     description:
       'Créer une ressource avec un titre, statut, visibilité catégorie, texte et contenu. Le contenu peut être un document, image, vidéo, etc...',
   })
@@ -24,107 +50,104 @@ export class RessrouceController {
     type: CreateRessourceDto,
     description: 'Structure du json pour créer une ressource',
   })
-  @ApiResponse({
-    status: 201,
+  @ApiCreatedResponse({
     description: 'La ressource a été créé avec succès',
-    schema: {
-      example: {
-        id: 1,
-        user_id: 25,
-        title: 'Exemple de titre',
-        description: 'Exemple de titre',
-        content_text: 'Exemple de content',
-        conent_link: 'Exemple de contenu',
-        created_at: 'datetime',
-        category: 'Exemple de catégorie',
-        visibilty: 1,
-        status: 1,
-      },
-    },
+    type: RessourceResponseDto,
   })
-  @ApiResponse({
-    status: 400,
+  @ApiBadRequestResponse({
     description: 'La création de la ressource a échoué',
-    schema: {
-      example: {
-        status: 'error',
-        message: "La ressource n'pas été crée",
-      },
-    },
   })
-  async create(@Body() CreateRessourceDto: CreateRessourceDto) {}
+  async create(@Body() createRessourceDto: CreateRessourceDto, @Req() req) {
+    try {
+      const user = req.user;
+      const ressource =
+        await this.ressourceService.createRessource(user, createRessourceDto);
+      return ressource;
+    } catch (error) {
+      throw new BadRequestException('La création de la ressource a échoué');
+    }
+  }
+
+  // Récupérer une ressource par ID
+  @Get('/:id')
+  @ApiOperation({
+    summary: 'Récupérer une ressource par ID',
+    description: "Récupérer une ressource en fonction de l'identifiant fourni",
+  })
+  @ApiParam({ name: 'id', required: true, type: String })
+  @ApiOkResponse({
+    description: 'La ressource a été trouvée avec succès',
+    type: FullRessourceResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'La recherche de la ressource a échoué',
+  })
+  @ApiNotFoundResponse({
+    description: "La ressource n'a pas été trouvée",
+  })
+  async getRessourceById(
+    @Param() params,
+  ): Promise<FullRessourceResponseDto | { status: string; message: string }> {
+    const id: string = params.id;
+    const ressource =
+      await this.ressourceService.findRessourceById(id);
+    if (!ressource) {
+      throw new NotFoundException("La ressource n'a pas été trouvée");
+    }
+    return ressource;
+  }
 
   //Récupérer une ressource / des ressources
   @Get('/')
   @ApiOperation({
-    summary: 'Récupérer la liste des ressources (publiques et restreint)',
+    summary: 'Récupérer la liste des ressources (publiques et restreintes)',
     description:
       'Récupérer la liste des ressourcess en fonction des critères fournis',
   })
+  @ApiExtraModels(FilterRessourceDto)
   @ApiQuery({
-    name: 'category',
+    name: 'filters',
     required: false,
-    type: Number,
-    description: 'Doit être un entier',
+    type: FilterRessourceDto,
+    style: 'deepObject',
+    explode: true,
   })
-  @ApiQuery({ name: 'title',    required: false,    type: String  })
-  @ApiQuery({ name: 'dateInterval1', required: false, type: Date })
-  @ApiQuery({ name: 'dateInterval2', required: false, type: Date })
-  @ApiQuery({ name: 'visibility', required: false, type: Boolean })
-  @ApiQuery({ name: 'status', required: false, type: String })
-  @ApiResponse({
-    status: 200,
-    description: 'La ressource a été trouvée avec succès',
-    schema: {
-      example: {
-        data: [
-          {
-            id: 1,
-            title: 'Exemple de titre',
-            category: 'Exemple de catégorie',
-            content_link: 'Exemple de contenu',
-            content_text: 'Exemple de contenu',
-            status: 0,
-            dateTimeValidation: '2025-03-14T10:00:00Z',
-            isRestricted: false,
-            suspended: false,
-            deleted: false,
-            createdAt: '2025-03-14T10:00:00Z',
-            user: {
-              id: 1,
-              usernme: 'username',
-            },
-            ressourceType: {
-              id: 1,
-              name: 'Type de ressource',
-            },
-          },
-        ],
-      },
-    },
+  @ApiOkResponse({
+    description: 'La ou les ressources ont été trouvées avec succès',
+    type: RessourceListResponseDto,
   })
-  @ApiResponse({
-    status: 400,
+  @ApiBadRequestResponse({
     description: 'La recherche de la ressource a échoué',
-    schema: {
-      example: {
-        status: 'error',
-        message: 'Échec de la demande',
-      },
-    },
   })
-  @ApiResponse({
-    status: 404,
-    description: "La ressource n'a pas été trouvée",
-    schema: {
-      example: {
-        status: 'error',
-        message: "La ressource n'a pas été trouvée",
-      },
-    },
+  async getRessources(): Promise<RessourceListResponseDto | { status: string; message: string }> {
+    try {
+      const ressources = await this.ressourceService.findRessourceAll();
+      return ressources;
+    } catch (error) {
+      throw new BadRequestException('La recherche de la ressource a échoué');
+    }
+  }
+
+  //Récupérer une ressource / des ressources à l'aide de filtres
+  @Get('/filter/')
+  @ApiOperation({
+    summary: 'Récupérer la liste des ressources à l’aide de filtres',
+    description:
+      'Récupérer la liste des ressourcess en fonction des critères fournis',
   })
-  findRessource(): null {
-    return null;
+  @ApiExtraModels(FilterRessourceDto)
+  @ApiOkResponse({
+    description: 'La ou les ressources ont été trouvées avec succès',
+    type: RessourceListResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'La recherche de la ressource a échoué',
+  })
+  async findRessources(@Query() filters: FilterRessourceDto, @Req() req) {
+    const user = req.user || null;
+    console.log('user', user);
+    console.log('filters');
+    return this.ressourceService.findRessourcesBySearch(user, filters);
   }
 
   // Mettre à jour une ressource
@@ -137,179 +160,36 @@ export class RessrouceController {
     type: UpdateRessourceDto,
     description: 'Structure du JSON pour mettre à jour une ressource',
   })
-  @ApiQuery({ name: 'id', required: false, type: Number })
-  @ApiResponse({
-    status: 200,
+  @ApiQuery({ name: 'id', required: false, type: String })
+  @ApiOkResponse({
     description: 'La ressource a été mise à jour avec succès',
-    schema: {
-      example: {
-        data: {
-          id: 1,
-          title: 'Exemple de titre mis à jour',
-          content_link: 'Exemple de contenu mis à jour',
-          content_text: 'Exemple de contenu mis à jour',
-          category: 'Exemple de catégorie mise à jour',
-          status: 2,
-          dateTimeValidation: '2025-03-14T10:00:00Z',
-          isRestricted: true,
-          suspended: true,
-          deleted: true,
-          createdAt: '2025-03-14T10:00:00Z',
-          updatedAt: '2025-03-14T10:00:00Z',
-          user: {
-            id: 1,
-            usernme: 'username',
-          },
-        },
-      },
-    },
+    type: RessourceResponseDto,
   })
-  @ApiResponse({
-    status: 404,
+  @ApiBadRequestResponse({
+    description: 'La mise à jour de la ressource a échoué',
+  })
+  @ApiNotFoundResponse({
     description: "La ressource n'a pas été trouvée",
-    schema: {
-      example: {
-        status: 'error',
-        message: "La ressource n'a pas été trouvée",
-      },
-    },
   })
-  updateRessource(): null {
-    return null;
+  async updateRessource(
+    @Body() updateRessourceDto: UpdateRessourceDto,
+    @Param() params,
+  ) {
+    try {
+      const ressource = await this.ressourceService.updateRessource(
+        params.id,
+        updateRessourceDto,
+      );
+      if (!ressource) {
+        throw new NotFoundException("La ressource n'a pas été trouvée");
+      }
+      return ressource;
+    } catch (error) {
+      throw new BadRequestException('La mise à jour de la ressource a échoué');
+    }
   }
 
-  //Récupérer des ressources publiques
-  @Get('/public')
-  @ApiOperation({
-    summary: 'Récupérer la liste des ressources publiques',
-    description:
-      'Récupérer la liste des ressources publiques en fonction des critères fournis',
-  })
-  @ApiQuery({
-    name: 'category',
-    required: false,
-    type: Number,
-    description: 'Doit être un entier',
-  })
-  @ApiQuery({
-    name: 'title',
-    required: false,
-    type: String,
-    description: 'Titre de la ressource',
-  })
-  @ApiQuery({
-    name: 'sortByDate',
-    required: false,
-    type: Boolean,
-    description: 'Trier par date de création (du plus récent au plus ancien)',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'La ressource publique a été trouvée avec succès',
-    schema: {
-      example: {
-        data: [
-          {
-            id: 1,
-            user_id: 25,
-            title: 'Exemple de titre',
-            content_text: 'écris toi même',
-            content_link: 'description',
-            created_at: 'username',
-            content: 'Exemple de contenu',
-            createdAt: '2025-03-14T10:00:00Z',
-            ressourceType: {
-              id: 1,
-              name: 'Type de ressource',
-            },
-            category: {
-              id: 1,
-              name: 'Catégorie',
-            },
-          },
-        ],
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: "La ressource publique n'a pas été trouvée",
-    schema: {
-      example: {
-        status: 'error',
-        message: "La ressource publique n'a pas été trouvée",
-      },
-    },
-  })
-  findRessourcePublic(): null {
-    return null;
-  }
-
-  // Récupérer une ressource par ID
-  @Get('/:id')
-  @ApiOperation({
-    summary: 'Récupérer une ressource par ID',
-    description: "Récupérer une ressource en fonction de l'identifiant fourni",
-  })
-  @ApiQuery({ name: 'id', required: true, type: Number })
-  @ApiResponse({
-    status: 200,
-    description: 'La ressource a été trouvée avec succès',
-    schema: {
-      example: {
-        id: 1,
-        title: 'Exemple de titre',
-        content_text: 'description',
-        content_link: 'Exemple de contenu',
-        created_at: 'username',
-        category: 'Exemple de catégorie',
-        visibilty: 1,
-        status: 1,
-        createdAt: '2025-03-14T10:00:00Z',
-        updatedAt: '2025-03-14T10:00:00Z',
-        user: {
-          id: 1,
-          usernme: 'username',
-        },
-        ressourceType: {
-          id: 1,
-          name: 'Type de ressource',
-        },
-        comments: [
-          {
-            id: 1,
-            id_user: 2,
-            content: 'Exemple de commentaire',
-            createdAt: '2025-03-14T10:00:00Z',
-          },
-        ],
-      },
-    },
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'La recherche de la ressource a échoué',
-    schema: {
-      example: {
-        status: 'error',
-        message: 'Échec de la demande',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: "La ressource n'a pas été trouvée",
-    schema: {
-      example: {
-        status: 'error',
-        message: "La ressource n'a pas été trouvée",
-      },
-    },
-  })
-  findOne(): null {
-    return null;
-  }
-
+  // Sauvegarder une ressource en tant que favori ou a regarder plus tard
   @Post('/collect/:id')
   @ApiOperation({
     summary:
@@ -317,34 +197,42 @@ export class RessrouceController {
     description:
       'Sauvegarder une ressource en tant que favori/regarder plus tard pour l’utilisateur connecté',
   })
-  @ApiQuery({ name: 'id', required: true, type: Number })
+  @ApiQuery({ name: 'id', required: true, type: String })
   @ApiBody({
     type: CollectRessourceDto,
     description: 'Structure du JSON pour sauvegarder une ressource',
   })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description: 'La ressource a été sauvegardée avec succès',
-    schema: {
-      example: {
-        status: 'success',
-        message: 'Ressource sauvegardée avec succès',
-      },
-    },
   })
-  @ApiResponse({
-    status: 400,
+  @ApiBadRequestResponse({
     description: 'La sauvegarde de la ressource a échoué',
-    schema: {
-      example: {
-        status: 'error',
-        message: 'Échec de la sauvegarde de la ressource',
-      },
-    },
   })
-  saveBookmark(): null {
-    return null;
+  @ApiNotFoundResponse({
+    description: "La ressource n'a pas été trouvée",
+  })
+  async saveBookmark(
+    @Body() collectRessourceDto: CollectRessourceDto,
+    @Param() params,
+    @Req() req,
+  ): Promise<void> {
+    const user = req.user;
+    if (!user) {
+      throw new BadRequestException(
+        'L\'utilisateur n\'est pas connecté ou n\'existe pas',
+      );
+    }
+    try {
+      await this.ressourceService.saveBookmark(
+        user,
+        params.id,
+        collectRessourceDto.type,
+      );
+    } catch (error) {
+      throw new BadRequestException('La sauvegarde de la ressource a échoué');
+    }
   }
+
   @Put('/uncollect/:id')
   @ApiOperation({
     summary:
@@ -352,32 +240,152 @@ export class RessrouceController {
     description:
       'Supprimer une ressource de la liste des favoris ou à regarder plus tard pour l’utilisateur connecté',
   })
-  @ApiQuery({ name: 'id', required: true, type: Number })
+  @ApiQuery({ name: 'id', required: true, type: String })
   @ApiBody({
     type: CollectRessourceDto,
     description: 'Structure du JSON pour supprimer une ressource',
   })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
+    description: 'La sauvegarde de la ressource a été supprimé avec succès',
+  })
+  @ApiBadRequestResponse({
+    description: 'La suppression de la sauvegarde a échoué',
+  })
+  @ApiNotFoundResponse({
+    description: "La ressource n'a pas été trouvée",
+  })
+  async deleteBookmark(
+    @Body() collectRessourceDto: CollectRessourceDto,
+    @Param() params,
+    @Req() req,
+  ): Promise<void> {
+    const user = req.user;
+    if (!user) {
+      throw new BadRequestException(
+        'L\'utilisateur n\'est pas connecté ou n\'existe pas',
+      );
+    }
+    try {
+      await this.ressourceService.saveBookmark(
+        user,
+        params.id,
+        collectRessourceDto.type,
+      );
+    } catch (error) {
+      throw new BadRequestException('La suppression de la sauvegarde a échoué');
+    }
+  }
+
+  @Put('/validate/:id')
+  @ApiOperation({
+    summary:
+      'Valider une ressource par le modérateur connecté',
+    description:
+      'Valider une ressource par le modérateur connecté',
+  })
+  @ApiQuery({ name: 'id', required: true, type: String })
+  @ApiBody({
+    type: ValidateRessourceDto,
+    description: 'Structure du JSON pour supprimer une ressource',
+  })
+  @ApiOkResponse({
+    description: 'La ressource a été validé avec succès',
+  })
+  @ApiBadRequestResponse({
+    description: 'La validation de la ressource a échoué',
+  })
+  @ApiNotFoundResponse({
+    description: "La ressource n'a pas été trouvée",
+  })
+  async changeStatus(
+    @Body() validateRessourceDto: ValidateRessourceDto,
+    @Param() params,
+    @Req() req,
+  ): Promise<void> {
+    const user = req.user;
+    if (!user) {
+      throw new BadRequestException(
+        'L\'utilisateur n\'est pas connecté ou n\'existe pas',
+      );
+    }
+    try {
+      await this.ressourceService.validateRessource(
+        user,
+        params.id,
+        validateRessourceDto.validate,
+      );
+    } catch (error) {
+      throw new BadRequestException('La suppression de la sauvegarde a échoué');
+    }
+  }
+
+  @Post('/consulte/:id')
+  @ApiOperation({
+    summary:
+      'Enregistrer une consultation d’une ressource par l’utilisateur connecté',
+    description:
+      'Enregistrer une consultation d’une ressource par l’utilisateur connecté',
+  })
+  @ApiQuery({ name: 'id', required: true, type: String })
+  @ApiOkResponse({
+    description: 'La ressource a été consulté avec succès',
+  })
+  @ApiBadRequestResponse({
+    description: 'La consultation de la ressource a échoué',
+  })
+  @ApiNotFoundResponse({
+    description: "La ressource n'a pas été trouvée",
+  })
+  async consulteRessource(
+    @Param() params,
+    @Req() req,
+  ): Promise<void> {
+    const user = req.user;
+    if (!user) {
+      throw new BadRequestException(
+        'L\'utilisateur n\'est pas connecté ou n\'existe pas',
+      );
+    }
+    try {
+      await this.ressourceService.consulteRessource(
+        user,
+        params.id,
+      );
+    } catch (error) {
+      throw new BadRequestException('La sauvegarde de la ressource a échoué');
+    }
+  }
+
+  @Delete('/delete/:id')
+  @ApiOperation({
+    summary: 'Supprimer une ressource par ID',
+    description:
+      'Supprimer une ressource en fonction de l’identifiant fourni',
+  })
+  @ApiQuery({ name: 'id', required: true, type: String })
+  @ApiOkResponse({
     description: 'La ressource a été supprimée avec succès',
-    schema: {
-      example: {
-        status: 'success',
-        message: 'Ressource supprimée avec succès',
-      },
-    },
+    type: RessourceResponseDto,
   })
-  @ApiResponse({
-    status: 400,
+  @ApiBadRequestResponse({
     description: 'La suppression de la ressource a échoué',
-    schema: {
-      example: {
-        status: 'error',
-        message: 'Échec de la suppression de la ressource',
-      },
-    },
   })
-  deleteRessourceInMyCollection(): null {
-    return null;
+  @ApiNotFoundResponse({
+    description: "La ressource n'a pas été trouvée",
+  })
+  async deleteRessource(
+    @Param() params,
+  ): Promise<RessourceResponseDto | null> {
+    try {
+      const ressource = await this.ressourceService.deleteRessource(
+        params.id,
+      );
+      if (!ressource) {
+        throw new NotFoundException("La ressource n'a pas été trouvée");
+      }
+      return ressource;
+    } catch (error) {
+      throw new BadRequestException('La suppression de la ressource a échoué');
+    }
   }
 }

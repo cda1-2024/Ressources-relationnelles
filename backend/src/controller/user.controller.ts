@@ -120,7 +120,7 @@ export class UserController {
     },
   })
   async getUserById( @Param() params): Promise<User | { status: string; message: string }> {
-    const id : number = params.id;
+    const id : string = params.id;
     const user: User | null = await this.userService.findUserById(id);
     if (!user) {
     throw new NotFoundException("L'utilisateur n'a pas été trouvé");
@@ -220,3 +220,4 @@ export class UserController {
     return null;
   }
 }
+

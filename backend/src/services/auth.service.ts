@@ -3,8 +3,6 @@ import { UserService } from './user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { RegisterUserDto } from './../dto/user/register-user.dto';
-import { User } from 'src/models/user.model';
-import { IsNotEmpty } from 'class-validator';
 import { ValidationException } from 'src/helper/validationException';
 
 @Injectable()
@@ -39,7 +37,7 @@ export class AuthService {
     );
 
     if (existingUserByUsername) {
-      errors['username'] = 'Cet username est déjà utilisé';
+      errors['username'] = 'Cet identifiant est déjà utilisé';
     }
 
     const existingUserByEmail = await this.usersService.findUserByEmail(

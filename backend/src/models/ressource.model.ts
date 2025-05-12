@@ -25,7 +25,7 @@ export enum Visibility {
   PRIVATE = 'private',
 }
 
-export enum State {
+export enum Status {
   DRAFT = 'draft',
   TOVALIDATE = 'toValidate',
   PUBLISHED = 'published',
@@ -69,10 +69,10 @@ export class Ressource {
 
   @Column({
     type: 'enum',
-    enum: State,
-    default: State.DRAFT,
+    enum: Status,
+    default: Status.DRAFT,
   })
-  state: State;
+  status: Status;
 
   @Column({ default: 0 })
   like: number;

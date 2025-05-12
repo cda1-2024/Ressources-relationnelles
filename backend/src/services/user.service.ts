@@ -53,7 +53,7 @@ export class UserService {
     });
   }
 
-  async findUserById(id: number): Promise<User | null> {
+  async findUserById(id: string): Promise<User | null> {
     return this.usersRepository.findOneBy({ id: id });
   }
 

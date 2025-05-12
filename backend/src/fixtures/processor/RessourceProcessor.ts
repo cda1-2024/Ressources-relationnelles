@@ -2,7 +2,7 @@ import { IProcessor } from 'typeorm-fixtures-cli';
 import {
   Ressource,
   RessourceType,
-  State,
+  Status,
   Visibility,
 } from '../../models/ressource.model';
 
