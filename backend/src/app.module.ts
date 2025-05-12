@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { loadControllers } from './helper/loadControllers';
 import { AuthService } from './services/auth.service';
-import { UserService } from './services/user.service';
 import { AuthController } from './controller/auth.controller';
 import { CommentController } from './controller/comment.controller';
 import { AuthModule } from './modules/auth.module';

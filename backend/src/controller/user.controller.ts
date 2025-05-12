@@ -1,75 +1,57 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBody,
+  ApiExtraModels,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UpdateAccountDto } from 'src/dto/user/update-account.dto';
-import { UpdateUserDto } from 'src/dto/user/update-user.dto';
-import { UserService } from './../services/user.service';
+import { UpdateAccountDto } from 'src/dto/user/request/update-account.dto';
+import { UpdateUserDto } from 'src/dto/user/request/update-user.dto';
+import { UserService } from '../services/user/user.service';
 import { User } from 'src/models/user.model';
+import { ListUserRequestDto } from 'src/dto/user/request/list-user-request.dto';
+import { ListUserResponseDto } from 'src/dto/user/reponse/list-user-response.dto';
+import { FullUserResponseDto } from 'src/dto/user/reponse/full-user-response.dto';
 
 @ApiTags('Users')
 @Controller('api/users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  //Récupérer la liste utilisateurs
+
   @Get('/')
   @ApiOperation({
     summary: "Récupérer la liste d'utilisateurs",
     description:
       "Récupérer la liste d'utilisateurs en fonction des critères fournis",
   })
-  @ApiQuery({ name: 'id', required: false, type: Number })
-  @ApiQuery({ name: 'uuid', required: false, type: String })
-  @ApiQuery({ name: 'email', required: false, type: String })
-  @ApiQuery({ name: 'banned', required: false, type: Boolean })
-  @ApiQuery({ name: 'disabled', required: false, type: Boolean })
-  @ApiQuery({ name: 'role', required: false, type: String })
-  @ApiResponse({
-    status: 200,
-    description: "L'utilisateur a été trouvé avec succès",
-    schema: {
-      example: {
-        data: [
-          {
-            id: 123,
-            email: 'example1@gmail.com',
-            username: 'User1',
-          },
-          {
-            id: 124,
-            email: 'example2@gmail.com',
-            username: 'User2',
-          },
-        ],
-      },
-    },
+  @ApiExtraModels(ListUserRequestDto)
+  @ApiOkResponse({
+    description: 'La liste des utilisateurs',
+    type: ListUserResponseDto,
   })
-  @ApiResponse({
-    status: 400,
-    description: "La Recherche de l'utilisateur a échoué",
-    schema: {
-      example: {
-        status: 'error',
-        message: 'Échec de la demande',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
+  @ApiNotFoundResponse({
     description: "L'utilisateur n'a pas été trouvé",
-    schema: {
-      example: {
-        status: 'error',
-        message: "L'utilisateur/(s) n'a pas été trouvé",
-      },
-    },
   })
-  GetUsers(): Record<string, any> {
-    return this.userService.findUserAll();
+  async GetUsers(@Query() params): Promise<ListUserResponseDto> {
+    const { pageNumber = 1, pageSize = 10, ...filters } = params;
+    return await this.userService.findUsersWithFilters(
+      pageNumber,
+      pageSize,
+      filters,
+    );
   }
 
   @Get('/:id')
@@ -77,55 +59,16 @@ export class UserController {
     summary: 'Récupérer un utilisateur',
     description: 'Récupérer un utilisateur par son mail, UUID, username',
   })
-  @ApiQuery({ name: 'uuid', required: false, type: String })
-  @ApiQuery({ name: 'email', required: false, type: String })
-  @ApiQuery({ name: 'username', required: false, type: String })
-  @ApiResponse({
-    status: 200,
-    description: "L'utilisateur a été trouvé avec succès",
-    schema: {
-      example: {
-        id: 123,
-        uuid: 'UU_15efz',
-        email: 'example1@gmail.com',
-        username: 'User1',
-        bio: 'I am a user',
-        pictre_profile: 'http://image1-1',
-        banned: false,
-        disabled: false,
-        createdAt: '2025-03-14T10:00:00Z',
-        updatedAt: '2025-03-14T10:00:00Z',
-        role: 'user',
-      },
-    },
+  @ApiOkResponse({
+    description: 'Les informations de l’utilisateur',
+    type: FullUserResponseDto,
   })
-  @ApiResponse({
-    status: 400,
-    description: "La Recherche de l'utilisateur a échoué",
-    schema: {
-      example: {
-        status: 'error',
-        message: 'Échec de la demande',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
+  @ApiNotFoundResponse({
     description: "L'utilisateur n'a pas été trouvé",
-    schema: {
-      example: {
-        status: 'error',
-        message: "L'utilisateur/(s) n'a pas été trouvé",
-      },
-    },
   })
-  async getUserById( @Param() params): Promise<User | { status: string; message: string }> {
-    const id : number = params.id;
-    const user: User | null = await this.userService.findUserById(id);
-    if (!user) {
-    throw new NotFoundException("L'utilisateur n'a pas été trouvé");
-    }
-    return user;
+  async getUserById(@Param() params): Promise<FullUserResponseDto> {
+    const id: string = params.id;
+    return await this.userService.findUserById(id);
   }
 
   @Put('/:id')
