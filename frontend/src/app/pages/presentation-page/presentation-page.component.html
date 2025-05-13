@@ -1,0 +1,36 @@
+<div class="flex flex-col flex-grow items-center justify-center">
+    <div class="flex flex-col justify-around items-center px-[10vw] lg:px-[15vw] py-[20px] flex-none w-full">
+
+        <h1 class="text-[30px] font-bold leading-[45px] w-full mt-[12px] mb-[20px] flex flex-wrap
+            justify-center items-center md:justify-start md:items-start md:px-[5vw]">    
+            Bienvenue sur 
+            <span class="text-primary-500 mx-[8px]">(Re)Sources</span> 
+            <span class="text-secondary-500">Relationnelles</span>
+        </h1>
+
+        <p *ngIf="!isMobile" class="text-secondary-500 w-full mb-[16px] text-center md:text-start md:px-[5vw] text-base">Ici, chaque interaction est une opportunité d’apprentissage et de développement personnel.
+            Rejoignez-nous dès maintenant et faites partie d’une communauté où l’entraide est au cœur des échanges !</p>
+        
+        <p *ngIf="isMobile" class="text-secondary-500 w-full my-[25px] text-center md:text-start md:px-[5vw] text-base">
+            Ici, chaque interaction est une opportunité d’apprentissage et de développement personnel.
+        </p>
+        
+        <button *ngIf="isMobile" mat-flat-button class="!rounded-[10px] px-[35px] mt-[16px]">Commencer</button>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mx-auto my-[16px]">
+            <div class="card rounded-lg p-4 w-[280px]">
+                <img src="assets/img/presentationPage/imgRessource.png" alt="Image 1" class="w-full h-32 object-cover rounded-lg">
+                <h3 class="text-lg mt-2 text-[16px]">Ressource</h3>
+                <p class="text-secondary-500 mt-1 text-[14px]">Trouvez la ressources qu’il vous faut pour vous sociabiliser et vous instruire</p>
+            </div>
+            <div class="card rounded-lg p-4 w-[280px]">
+                <img src="assets/img/presentationPage/imgActivite.jpg" alt="Image 2" class="w-full h-32 object-cover rounded-lg">
+                <h3 class="text-lg mt-2 text-[16px]">Évènements</h3>
+                <p class="text-secondary-500 mt-1 text-[14px]">Participez à des activités avec d’autres utilisateurs pour vous amuser</p>
+            </div>
+        </div>
+
+        
+        <button *ngIf="!isMobile" mat-flat-button class="!rounded-[10px] m-[12px] px-[35px]">Commencer</button>
+    </div>
+</div>
