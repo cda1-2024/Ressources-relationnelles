@@ -1,0 +1,56 @@
+// @use '@angular/material' as mat;
+
+// $primary-color: #DD7596;
+// $secondary-color: #8EA2FF;
+
+// $my-primary: mat.define-palette(
+//   mat.$pink-palette,
+//   500,
+//   (
+//     50: #FDECEF,
+//     100: #FAD1DA,
+//     200: #F4A6B9,
+//     300: #EE7B99,
+//     400: #E85078,
+//     500: $primary-color,
+//     600: #C66585,
+//     700: #A6536F,
+//     800: #85425A,
+//     900: #6A3448,
+//   )
+// );
+
+// $my-accent: mat.define-palette(
+//   mat.$blue-palette,
+//   200,
+//   (
+//     50: #EEF2FF,
+//     100: #DCE4FF,
+//     200: #BCC7FF,
+//     300: #9BAAFF,
+//     400: #7A8DFF,
+//     500: $secondary-color,
+//     600: #6B7DFF,
+//     700: #5565E6,
+//     800: #404DBF,
+//     900: #313C99,
+//   )
+// );
+
+// $my-theme: mat.define-light-theme((
+//   color: (
+//     primary: $my-primary,
+//     accent: $my-accent,
+//     warn: mat.define-palette(mat.$red-palette)
+//   ),
+//   background: (
+//     default: mat.$grey-palette-50,
+//     app-bar: mat.$grey-palette-100,
+//     status-bar: mat.$grey-palette-900,
+//     hover: mat.$grey-palette-200,
+//     card: mat.$grey-palette-100
+//   )
+// ));
+
+// @include mat.core();
+// @include mat.all-component-themes($my-theme);
