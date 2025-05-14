@@ -9,7 +9,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from './../../../auth/auth.service';
 import { Router } from '@angular/router';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { RegisterModalComponent } from '../register-modal/register-modal.component'; // Adaptez le chemin si besoin
 
 
 @Component({
@@ -39,7 +40,8 @@ export class LoginComponent {
   constructor(
     private auth: AuthService,
     private router: Router,
-    private dialogRef: MatDialogRef<LoginComponent> // Injection du service MatDialogRef
+    private dialogRef: MatDialogRef<LoginComponent>,
+    private dialog: MatDialog
   ) {}
 
   onSubmit() {
@@ -53,6 +55,13 @@ export class LoginComponent {
         this.error = err.message;
         console.error('Login failed', err);
       }
+    });
+  }
+
+  openRegisterModal() {
+    this.dialogRef.close();
+    this.dialog.open(RegisterModalComponent, {
+      width: '400px'
     });
   }
 }

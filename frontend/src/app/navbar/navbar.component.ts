@@ -29,16 +29,28 @@ export class NavbarComponent {
 
   isMobile: boolean = false;
   isLoggedIn: boolean = false;
+  userId: string | null = null;
+  username: string | null = null;
   
-    constructor(private breakpointService: BreakpointService, private authService: AuthService , private dialog: MatDialog) {
+  constructor(private breakpointService: BreakpointService, private authService: AuthService , private dialog: MatDialog) {
       this.isMobile = this.breakpointService.isMobile();
       this.breakpointService.isMobile$.subscribe((isMobile) => {
-      this.isMobile = isMobile;
+        this.isMobile = isMobile;
+      });
 
       this.isLoggedIn = this.authService.isLoggedIn();
       this.authService.isLoggedIn$.subscribe((loggedIn) => {
-        this.isLoggedIn = loggedIn;  // Mise à jour de l'état de la connexion
+        this.isLoggedIn = loggedIn;
       });
+
+      this.userId = this.authService.getUserId();
+      this.authService.userId$.subscribe((userId) => {
+        this.userId = userId;
+      });
+
+      this.username = this.authService.getUsername();
+      this.authService.username$.subscribe((username) => {
+        this.username = username;
       });
   }
 
@@ -51,7 +63,7 @@ export class NavbarComponent {
 
   onLogout(): void {
     console.log('Logout button clicked');
-    this.authService.logout();  // Appelle la méthode de déconnexion
+    this.authService.logout(); 
   }
 
   

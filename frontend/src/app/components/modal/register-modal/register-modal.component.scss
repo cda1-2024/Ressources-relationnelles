@@ -1,0 +1,11 @@
+.alert {
+  color: red;
+  font-size: 0.8em;
+  margin-top: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+::ng-deep .mat-form-field-wrapper{
+    display: none;
+}
