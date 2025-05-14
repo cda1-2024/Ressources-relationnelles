@@ -23,6 +23,13 @@ export class UserService {
 
   async findUserByIdentifier(identifier: string): Promise<User | null> {
     return this.usersRepository.findOne({
+        select: {
+        id: true,
+        username: true,
+        email: true,
+        password: true,
+        role: true,
+      },
       where: [{ email: identifier }, { username: identifier }],
     });
   }
