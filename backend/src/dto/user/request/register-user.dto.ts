@@ -1,9 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
+import { IsEmailUnique } from 'src/validators/is_email_unique/is-email-unique.decorator';
+import { IsUsernameUnique } from 'src/validators/is_username_unique/is-username-unique.decorator';
 
 export class RegisterUserDto {
   @IsNotEmpty({ message: "L'email ne doit pas être vide" })
   @IsEmail({}, { message: "L'email doit être une adresse email valide" })
+  @IsEmailUnique()
   @ApiProperty({
     example: 'b.976@gmail.com',
     description: "L'email de l'utilisateur",
@@ -18,6 +21,7 @@ export class RegisterUserDto {
     message:
       "Le nom d'utilisateur doit contenir au moins 3 caractères, ne peut être composé uniquement de chiffres ou de caractères spéciaux, et peut inclure des lettres, des chiffres, des tirets (-), des underscores (_) ou des points (.)",
   })
+  @IsUsernameUnique()
   @ApiProperty({
     example: 'Toto976',
     description: "Username de l'utilisateur",

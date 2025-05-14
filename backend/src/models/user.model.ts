@@ -40,6 +40,9 @@ export class User {
   @Column({ unique: true, length: 60 })
   username: string;
 
+  @Column({ default: '', length: 1000 })
+  bio: string;
+
   @Column({ select: false })
   password: string;
 
@@ -49,13 +52,13 @@ export class User {
   @Column({ default: false })
   disabled: boolean;
 
-  @Column({ default: "", length: 100 })
+  @Column({ default: '', length: 100 })
   city: string;
 
-  @Column({ default: "", length: 100 })
+  @Column({ default: '', length: 100 })
   region: string;
 
-  @Column({ default: "", length: 100 })
+  @Column({ default: '', length: 100 })
   country: string;
 
   @CreateDateColumn()
@@ -113,18 +116,10 @@ export class User {
   })
   savedRessources: SavedRessource[];
 
-  @OneToMany(
-    () => ConsultedRessource,
-    (consultedRessources) => consultedRessources.user,
-    { nullable: true },
-  )
+  @OneToMany(() => ConsultedRessource, (consultedRessources) => consultedRessources.user, { nullable: true })
   consultedRessources: ConsultedRessource[];
 
-  @OneToMany(
-    () => EventParticipation,
-    (eventParticipation) => eventParticipation.user,
-    { nullable: true },
-  )
+  @OneToMany(() => EventParticipation, (eventParticipation) => eventParticipation.user, { nullable: true })
   eventParticipations: EventParticipation[];
 
   @OneToMany(() => UserReport, (userReport) => userReport.reportedUser, {

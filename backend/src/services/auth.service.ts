@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UserService } from './user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { RegisterUserDto } from './../dto/user/register-user.dto';
+import { RegisterUserDto } from '../dto/user/request/register-user.dto';
 import { User } from 'src/models/user.model';
 import { IsNotEmpty } from 'class-validator';
 import { ValidationException } from 'src/helper/validationException';
