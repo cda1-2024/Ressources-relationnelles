@@ -7,6 +7,10 @@ items:
     username: '{{person.firstName}}'
     lastName: '{{person.lastName}}'
     email: '{{internet.email}}'
-    isActive: true
+    country: '{{location.country}}'
+    city: '{{location.city}}'
+    region: '{{location.state}}'
+    profile_picture: '{{internet.url}}'
+    bio: '{{lorem.paragraph}}'
     createdAt: '{{date.past}}'
     updatedAt: '{{date.recent}}'

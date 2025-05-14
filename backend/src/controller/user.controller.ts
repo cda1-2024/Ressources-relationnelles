@@ -1,184 +1,86 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import {
   ApiBody,
+  ApiExtraModels,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UpdateAccountDto } from 'src/dto/user/update-account.dto';
-import { UpdateUserDto } from 'src/dto/user/update-user.dto';
-import { UserService } from './../services/user.service';
-import { User } from 'src/models/user.model';
+import { UpdateMyAccountDto } from 'src/dto/user/request/update-account.dto';
+import { UpdateUserDto } from 'src/dto/user/request/update-user.dto';
+import { UserService } from '../services/user/user.service';
+import { ListUserRequestDto } from 'src/dto/user/request/list-user-request.dto';
+import { ListUserResponseDto, UserResponseDto } from 'src/dto/user/response/list-user-response.dto';
+import { FullUserResponseDto } from 'src/dto/user/response/full-user-response.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { updateMyAccount as updateMyAccountDto } from './../dto/user/request/update-my-account';
 
 @ApiTags('Users')
+@ApiExtraModels(
+  ListUserRequestDto,
+  ListUserResponseDto,
+  UserResponseDto,
+  FullUserResponseDto,
+  UpdateMyAccountDto,
+  UpdateUserDto,
+  updateMyAccountDto,
+)
 @Controller('api/users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  //Récupérer la liste utilisateurs
+
   @Get('/')
+  @ApiQuery({ name: 'pageNumber', required: false, type: Number })
+  @ApiQuery({ name: 'pageSize', required: false, type: Number })
+  @ApiQuery({ name: 'username', required: false, type: String })
+  @ApiNotFoundResponse({
+    description: 'Auncun utilisateur a été trouvé',
+  })
+  async GetUsers(@Query() params): Promise<ListUserResponseDto> {
+    const { pageNumber = 1, pageSize = 10, ...filters } = params;
+    return await this.userService.findUsersWithFilters(pageNumber, pageSize, filters);
+  }
+
+  @Get('check/identifier/:identifier')
   @ApiOperation({
-    summary: "Récupérer la liste d'utilisateurs",
-    description:
-      "Récupérer la liste d'utilisateurs en fonction des critères fournis",
+    summary: 'Récupérer un utilisateur',
+    description: 'Récupérer un utilisateur par son mail / username',
   })
-  @ApiQuery({ name: 'id', required: false, type: Number })
-  @ApiQuery({ name: 'uuid', required: false, type: String })
-  @ApiQuery({ name: 'email', required: false, type: String })
-  @ApiQuery({ name: 'banned', required: false, type: Boolean })
-  @ApiQuery({ name: 'disabled', required: false, type: Boolean })
-  @ApiQuery({ name: 'role', required: false, type: String })
-  @ApiResponse({
-    status: 200,
-    description: "L'utilisateur a été trouvé avec succès",
-    schema: {
-      example: {
-        data: [
-          {
-            id: 123,
-            email: 'example1@gmail.com',
-            username: 'User1',
-          },
-          {
-            id: 124,
-            email: 'example2@gmail.com',
-            username: 'User2',
-          },
-        ],
-      },
-    },
+  @ApiOkResponse({
+    description: 'Les informations de l’utilisateur',
+    example: { IsAvailable: true },
   })
-  @ApiResponse({
-    status: 400,
-    description: "La Recherche de l'utilisateur a échoué",
-    schema: {
-      example: {
-        status: 'error',
-        message: 'Échec de la demande',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
+  @ApiNotFoundResponse({
     description: "L'utilisateur n'a pas été trouvé",
-    schema: {
-      example: {
-        status: 'error',
-        message: "L'utilisateur/(s) n'a pas été trouvé",
-      },
-    },
   })
-  GetUsers(): Record<string, any> {
-    return this.userService.findUserAll();
+  async GetUserByIdentifier(@Param() params: { identifier: string }) {
+    const identifier: string = params.identifier;
+    const user = await this.userService.findUserByIdentifier(identifier);
+    if (user != null) {
+      return { IsAvailable: false };
+    } else {
+      return { IsAvailable: true };
+    }
   }
 
   @Get('/:id')
   @ApiOperation({
     summary: 'Récupérer un utilisateur',
-    description: 'Récupérer un utilisateur par son mail, UUID, username',
+    description: 'Récupérer un utilisateur par son id',
   })
-  @ApiQuery({ name: 'uuid', required: false, type: String })
-  @ApiQuery({ name: 'email', required: false, type: String })
-  @ApiQuery({ name: 'username', required: false, type: String })
-  @ApiResponse({
-    status: 200,
-    description: "L'utilisateur a été trouvé avec succès",
-    schema: {
-      example: {
-        id: 123,
-        uuid: 'UU_15efz',
-        email: 'example1@gmail.com',
-        username: 'User1',
-        bio: 'I am a user',
-        pictre_profile: 'http://image1-1',
-        banned: false,
-        disabled: false,
-        createdAt: '2025-03-14T10:00:00Z',
-        updatedAt: '2025-03-14T10:00:00Z',
-        role: 'user',
-      },
-    },
+  @ApiOkResponse({
+    description: 'Les informations de l’utilisateur',
+    type: FullUserResponseDto,
   })
-  @ApiResponse({
-    status: 400,
-    description: "La Recherche de l'utilisateur a échoué",
-    schema: {
-      example: {
-        status: 'error',
-        message: 'Échec de la demande',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
+  @ApiNotFoundResponse({
     description: "L'utilisateur n'a pas été trouvé",
-    schema: {
-      example: {
-        status: 'error',
-        message: "L'utilisateur/(s) n'a pas été trouvé",
-      },
-    },
   })
-  async getUserById( @Param() params): Promise<User | { status: string; message: string }> {
-    const id : string = params.id;
-    const user: User | null = await this.userService.findUserById(id);
-    if (!user) {
-    throw new NotFoundException("L'utilisateur n'a pas été trouvé");
-    }
-    return user;
-  }
-
-  @Put('/:id')
-  @ApiOperation({
-    summary: 'Modifier un utilisateur | Admin',
-    description:
-      "Modifier un utilisateur en fonction de l'identifiant ou de l'UUID fourni",
-  })
-  @ApiBody({
-    type: UpdateUserDto,
-    description: 'Structure du JSON pour mettre à jour un utilisateur',
-  })
-  @ApiQuery({ name: 'id', required: false, type: Number })
-  @ApiResponse({
-    status: 200,
-    description: "L'utilisateur a été mis à jour avec succès",
-    schema: {
-      example: {
-        data: {
-          id: 123,
-          email: 'example1@gmail.com',
-          username: 'User1',
-          banned: false,
-          disabled: false,
-          createdAt: '2025-03-14T10:00:00Z',
-          updatedAt: '2025-03-14T10:00:00Z',
-          role: 'user',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 400,
-    description: "La mise à jour de l'utilisateur a échoué",
-    schema: {
-      example: {
-        status: 'error',
-        message: "La mise à jour de l'utilisateur a échoué",
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: "L'utilisateur n'a pas été trouvé",
-    schema: {
-      example: {
-        status: 'error',
-        message: "L'utilisateur n'a pas été trouvé",
-      },
-    },
-  })
-  updateUser(): null {
-    return null;
+  async getUserById(@Param() params): Promise<FullUserResponseDto> {
+    const id: string = params.id;
+    return await this.userService.findUserById(id);
   }
 
   @Put('/myAccount')
@@ -187,37 +89,43 @@ export class UserController {
     description: 'Modifier son compte, email, surnom, photo de profil, etc.',
   })
   @ApiBody({
-    type: UpdateAccountDto,
+    type: UpdateMyAccountDto,
     description: 'Structure du JSON pour mettre son compte',
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Compte mis à jour avec succès',
-    schema: {
-      example: {
-        data: {
-          id: 123,
-          email: 'b.976@gmail.com',
-          username: 'Vnono',
-          bio: 'I am user',
-          profile_picture: 'http://image1-1',
-          updatedAt: '2025-03-14T10:00:00Z',
-        },
-      },
-    },
+  @ApiExtraModels(UpdateMyAccountDto)
+  @ApiOkResponse({
+    description: 'Les informations de l’utilisateur',
+    type: FullUserResponseDto,
   })
-  @ApiResponse({
-    status: 400,
-    description: 'La mise à jour du compte a échoué',
-    schema: {
-      example: {
-        status: 'error',
-        message: 'La mise à jour du compte a échoué',
-      },
-    },
+  @ApiNotFoundResponse({
+    description: "L'utilisateur n'a pas été trouvé",
   })
-  updateMyAccount(): null {
-    return null;
+  @UseGuards(AuthGuard('jwt'))
+  updateMyAccount(@Req() req, @Body() updateMyAccountDto: updateMyAccountDto) {
+    const user = req.user;
+    return this.userService.updateMyAccount(user.id, updateMyAccountDto);
+  }
+
+  @Put('/:id')
+  @ApiOperation({
+    summary: 'Modifier un utilisateur | Admin',
+    description: "Modifier un utilisateur en fonction de l'identifiant ou de l'UUID fourni",
+  })
+  @ApiBody({
+    type: UpdateUserDto,
+    description: 'Structure du JSON pour mettre à jour un utilisateur',
+  })
+  @ApiQuery({ name: 'id', required: false, type: Number })
+  @ApiExtraModels(UpdateUserDto)
+  @ApiOkResponse({
+    description: 'Les informations de l’utilisateur',
+    type: FullUserResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: "L'utilisateur n'a pas été trouvé",
+  })
+  async updateUser(@Body() updateUserDto: UpdateUserDto, @Param('id') id: string): Promise<UserResponseDto> {
+    return this.userService.updateUser(id, updateUserDto);
   }
 }
 

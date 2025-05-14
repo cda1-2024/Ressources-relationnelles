@@ -4,10 +4,9 @@ import { loadControllers } from './helper/loadControllers';
 import { AuthModule } from './modules/auth.module';
 import { UsersModule } from './modules/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppDataSource } from './configuration/data-source';
+import { AppDataSource } from './configuration/data-source-app';
 import { RessourcesModule } from './modules/ressource.module';
 import { CategoryModule } from './modules/category.module';
-
 
 @Module({
   imports: [
