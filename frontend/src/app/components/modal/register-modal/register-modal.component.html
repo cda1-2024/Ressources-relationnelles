@@ -1,0 +1,126 @@
+<h2 mat-dialog-title class="!text-[32px] !leading-[40px] !font-bold">Inscription</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Email -->
+    <mat-form-field appearance="fill" class="w-full mb-3" subscriptSizing="dynamic">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        type="text"
+        autocomplete="off"
+        formControlName="email"
+        required
+      />
+      <mat-error *ngIf="form.get('email')?.hasError('required')">
+        L'email est obligatoire.
+      </mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">
+        L'email n'est pas valide.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Username -->
+    <mat-form-field appearance="fill" class="w-full mb-3" subscriptSizing="dynamic">
+      <mat-label>Nom d'utilisateur</mat-label>
+      <input
+        matInput
+        type="text"
+        autocomplete="off"
+        formControlName="username"
+        required
+      />
+      <mat-error *ngIf="form.get('username')?.hasError('required')">
+        Le nom d'utilisateur est obligatoire.
+      </mat-error>
+      <mat-error *ngIf="form.get('username')?.hasError('pattern')">
+        Le nom d'utilisateur doit contenir au moins 3 caractères, ne peut être composé uniquement de chiffres ou de caractères spéciaux, et peut inclure des lettres, des chiffres, des tirets (-), des underscores (_) ou des points (.).
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Password -->
+    <mat-form-field appearance="fill" class="w-full mb-3" subscriptSizing="dynamic">
+      <mat-label>Mot de passe</mat-label>
+      <input
+        matInput
+        [type]="hidePsw ? 'password' : 'text'"
+        formControlName="password"
+        required
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="hidePsw = !hidePsw"
+        [attr.aria-label]="'Toggle password visibility'"
+        [attr.aria-pressed]="!hidePsw"
+      >
+        <mat-icon>{{ hidePsw ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="form.get('password')?.hasError('required')">
+        Le mot de passe est obligatoire.
+      </mat-error>
+      <mat-error *ngIf="form.get('password')?.hasError('minlength') || form.get('password')?.hasError('pattern')">
+        Doit contenir au moins 8 caractères dont une majuscule, une minuscule, un chiffre et un caractère spécial.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Confirm Password -->
+    <mat-form-field appearance="fill" class="w-full mb-3" subscriptSizing="dynamic">
+      <mat-label>Confirmez votre mot de passe</mat-label>
+      <input
+        matInput
+        [type]="hideConfirmPsw ? 'password' : 'text'"
+        formControlName="confirmPassword"
+        required
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="hideConfirmPsw = !hideConfirmPsw"
+        [attr.aria-label]="'Toggle password visibility'"
+        [attr.aria-pressed]="!hideConfirmPsw"
+      >
+        <mat-icon>{{ hideConfirmPsw ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+
+      <mat-error *ngIf="form.get('confirmPassword')?.hasError('required')">
+        La confirmation du mot de passe est obligatoire.
+      </mat-error>
+
+      <mat-error *ngIf="form.get('confirmPassword')?.hasError('notSame')">
+        Les mots de passe ne correspondent pas.
+      </mat-error>
+
+    </mat-form-field>
+
+    <!-- Remember Me -->
+    <mat-checkbox formControlName="rememberMe">
+      Se souvenir de moi
+    </mat-checkbox>
+
+    <!-- Error message -->
+    <div *ngIf="error" class="text-red-500 text-sm mt-2 text-center">
+      Erreur : {{ error }}
+    </div>
+
+    <!-- Submit button -->
+    <button
+      mat-flat-button
+      color="primary"
+      class="!rounded-[10px] px-[35px] w-full mt-[20px]"
+      [disabled]="form.invalid"
+    >
+      S'inscrire
+    </button>
+
+    <p class="text-secondary-500 text-center text-xs mt-3">
+      Vous avez déjà un compte ?
+    </p>
+    <a class="text-secondary-500 text-center text-xs underline underline-offset-3 w-full block cursor-pointer"
+       (click)="openLoginModal()">
+      Se connecter
+    </a>
+  </form>
+</mat-dialog-content>
