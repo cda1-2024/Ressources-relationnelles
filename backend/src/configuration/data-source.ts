@@ -23,8 +23,9 @@ export const AppDataSource = new DataSource({
   password: process.env.MARIADB_PASSWORD,
   database: process.env.MARIADB_DATABASE,
   entities: [User, Category, Comment, Event, Ressource, SavedRessource, ConsultedRessource, UserReport, EventParticipation, SearchedStats],
-  migrations: ['dist/migrations/*.ts'],
+
+  migrations: ['src/migrations/*.ts'],
   namingStrategy: new SnakeNamingStrategy(),
   synchronize: false,
-  logging: false,
+  logging: true,
 });

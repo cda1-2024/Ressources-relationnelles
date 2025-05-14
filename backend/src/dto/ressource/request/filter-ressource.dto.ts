@@ -1,11 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString, IsUUID, IsInt, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class FilterRessourceDto {
+export class FilterRessourceRequestDto {
   @ApiProperty({
     example: 'La fresqu',
     description: 'Le champ de recherche',
     required: false,
   })
+  @IsOptional()
+  @IsString()
   readonly query_string?: string;
 
   @ApiProperty({
@@ -13,6 +17,8 @@ export class FilterRessourceDto {
     description: 'L\'id de la catégorie recherchée',
     required: false,
   })
+  @IsOptional()
+  @IsUUID()
   readonly category?: string;
 
   @ApiProperty({
@@ -20,6 +26,8 @@ export class FilterRessourceDto {
     description: 'Type recherché',
     required: false,
   })
+  @IsOptional()
+  @IsString()
   readonly type?: string;
 
   @ApiProperty({
@@ -27,13 +35,17 @@ export class FilterRessourceDto {
     description: 'L\'id de l\'utilisateur qui a créé la ressource',
     required: false,
   })
+  @IsOptional()
+  @IsUUID()
   readonly creator_id?: string;
 
   @ApiProperty({
     example: 'f5e3f135-e8c3-4008-b4f0-add664f16524',
-    description: 'L\'id de l\'utilisateur qui a créé la ressource',
+    description: 'L\'id de l\'utilisateur qui a validé la ressource',
     required: false,
   })
+  @IsOptional()
+  @IsUUID()
   readonly validator_id?: string;
 
   @ApiProperty({
@@ -41,17 +53,26 @@ export class FilterRessourceDto {
     description: 'Statut de la ressource',
     required: false,
   })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
   readonly status?: number;
 
   @ApiProperty({
     example: 1,
     description: 'Le numéro de la page',
   })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   readonly page_number: number;
 
   @ApiProperty({
     example: 10,
     description: 'Le nombre de ressources par page',
   })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   readonly result_size: number;
 }

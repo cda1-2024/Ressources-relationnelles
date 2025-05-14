@@ -1,13 +1,6 @@
-import { FullRessourceResponseDto } from 'src/dto/ressource/full-ressource-response.dto';
-import {
-  RessourceListResponseDto,
-  RessourceResponseDto,
-} from 'src/dto/ressource/ressource-response.dto';
-import {
-  RessourceStatusToInt,
-  RessourceTypeToInt,
-  RessourceVisibilityToInt,
-} from 'src/helper/enumMapper';
+import { FullRessourceResponseDto } from 'src/dto/ressource/response/full-ressource-response.dto';
+import { RessourceListResponseDto, RessourceResponseDto } from 'src/dto/ressource/response/ressource-response.dto';
+import { RessourceStatusToInt, RessourceTypeToInt, RessourceVisibilityToInt } from 'src/helper/enumMapper';
 import { Ressource } from 'src/models/ressource.model';
 
 export class RessourceMapper {
@@ -38,9 +31,18 @@ export class RessourceMapper {
     };
   }
 
-  static toResponseListDto(ressources: Ressource[]): RessourceListResponseDto {
+  static toResponseListDto(
+    ressources: Ressource[],
+    pageNumber: number,
+    pageSize: number,
+    totalNumberRessources: number,
+  ): RessourceListResponseDto {
     return {
-      data: ressources.map((ressource) => this.toResponseDto(ressource)),
+      ressources: ressources.map((ressource) => this.toResponseDto(ressource)),
+      pageNumber,
+      pageSize,
+      totalNumberRessources,
+      totalPages: Math.ceil(totalNumberRessources / pageSize),
     };
   }
 

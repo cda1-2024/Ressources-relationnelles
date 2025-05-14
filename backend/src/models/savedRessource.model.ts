@@ -17,6 +17,9 @@ export class SavedRessource {
   @Column({ default: false })
   isToLater: boolean;
 
+  @Column({ default: false })
+  like: boolean;
+
   @ManyToOne(() => Ressource, (ressource) => ressource.savedRessources, 
   { nullable: true })
   ressource: Ressource;

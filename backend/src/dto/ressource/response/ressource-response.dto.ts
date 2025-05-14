@@ -35,5 +35,17 @@ export class RessourceResponseDto {
 
 export class RessourceListResponseDto {
   @ApiProperty({ type: [RessourceResponseDto] })
-  data: RessourceResponseDto[];
+  ressources: RessourceResponseDto[];
+
+  @ApiProperty()
+  pageNumber: number;
+
+  @ApiProperty()
+  pageSize: number;
+
+  @ApiProperty()
+  totalNumberRessources: number;
+
+  @ApiProperty()
+  totalPages: number;
 }

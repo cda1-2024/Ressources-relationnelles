@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CollectRessourceDto {
+export class CollectRessourceRequestDto {
+  @IsNotEmpty()
+  @IsString()
   @ApiProperty({
     example: 'Bookmark',
     description: "Type de sauvegarde",
