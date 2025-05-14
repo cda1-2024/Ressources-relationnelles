@@ -2,7 +2,6 @@ import { registerDecorator, ValidationOptions, ValidationArguments } from 'class
 import { IsUsernameUniqueConstraint } from './is-username-unique.validator';
 
 export function IsUsernameUnique(validationOptions?: ValidationOptions) {
-  console.log('IsUsernameUnique', validationOptions);
   return function (object: Object, propertyName: string) {
     registerDecorator({
       name: 'IsUsernameUnique',
