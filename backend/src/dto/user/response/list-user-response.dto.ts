@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-
 export class UserResponseDto {
   @ApiProperty()
   id: string;
@@ -10,6 +9,9 @@ export class UserResponseDto {
 
   @ApiProperty()
   username: string;
+
+  @ApiProperty()
+  bio: string;
 
   @ApiProperty()
   banned: boolean;

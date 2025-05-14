@@ -1,8 +1,5 @@
 import { User } from 'src/models/user.model';
-import {
-  UserResponseDto,
-  ListUserResponseDto,
-} from 'src/dto/user/response/list-user-response.dto';
+import { UserResponseDto, ListUserResponseDto } from 'src/dto/user/response/list-user-response.dto';
 import { UserRoleToInt } from 'src/helper/enumMapper';
 import { FullUserResponseDto } from 'src/dto/user/response/full-user-response.dto';
 
@@ -12,6 +9,7 @@ export class UserMapper {
       id: user.id,
       email: user.email,
       username: user.username,
+      bio: user.bio,
       banned: user.banned,
       disabled: user.disabled,
       role: UserRoleToInt[user.role],
@@ -25,7 +23,7 @@ export class UserMapper {
     totalNumberUser: number,
   ): ListUserResponseDto {
     return {
-      users : users.map((user) => this.toResponseDto(user)),
+      users: users.map((user) => this.toResponseDto(user)),
       pageNumber,
       pageSize,
       totalNumberUser,
@@ -39,6 +37,7 @@ export class UserMapper {
       uuidGoogle: user.uuidGoogle,
       email: user.email,
       username: user.username,
+      bio: user.bio,
       banned: user.banned,
       disabled: user.disabled,
       role: UserRoleToInt[user.role],
@@ -47,6 +46,6 @@ export class UserMapper {
       country: user.country,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
-    }
+    };
   }
 }

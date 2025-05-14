@@ -1,17 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, isString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, isString, MaxLength } from 'class-validator';
+import { IsUsernameUnique } from 'src/validators/is_username_unique/is-username-unique.decorator';
 
 export class updateMyAccount {
   @IsString()
   @IsOptional()
-  @ApiProperty({
-    example: 'b.976@gmail.com',
-    description: "L'email de l'utilisateur",
-  })
-  email?: string;
-
-  @IsString()
-  @IsOptional()
+  @IsUsernameUnique()
+  @IsNotEmpty({ message: "Le nom d'utilisateur ne doit pas être vide" })
   @ApiProperty({ example: 'Vnono', description: "Surnom de l'utilisateur" })
   username?: string;
 
@@ -25,6 +20,8 @@ export class updateMyAccount {
 
   @IsString()
   @IsOptional()
+  @IsOptional()
+  @MaxLength(1000)
   @ApiProperty({
     example: 'I am user',
     description: "Le bio de l'utilisateur",

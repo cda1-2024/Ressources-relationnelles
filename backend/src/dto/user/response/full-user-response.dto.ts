@@ -15,6 +15,9 @@ export class FullUserResponseDto {
   username: string;
 
   @ApiProperty()
+  bio: string;
+
+  @ApiProperty()
   banned: boolean;
 
   @ApiProperty()

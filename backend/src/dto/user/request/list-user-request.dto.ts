@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumberString, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator';
 
 export class ListUserRequestDto {
   @ApiProperty({
@@ -8,8 +8,8 @@ export class ListUserRequestDto {
     required: false,
   })
   @IsOptional()
-  @IsNumberString()
-  readonly pageNumber?: string;
+  @IsNumber()
+  readonly pageNumber?: number;
 
   @ApiProperty({
     example: '10',
@@ -18,7 +18,7 @@ export class ListUserRequestDto {
   })
   @IsOptional()
   @IsNumberString()
-  readonly pageSize?: string;
+  readonly pageSize?: number;
 
   @ApiProperty({
     example: 'john_doe',

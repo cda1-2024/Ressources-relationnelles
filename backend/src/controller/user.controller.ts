@@ -33,18 +33,43 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('/')
-  @ApiOperation({
-    description: "L'utilisateur n'a pas été trouvé",
+  @ApiQuery({ name: 'pageNumber', required: false, type: Number })
+  @ApiQuery({ name: 'pageSize', required: false, type: Number })
+  @ApiQuery({ name: 'username', required: false, type: String })
+  @ApiNotFoundResponse({
+    description: 'Auncun utilisateur a été trouvé',
   })
   async GetUsers(@Query() params): Promise<ListUserResponseDto> {
     const { pageNumber = 1, pageSize = 10, ...filters } = params;
     return await this.userService.findUsersWithFilters(pageNumber, pageSize, filters);
   }
 
+  @Get('check/identifier/:identifier')
+  @ApiOperation({
+    summary: 'Récupérer un utilisateur',
+    description: 'Récupérer un utilisateur par son mail / username',
+  })
+  @ApiOkResponse({
+    description: 'Les informations de l’utilisateur',
+    example: { IsAvailable: true },
+  })
+  @ApiNotFoundResponse({
+    description: "L'utilisateur n'a pas été trouvé",
+  })
+  async GetUserByIdentifier(@Param() params: { identifier: string }) {
+    const identifier: string = params.identifier;
+    const user = await this.userService.findUserByIdentifier(identifier);
+    if (user != null) {
+      return { IsAvailable: false };
+    } else {
+      return { IsAvailable: true };
+    }
+  }
+
   @Get('/:id')
   @ApiOperation({
     summary: 'Récupérer un utilisateur',
-    description: 'Récupérer un utilisateur par son mail, UUID, username',
+    description: 'Récupérer un utilisateur par son id',
   })
   @ApiOkResponse({
     description: 'Les informations de l’utilisateur',

@@ -23,8 +23,7 @@ export class AuthController {
   @Post('/register')
   @ApiOperation({
     summary: 'Créer un utilisateur',
-    description:
-      'Créer un utilisateur avec un email, un surnom et un mot de passe / ou un service de connexion',
+    description: 'Créer un utilisateur avec un email, un surnom et un mot de passe / ou un service de connexion',
   })
   @ApiBody({
     type: RegisterUserDto,
@@ -35,8 +34,7 @@ export class AuthController {
     description: "L'utilisateur a été créé avec succès",
     schema: {
       example: {
-        token:
-          'Jwtjkesgenvkgzeqegr065ev1f5ezge6g5156G4ZH1Z5364HAG0235H4ZH02H3S4H203DB4DF3B0F2',
+        access_token: 'Jwtjkesgenvkgzeqegr065ev1f5ezge6g5156G4ZH1Z5364HAG0235H4ZH02H3S4H203DB4DF3B0F2',
       },
     },
   })
@@ -62,10 +60,7 @@ export class AuthController {
     description: "La connection de l'utilisateur a échoué",
   })
   async login(@Body() loginDto: LoginUserDto) {
-    const accessToken = await this.authService.login(
-      loginDto.identifier,
-      loginDto.password,
-    );
+    const accessToken = await this.authService.login(loginDto.identifier, loginDto.password);
     return { accessToken };
   }
 
