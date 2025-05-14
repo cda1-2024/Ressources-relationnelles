@@ -1,0 +1,62 @@
+<h2 mat-dialog-title class="!text-[32px] !leading-[40px] !font-bold">Se connecter</h2>
+<mat-dialog-content>
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Email ou Nom d'utilisateur</mat-label>
+      <input
+        matInput
+        type="text"
+        autocomplete="off"
+        [(ngModel)]="email"
+        name="email"
+        required
+      />
+    </mat-form-field>
+  
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Mot de passe</mat-label>
+      <input
+        matInput
+        [type]="hide ? 'password' : 'text'"
+        [(ngModel)]="password"
+        name="password"
+        required
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="hide = !hide"
+        [attr.aria-label]="'Toggle password visibility'"
+        [attr.aria-pressed]="!hide"
+      >
+        <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+    </mat-form-field>
+  
+    <mat-checkbox [(ngModel)]="rememberMe" name="rememberMe">
+      Se souvenir de moi
+    </mat-checkbox>
+
+    <div *ngIf="error" class="text-red-500 text-sm mt-2 text-center">
+      Erreur : {{ error }}
+    </div>
+  
+    <button
+      mat-flat-button
+      color="primary"
+      class="!rounded-[10px] px-[35px] w-full mt-[20px]"
+      [disabled]="!loginForm.form.valid"
+    >
+      Se Connecter
+    </button>
+  
+    <p class="text-secondary-500 text-center text-xs mt-3">
+      Vous n'avez pas de compte ?
+    </p>
+    <a class="text-secondary-500 text-center text-xs underline underline-offset-3 w-full block cursor-pointer">
+      Inscrivez-vous pour en obtenir un dès maintenant
+    </a>
+  </form>
+  
+</mat-dialog-content>

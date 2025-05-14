@@ -1,0 +1,10 @@
+/* filepath: c:\Users\esteb\Documents\cours\cours\CESI\Cube\Ressources-relationnelles\frontend\src\app\app.component.scss */
+
+router-outlet + *{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex-grow: 1;
+}
+
+  
