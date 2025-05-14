@@ -96,6 +96,15 @@ export class UserService {
     });
   }
 
+  async findObjectUserById(id: string): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id: id });
+
+    if (!user) {
+      throw new NotFoundException("L'utilisateur n'a pas été trouvé");
+    }
+    return user;
+  }
+
   async findUserById(id: string): Promise<FullUserResponseDto> {
     const user = await this.usersRepository.findOneBy({ id: id });
 
@@ -160,4 +169,7 @@ export class UserService {
     }
     return false;
   }
+
+
+  
 }
