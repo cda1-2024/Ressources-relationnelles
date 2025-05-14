@@ -2,9 +2,9 @@ import { User } from 'src/models/user.model';
 import {
   UserResponseDto,
   ListUserResponseDto,
-} from 'src/dto/user/reponse/list-user-response.dto';
+} from 'src/dto/user/response/list-user-response.dto';
 import { UserRoleToInt } from 'src/helper/enumMapper';
-import { FullUserResponseDto } from 'src/dto/user/reponse/full-user-response.dto';
+import { FullUserResponseDto } from 'src/dto/user/response/full-user-response.dto';
 
 export class UserMapper {
   static toResponseDto(user: User): UserResponseDto {
@@ -25,7 +25,7 @@ export class UserMapper {
     totalNumberUser: number,
   ): ListUserResponseDto {
     return {
-      data: users.map((user) => this.toResponseDto(user)),
+      users : users.map((user) => this.toResponseDto(user)),
       pageNumber,
       pageSize,
       totalNumberUser,

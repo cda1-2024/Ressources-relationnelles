@@ -8,7 +8,7 @@ import { AuthModule } from './modules/auth.module';
 import { UsersModule } from './modules/user.module';
 import { DataSource } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppDataSource } from './configuration/data-source';
+import { AppDataSource } from './configuration/data-source-app';
 
 
 @Module({

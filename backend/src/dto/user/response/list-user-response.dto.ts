@@ -23,7 +23,7 @@ export class UserResponseDto {
 
 export class ListUserResponseDto {
   @ApiProperty({ type: [UserResponseDto] })
-  data: UserResponseDto[];
+  users: UserResponseDto[];
 
   @ApiProperty()
   pageNumber: number;
