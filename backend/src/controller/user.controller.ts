@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Query, Req, UseGuards } from '@nestjs/common';
 import {
   ApiBody,
   ApiExtraModels,
@@ -6,17 +6,17 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiQuery,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UpdateMyAccountDto } from 'src/dto/user/request/update-account.dto';
 import { UpdateUserDto } from 'src/dto/user/request/update-user.dto';
 import { UserService } from '../services/user/user.service';
 import { ListUserRequestDto } from 'src/dto/user/request/list-user-request.dto';
 import { ListUserResponseDto, UserResponseDto } from 'src/dto/user/response/list-user-response.dto';
 import { FullUserResponseDto } from 'src/dto/user/response/full-user-response.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { updateMyAccount as updateMyAccountDto } from './../dto/user/request/update-my-account';
+import { updateMyAccountDto as updateMyAccountDto } from '../dto/user/request/update-my-account.dto';
+import { UserMapper } from 'src/services/user/user.mapper';
+import { User } from 'src/models/user.model';
 
 @ApiTags('Users')
 @ApiExtraModels(
@@ -24,7 +24,6 @@ import { updateMyAccount as updateMyAccountDto } from './../dto/user/request/upd
   ListUserResponseDto,
   UserResponseDto,
   FullUserResponseDto,
-  UpdateMyAccountDto,
   UpdateUserDto,
   updateMyAccountDto,
 )
@@ -41,7 +40,15 @@ export class UserController {
   })
   async GetUsers(@Query() params): Promise<ListUserResponseDto> {
     const { pageNumber = 1, pageSize = 10, ...filters } = params;
-    return await this.userService.findUsersWithFilters(pageNumber, pageSize, filters);
+
+    const {
+      users,
+      total,
+      pageNumber: validPageNumber,
+      pageSize: validPageSize,
+    } = await this.userService.findUsersWithFilters(pageNumber, pageSize, filters);
+
+    return UserMapper.toResponseListDto(users, validPageNumber, validPageSize, total);
   }
 
   @Get('check/identifier/:identifier')
@@ -80,7 +87,8 @@ export class UserController {
   })
   async getUserById(@Param() params): Promise<FullUserResponseDto> {
     const id: string = params.id;
-    return await this.userService.findUserById(id);
+    const user: User = await this.userService.findUserById(id);
+    return UserMapper.toResponseFullDto(user);
   }
 
   @Put('/myAccount')
@@ -89,10 +97,10 @@ export class UserController {
     description: 'Modifier son compte, email, surnom, photo de profil, etc.',
   })
   @ApiBody({
-    type: UpdateMyAccountDto,
+    type: updateMyAccountDto,
     description: 'Structure du JSON pour mettre son compte',
   })
-  @ApiExtraModels(UpdateMyAccountDto)
+  @ApiExtraModels(updateMyAccountDto)
   @ApiOkResponse({
     description: 'Les informations de l’utilisateur',
     type: FullUserResponseDto,
@@ -101,9 +109,10 @@ export class UserController {
     description: "L'utilisateur n'a pas été trouvé",
   })
   @UseGuards(AuthGuard('jwt'))
-  updateMyAccount(@Req() req, @Body() updateMyAccountDto: updateMyAccountDto) {
+  async updateMyAccount(@Req() req, @Body() updateMyAccountDto: updateMyAccountDto): Promise<UserResponseDto> {
     const user = req.user;
-    return this.userService.updateMyAccount(user.id, updateMyAccountDto);
+    const userResponse = await this.userService.updateMyAccount(user.id, updateMyAccountDto);
+    return UserMapper.toResponseDto(userResponse);
   }
 
   @Put('/:id')
@@ -125,6 +134,7 @@ export class UserController {
     description: "L'utilisateur n'a pas été trouvé",
   })
   async updateUser(@Body() updateUserDto: UpdateUserDto, @Param('id') id: string): Promise<UserResponseDto> {
-    return this.userService.updateUser(id, updateUserDto);
+    const user = await this.userService.updateUser(id, updateUserDto);
+    return UserMapper.toResponseDto(user);
   }
 }

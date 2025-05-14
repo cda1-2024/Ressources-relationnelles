@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator';
 
 export class ListUserRequestDto {
   @ApiProperty({
@@ -35,7 +35,7 @@ export class ListUserRequestDto {
     required: false,
   })
   @IsOptional()
-  @IsString()
+  @IsBoolean()
   readonly banned?: string;
 
   @ApiProperty({
@@ -44,6 +44,6 @@ export class ListUserRequestDto {
     required: false,
   })
   @IsOptional()
-  @IsString()
+  @IsBoolean()
   readonly disabled?: string;
 }

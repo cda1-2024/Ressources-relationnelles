@@ -1,14 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConsoleLogger, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User, UserRole } from 'src/models/user.model';
 import { Repository } from 'typeorm';
-import { UserMapper } from './user.mapper';
-import { ListUserResponseDto, UserResponseDto } from 'src/dto/user/response/list-user-response.dto';
-import { FullUserResponseDto } from 'src/dto/user/response/full-user-response.dto';
 import { UpdateUserDto } from './../../dto/user/request/update-user.dto';
 import { IntToUserRole } from 'src/helper/enumMapper';
-import { updateMyAccount } from './../../dto/user/request/update-my-account';
-
+import { updateMyAccountDto } from 'src/dto/user/request/update-my-account.dto';
 @Injectable()
 export class UserService {
   private readonly usersRepository: Repository<User>;
@@ -23,7 +19,7 @@ export class UserService {
 
   async findUserByIdentifier(identifier: string): Promise<User | null> {
     return this.usersRepository.findOne({
-        select: {
+      select: {
         id: true,
         username: true,
         email: true,
@@ -47,7 +43,11 @@ export class UserService {
     });
   }
 
-  async findUsersWithFilters(pageNumber: number, pageSize: number, filters?: any): Promise<ListUserResponseDto> {
+  async findUsersWithFilters(
+    pageNumber: number,
+    pageSize: number,
+    filters?: any,
+  ): Promise<{ users: User[]; total: number; pageNumber: number; pageSize: number }> {
     const queryBuilder = await this.usersRepository.createQueryBuilder('user');
 
     if (filters?.username) {
@@ -56,20 +56,20 @@ export class UserService {
       });
     }
 
-    if (filters?.disbaled) {
-      queryBuilder.andWhere('user.disbaled = :disbaled', {
-        status: filters.disbaled,
+    if (filters?.disabled !== undefined) {
+      queryBuilder.andWhere('user.disabled = :disabled', {
+        disabled: filters.disabled === 'true',
       });
     }
 
-    if (filters?.banned) {
+    if (filters?.banned !== undefined) {
       queryBuilder.andWhere('user.banned = :banned', {
-        status: filters.banned,
+        banned: filters.banned === 'true',
       });
     }
 
-    const validPageNumber = Number(pageNumber) || 1;
-    const validPageSize = Number(pageSize) || 10;
+    const validPageNumber: number = Number(pageNumber) || 1;
+    const validPageSize: number = Number(pageSize) || 10;
 
     const [users, total] = await queryBuilder
       .skip((validPageNumber - 1) * validPageSize)
@@ -80,7 +80,7 @@ export class UserService {
       throw new NotFoundException('Aucun utilisateur trouvé');
     }
 
-    return UserMapper.toResponseListDto(users, validPageNumber, validPageSize, total);
+    return { users, total, pageNumber: validPageNumber, pageSize: validPageSize };
   }
 
   async findUserByEmail(email: string): Promise<User | null> {
@@ -105,13 +105,13 @@ export class UserService {
     return user;
   }
 
-  async findUserById(id: string): Promise<FullUserResponseDto> {
+  async findUserById(id: string): Promise<User> {
     const user = await this.usersRepository.findOneBy({ id: id });
 
     if (!user) {
       throw new NotFoundException("L'utilisateur n'a pas été trouvé");
     }
-    return UserMapper.toResponseFullDto(user);
+    return user;
   }
 
   async createUser(user: Partial<User>): Promise<User> {
@@ -123,7 +123,7 @@ export class UserService {
     return this.usersRepository.count();
   }
 
-  async updateUser(id: string, userDto: UpdateUserDto): Promise<UserResponseDto> {
+  async updateUser(id: string, userDto: UpdateUserDto): Promise<User> {
     if (!userDto || Object.values(userDto).every((value) => value === undefined)) {
       throw new BadRequestException('Aucune donnée à mettre à jour');
     }
@@ -139,11 +139,11 @@ export class UserService {
 
     await this.usersRepository.save(userToUpdate);
     const user = await this.usersRepository.findOneByOrFail({ id: id })!;
-    return UserMapper.toResponseDto(user);
+    return user;
   }
 
-  async updateMyAccount(idUser: string, updateMyAccount: updateMyAccount): Promise<UserResponseDto> {
-    if (!updateMyAccount || Object.values(updateMyAccount).every((value) => value === undefined)) {
+  async updateMyAccount(idUser: string, updateMyAccountDto: updateMyAccountDto): Promise<User> {
+    if (!updateMyAccountDto || Object.values(updateMyAccountDto).every((value) => value === undefined)) {
       throw new BadRequestException('Aucune donnée à mettre à jour');
     }
 
@@ -151,11 +151,11 @@ export class UserService {
     if (userToUpdate == null) {
       throw new NotFoundException("L'utilisateur n'a pas été trouvé");
     }
-    Object.assign(userToUpdate, updateMyAccount);
+    Object.assign(userToUpdate, updateMyAccountDto);
 
     await this.usersRepository.save(userToUpdate);
     const userResponse = await this.usersRepository.findOneByOrFail({ id: idUser })!;
-    return UserMapper.toResponseDto(userResponse);
+    return userResponse;
   }
 
   async deleteUser(id: string): Promise<boolean> {
@@ -169,7 +169,4 @@ export class UserService {
     }
     return false;
   }
-
-
-  
 }
