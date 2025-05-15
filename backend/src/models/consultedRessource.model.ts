@@ -2,7 +2,7 @@ import { Entity, Column, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from './user.model';
 import { Ressource } from './ressource.model';
 
-@Entity('Consulted_Ressources')
+@Entity()
 export class ConsultedRessource {
   @PrimaryColumn('uuid')
   userId: string

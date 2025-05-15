@@ -8,7 +8,7 @@ export enum EventType {
   SONDAGE = "sondage"
 }
 
-@Entity('Events')
+@Entity()
 export class Event {
   @PrimaryGeneratedColumn('uuid')
   id: string;

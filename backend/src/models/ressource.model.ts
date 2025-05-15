@@ -33,7 +33,7 @@ export enum Status {
   DELETED = 'deleted',
 }
 
-@Entity('Ressources')
+@Entity()
 export class Ressource {
   @PrimaryGeneratedColumn('uuid')
   id: string;
