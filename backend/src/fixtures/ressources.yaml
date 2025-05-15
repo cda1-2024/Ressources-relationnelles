@@ -1,0 +1,66 @@
+entity: Ressources
+processor:
+  ./processor/RessourceProcessor
+  # Created by standard users
+items:
+  ressources_published{1..10}:
+    index: ($current)
+    title: '{{lorem.sentence}}'
+    contentText: '{{lorem.sentences}}'
+    # TODO mettre autre chose
+    contentLink: 'TODO_A_AJOUTER'
+    createdAt: '{{date.past}}'
+    creator: '@user{16..50}'
+    category: '@category*'
+    # On prends les uniquement les modérateurs ou role supérieur ici
+    validator: '@user{2..15}'
+    dateTimeValidation: '{{date.past}}'
+    status: 'published'
+
+  ressources_suspended{11..20}:
+    index: ($current)
+    title: '{{lorem.sentence}}'
+    contentText: '{{lorem.sentences}}'
+    # TODO mettre autre chose
+    contentLink: 'TODO_A_AJOUTER'
+    createdAt: '{{date.past}}'
+    creator: '@user{16..50}'
+    category: '@category*'
+    # On prends les uniquement les modérateurs ou role supérieur ici
+    validator: '@user{2..15}'
+    dateTimeValidation: '{{date.past}}'
+    status: 'suspended'
+
+  ressources_toValidate{21..30}:
+    index: ($current)
+    title: '{{lorem.sentence}}'
+    contentText: '{{lorem.sentences}}'
+    # TODO mettre autre chose
+    contentLink: 'TODO_A_AJOUTER'
+    createdAt: '{{date.past}}'
+    creator: '@user{16..50}'
+    category: '@category*'
+    status: 'toValidate'
+
+  ressources_deleted{31..40}:
+    index: ($current)
+    title: '{{lorem.sentence}}'
+    contentText: '{{lorem.sentences}}'
+    # TODO mettre autre chose
+    contentLink: 'TODO_A_AJOUTER'
+    createdAt: '{{date.past}}'
+    creator: '@user{16..50}'
+    category: '@category*'
+    status: 'deleted'
+
+  ressources_draft{41..50}:
+    index: ($current)
+    title: '{{lorem.sentence}}'
+    contentText: '{{lorem.sentences}}'
+    # TODO mettre autre chose
+    contentLink: 'TODO_A_AJOUTER'
+    createdAt: '{{date.past}}'
+    creator: '@user{16..50}'
+    category: '@category*'
+    status: 'draft'
+
