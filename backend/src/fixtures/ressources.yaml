@@ -1,4 +1,4 @@
-entity: Ressources
+entity: Ressource
 processor:
   ./processor/RessourceProcessor
   # Created by standard users
