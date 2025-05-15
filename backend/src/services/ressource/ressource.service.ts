@@ -1,13 +1,10 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, Res } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilterRessourceRequestDto } from 'src/dto/ressource/request/filter-ressource.dto';
-import { FullRessourceResponseDto } from 'src/dto/ressource/response/full-ressource-response.dto';
-import { RessourceListResponseDto, RessourceResponseDto } from 'src/dto/ressource/response/ressource-response.dto';
 import { UpdateRessourceRequestDto } from 'src/dto/ressource/request/update-ressource.dto';
 import { Ressource, Status, Visibility } from 'src/models/ressource.model';
 import { User, UserRole } from 'src/models/user.model';
 import { Repository, SelectQueryBuilder } from 'typeorm';
-import { RessourceMapper } from './ressource.mapper';
 import { CreateRessourceRequestDto } from 'src/dto/ressource/request/create-ressource.dto';
 import { CategoryService } from '../category.service';
 import { RessourceStatusFromInt, RessourceTypeFromInt, RessourceVisibilityFromInt } from 'src/helper/enumMapper';
@@ -31,7 +28,7 @@ export class RessourceService {
     this.consultedRessourceRepository = consultedRessourceRepository;
   }
 
-  async findRessourceAll(): Promise<RessourceListResponseDto> {
+  async findRessourceAll(): Promise<Ressource[]> {
     const ressources = await this.ressourcesRepository.find({
       relations: {
         category: true,
@@ -39,14 +36,14 @@ export class RessourceService {
         validator: true,
       },
     });
-    return RessourceMapper.toResponseListDto(ressources, 0, 10000, ressources.length);
+    return ressources;
   }
 
   async findRessourcesBySearch(
     user: User | null,
     filters: FilterRessourceRequestDto,
     isRestricted: boolean,
-  ): Promise<RessourceListResponseDto> {
+  ): Promise<Ressource[]> {
     let query = this.ressourcesRepository
       .createQueryBuilder('ressource')
       .leftJoinAndSelect('ressource.category', 'category')
@@ -79,10 +76,10 @@ export class RessourceService {
     query.skip((filters.page_number - 1) * filters.result_size).take(filters.result_size);
 
     const ressources = await query.getMany();
-    return RessourceMapper.toResponseListDto(ressources, filters.page_number, filters.result_size, ressources.length);
+    return ressources;
   }
 
-  async findRessourceById(id: string): Promise<FullRessourceResponseDto> {
+  async findRessourceById(id: string): Promise<Ressource> {
     const ressource = await this.ressourcesRepository.findOne({
       where: { id: id },
       relations: {
@@ -94,10 +91,10 @@ export class RessourceService {
     if (!ressource) {
       throw new NotFoundException("La ressource n'a pas été trouvée");
     }
-    return RessourceMapper.toFullResponseDto(ressource);
+    return ressource;
   }
 
-  async createRessource(user: User, ressource: CreateRessourceRequestDto): Promise<RessourceResponseDto> {
+  async createRessource(user: User, ressource: CreateRessourceRequestDto): Promise<Ressource> {
     let newRessource = new Ressource();
     if (ressource.category) {
       const category = await this.categoryService.findCategoryById(ressource.category);
@@ -116,10 +113,10 @@ export class RessourceService {
     newRessource.creator = user;
 
     await this.ressourcesRepository.save(newRessource);
-    return RessourceMapper.toResponseDto(newRessource);
+    return newRessource;
   }
 
-  async updateRessource(id: string, ressourceDto: UpdateRessourceRequestDto): Promise<RessourceResponseDto> {
+  async updateRessource(id: string, ressourceDto: UpdateRessourceRequestDto): Promise<Ressource> {
     try {
       if (!ressourceDto || Object.values(ressourceDto).every((value) => value === undefined)) {
         throw new BadRequestException('Aucune donnée à mettre à jour');
@@ -155,7 +152,7 @@ export class RessourceService {
           creator: true,
         },
       });
-      return RessourceMapper.toResponseDto(ressource);
+      return ressource;
     } catch (error) {
       throw error;
     }
@@ -193,8 +190,7 @@ export class RessourceService {
       throw new BadRequestException('Type de ressource non valide');
     }
 
-    await this.savedRessourceRepository.save(entity);
-    
+    await this.savedRessourceRepository.save(entity);  
   }
 
   async validateRessource(validator: User, ressourceId: string, validate: boolean): Promise<void> {
@@ -230,7 +226,7 @@ export class RessourceService {
     await this.consultedRessourceRepository.save(consultedRessource);
   }
 
-  async deleteRessource(id: string): Promise<RessourceResponseDto> {
+  async deleteRessource(id: string): Promise<Ressource> {
     try {
       const ressource = await this.ressourcesRepository.findOneBy({
         id: id,
@@ -240,7 +236,7 @@ export class RessourceService {
       }
       ressource.status = Status.DELETED;
       await this.ressourcesRepository.save(ressource);
-      return RessourceMapper.toResponseDto(ressource);
+      return ressource;
     } catch (error) {
       throw error;
     }

@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -30,6 +31,9 @@ import { RessourceListResponseDto, RessourceResponseDto } from 'src/dto/ressourc
 import { UpdateRessourceRequestDto } from 'src/dto/ressource/request/update-ressource.dto';
 import { ValidateRessourceRequestDto } from 'src/dto/ressource/request/validate-ressource.dto';
 import { RessourceService } from 'src/services/ressource/ressource.service';
+import { RessourceMapper } from 'src/services/ressource/ressource.mapper';
+import { User } from 'src/models/user.model';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Ressources')
 @Controller('api/ressources')
@@ -54,11 +58,16 @@ export class RessourceController {
   @ApiBadRequestResponse({
     description: 'La création de la ressource a échoué',
   })
+  @UseGuards(AuthGuard('jwt'))
   async create(@Body() createRessourceDto: CreateRessourceRequestDto, @Req() req): Promise<RessourceResponseDto> {
     try {
-      const user = req.user;
-      const ressource = await this.ressourceService.createRessource(user, createRessourceDto);
-      return ressource;
+      const user: User = req.user;
+      if (!user) {
+        throw new BadRequestException("L'utilisateur n'est pas connecté ou n'existe pas");
+      }
+      console.log('user', user);
+      const ressource = await this.ressourceService.createRessource(user, createRessourceDto);   
+      return RessourceMapper.toResponseDto(ressource);
     } catch (error) {
       throw error;
     }
@@ -78,10 +87,10 @@ export class RessourceController {
   @ApiBadRequestResponse({
     description: 'La recherche de la ressource a échoué',
   })
-  async findPublicRessources(@Query() filters: FilterRessourceRequestDto, @Req() req): Promise<RessourceListResponseDto>  {
+  async findPublicRessources(@Query() filters: FilterRessourceRequestDto): Promise<RessourceListResponseDto>  {
     try {
-      const user = req.user || null;
-      return this.ressourceService.findRessourcesBySearch(user, filters, false);
+      const ressources = await this.ressourceService.findRessourcesBySearch(null, filters, false);
+      return RessourceMapper.toResponseListDto(ressources, filters.page_number, filters.result_size, ressources.length);
     }
     catch (error) {
       throw error;
@@ -101,10 +110,12 @@ export class RessourceController {
   @ApiBadRequestResponse({
     description: 'La recherche de la ressource a échoué',
   })
+  @UseGuards(AuthGuard('jwt'))
   async findRessources(@Query() filters: FilterRessourceRequestDto, @Req() req): Promise<RessourceListResponseDto> {
     try {
-      const user = req.user || null;
-      return this.ressourceService.findRessourcesBySearch(user, filters, true);
+      const user: User = req.user;
+      const ressources = await this.ressourceService.findRessourcesBySearch(user, filters, true);
+      return RessourceMapper.toResponseListDto(ressources, filters.page_number, filters.result_size, ressources.length);
     }
     catch (error) { 
       throw error;
@@ -132,7 +143,7 @@ export class RessourceController {
     try {
       const id: string = params.id;
       const ressource = await this.ressourceService.findRessourceById(id);
-      return ressource;
+      return RessourceMapper.toFullResponseDto(ressource);
     }
     catch (error) {
       throw error;
@@ -145,7 +156,6 @@ export class RessourceController {
     summary: 'Récupérer la liste des ressources (publiques et restreintes)',
     description: 'Récupérer la liste des ressourcess en fonction des critères fournis',
   })
-  @ApiExtraModels(FilterRessourceRequestDto)
   @ApiQuery({
     name: 'filters',
     required: false,
@@ -163,7 +173,7 @@ export class RessourceController {
   async getRessources(): Promise<RessourceListResponseDto> {
     try {
       const ressources = await this.ressourceService.findRessourceAll();
-      return ressources;
+      return RessourceMapper.toResponseListDto(ressources, 1, 10000, ressources.length);
     } catch (error) {
       throw error;
     }
@@ -194,7 +204,7 @@ export class RessourceController {
     try {
       const id: string = params.id;
       const ressource = await this.ressourceService.updateRessource(id, updateRessourceDto);
-      return ressource;
+      return RessourceMapper.toResponseDto(ressource);
     } catch (error) {
       throw error.message;
     }
@@ -220,6 +230,7 @@ export class RessourceController {
   @ApiNotFoundResponse({
     description: "La ressource n'a pas été trouvée",
   })
+  @UseGuards(AuthGuard('jwt'))
   async saveBookmark(
     @Body() collectRessourceDto: CollectRessourceRequestDto,
     @Param() params,
@@ -256,6 +267,7 @@ export class RessourceController {
   @ApiNotFoundResponse({
     description: "La ressource n'a pas été trouvée",
   })
+  @UseGuards(AuthGuard('jwt'))
   async deleteBookmark(
     @Body() collectRessourceDto: CollectRessourceRequestDto,
     @Param() params,
@@ -292,6 +304,7 @@ export class RessourceController {
   @ApiNotFoundResponse({
     description: "La ressource n'a pas été trouvée",
   })
+  @UseGuards(AuthGuard('jwt'))
   async changeStatus(
     @Body() validateRessourceDto: ValidateRessourceRequestDto,
     @Param() params,
@@ -324,6 +337,7 @@ export class RessourceController {
   @ApiNotFoundResponse({
     description: "La ressource n'a pas été trouvée",
   })
+  @UseGuards(AuthGuard('jwt'))
   async consulteRessource(@Param() params, @Req() req): Promise<void> {
     const user = req.user;
     if (!user) {
@@ -357,7 +371,7 @@ export class RessourceController {
     try {
       const id: string = params.id;
       const ressource = await this.ressourceService.deleteRessource(id);
-      return ressource;
+      return RessourceMapper.toResponseDto(ressource);
     } catch (error) {
       throw error;
     }
