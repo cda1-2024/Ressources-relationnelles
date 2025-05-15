@@ -80,9 +80,9 @@ export class RessourceMapper {
         id: comment.id,
         content: comment.message,
         created_at: comment.createdAt.toISOString(),
-        autor: {
-          id: comment.autor.id,
-          username: comment.autor.username,
+        author: {
+          id: comment.author.id,
+          username: comment.author.username,
         },
       })),
       category: {

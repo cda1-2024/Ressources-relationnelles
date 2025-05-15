@@ -45,7 +45,7 @@ export class UserDto {
     id: string;
   
     @ApiProperty({ type: UserDto })
-    autor: UserDto;
+    author: UserDto;
   
     @ApiProperty()
     content: string;

@@ -21,7 +21,7 @@ export class Comment {
   ressource: Ressource;
 
   @ManyToOne(() => User, (user) => user.comments)
-  autor: User;
+  author: User;
 
   @ManyToOne(() => Comment, (comment) => comment.childComments,
   { nullable: true })

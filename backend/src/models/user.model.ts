@@ -90,7 +90,7 @@ export class User {
     this.updatedAt = new Date();
   }
 
-  @OneToMany(() => Comment, (comment) => comment.autor, { nullable: true })
+  @OneToMany(() => Comment, (comment) => comment.author)
   comments: Comment[];
 
   @OneToMany(() => Category, (category) => category.lastAutor, {
