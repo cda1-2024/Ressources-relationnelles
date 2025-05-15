@@ -1,0 +1,18 @@
+entity: Comment
+processor: ./processor/CommentProcessor
+items:
+  comment_enabled{1..50}:
+    index: ($current)
+    message: '{{lorem.sentence}}'
+    deleted: '{{person.firstName}}'
+    createdAt: '{{date.past}}'
+    ressource: '@ressources_published*'
+    author: '@user*'
+  comment_response{51..100}:
+    index: ($current)
+    message: '{{lorem.sentence}}'
+    deleted: '{{person.firstName}}'
+    createdAt: '{{date.past}}'
+    ressource: '@ressources_published*'
+    author: '@user*'
+    parentComment: '@comment_enabled($current-50)'

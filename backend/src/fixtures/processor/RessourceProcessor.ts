@@ -1,10 +1,5 @@
 import { IProcessor } from 'typeorm-fixtures-cli';
-import {
-  Ressource,
-  RessourceType,
-  Status,
-  Visibility,
-} from '../../models/ressource.model';
+import { Ressource, RessourceType, Visibility } from '../../models/ressource.model';
 
 export default class RessourceProcessor implements IProcessor<Ressource> {
   // Fonction à garder pour l'exemple
@@ -22,6 +17,5 @@ export default class RessourceProcessor implements IProcessor<Ressource> {
     let visibility = Object.values(Visibility);
     let lenghtVisibility = visibility.length;
     object.visibility = visibility[id % lenghtVisibility];
-    // Todo add multiple state for the ressources
   }
 }
