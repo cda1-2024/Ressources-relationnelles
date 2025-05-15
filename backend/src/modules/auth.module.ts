@@ -3,7 +3,6 @@ import { AuthController } from 'src/controller/auth.controller';
 import * as dotenv from 'dotenv';
 import { UsersModule } from './user.module';
 import { JwtModule } from '@nestjs/jwt';
-import { AppService } from 'src/app.service';
 import { AuthService } from 'src/services/auth.service';
 import passport from 'passport';
 import { PassportModule } from '@nestjs/passport';

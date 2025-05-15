@@ -39,7 +39,7 @@ export class AuthService {
     );
 
     if (existingUserByUsername) {
-      errors['username'] = 'Cet username est déjà utilisé';
+      errors['username'] = 'Cet identifiant est déjà utilisé';
     }
 
     const existingUserByEmail = await this.usersService.findUserByEmail(

@@ -1,21 +1,20 @@
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { loadControllers } from './helper/loadControllers';
-import { AuthService } from './services/auth.service';
-import { AuthController } from './controller/auth.controller';
-import { CommentController } from './controller/comment.controller';
 import { AuthModule } from './modules/auth.module';
 import { UsersModule } from './modules/user.module';
-import { DataSource } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './configuration/data-source-app';
-
+import { RessourcesModule } from './modules/ressource.module';
+import { CategoryModule } from './modules/category.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(AppDataSource.options),
      AuthModule,
-     UsersModule
+     UsersModule,
+     RessourcesModule,
+     CategoryModule,
     ],
   controllers: loadControllers(),
   providers: [AppService],
