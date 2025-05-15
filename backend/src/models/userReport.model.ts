@@ -10,7 +10,7 @@ export enum ReportReason {
   VISITOR = "visitor",
 }
 
-@Entity('User_Report')
+@Entity()
 export class UserReport {
   @PrimaryColumn('uuid')
   reporterId: string

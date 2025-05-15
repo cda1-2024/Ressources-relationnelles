@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
-@Entity('Search_Stats')
+@Entity()
 export class SearchedStats {
   @PrimaryColumn()
     search: string;
