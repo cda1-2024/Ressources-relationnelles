@@ -11,7 +11,7 @@ items:
     contentLink: 'TODO_A_AJOUTER'
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
-    category: '@category*'
+    category: '@category($current)'
     # On prends les uniquement les modérateurs ou role supérieur ici
     validator: '@user{2..15}'
     dateTimeValidation: '{{date.past}}'
@@ -25,7 +25,7 @@ items:
     contentLink: 'TODO_A_AJOUTER'
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
-    category: '@category*'
+    category: '@category($current-10)'
     # On prends les uniquement les modérateurs ou role supérieur ici
     validator: '@user{2..15}'
     dateTimeValidation: '{{date.past}}'
@@ -39,7 +39,7 @@ items:
     contentLink: 'TODO_A_AJOUTER'
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
-    category: '@category*'
+    category: '@category($current-20)'
     status: 'toValidate'
 
   ressources_deleted{31..40}:
@@ -50,7 +50,7 @@ items:
     contentLink: 'TODO_A_AJOUTER'
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
-    category: '@category*'
+    category: '@category($current-30)'
     status: 'deleted'
 
   ressources_draft{41..50}:
@@ -61,6 +61,6 @@ items:
     contentLink: 'TODO_A_AJOUTER'
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
-    category: '@category*'
+    category: '@category($current-40)'
     status: 'draft'
 

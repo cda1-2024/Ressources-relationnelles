@@ -93,7 +93,7 @@ export class User {
   @OneToMany(() => Comment, (comment) => comment.author)
   comments: Comment[];
 
-  @OneToMany(() => Category, (category) => category.lastAutor, {
+  @OneToMany(() => Category, (category) => category.lastAuthor, {
     nullable: true,
   })
   modifiedCategories: Category[];

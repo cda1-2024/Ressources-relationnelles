@@ -27,5 +27,5 @@ export class Category {
   ressources: Ressource[]
 
   @ManyToOne(() => User, (user) => user.modifiedCategories)
-  lastAutor: User;
+  lastAuthor: User;
 }
