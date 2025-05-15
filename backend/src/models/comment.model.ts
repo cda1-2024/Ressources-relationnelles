@@ -3,7 +3,7 @@ import { Ressource } from './ressource.model';
 import { User } from './user.model';
 import { UserReport } from './userReport.model';
 
-@Entity('Comments')
+@Entity()
 export class Comment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
