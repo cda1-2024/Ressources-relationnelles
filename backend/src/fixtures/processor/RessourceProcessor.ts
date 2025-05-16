@@ -9,6 +9,10 @@ export default class RessourceProcessor implements IProcessor<Ressource> {
 
   postProcess(name: string, object: { [key: string]: any }): void {
     let id = object.index;
+    // Every 6 resources, the ressource doesn't have a category
+    if (id % 6 == 0) {
+      object.category = null;
+    }
     // Select the type of the ressource
     let types = Object.values(RessourceType);
     let lenghtType = types.length;

@@ -13,6 +13,6 @@ items:
     message: '{{lorem.sentence}}'
     deleted: '{{person.firstName}}'
     createdAt: '{{date.past}}'
-    ressource: '@ressources_published*'
+    # We define the linked ressource in the processor
     author: '@user*'
     parentComment: '@comment_enabled($current-50)'

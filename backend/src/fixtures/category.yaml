@@ -1,23 +1,13 @@
 entity: Category
 # processor: ./processor/Category
 items:
-  category{1..7}:
+  category{1..10}:
     # TODO mettre autre chose
     name: '{{music.genre}}'
     # TODO mettre des icones
     iconPath: 'TODO_A_AJOUTER'
     color: '{{color.human}}'
     deleted: false
-    createdAt: '{{date.past}}'
-    # On prends les uniquement les admins ici
-    lastAuthor: '@user{2..5}'
-  category{8..10}:
-    # TODO mettre autre chose
-    name: '{{music.genre}}'
-    # TODO mettre des icones
-    iconPath: 'TODO_A_AJOUTER'
-    color: '{{color.human}}'
-    deleted: true
     createdAt: '{{date.past}}'
     # On prends les uniquement les admins ici
     lastAuthor: '@user{2..5}'

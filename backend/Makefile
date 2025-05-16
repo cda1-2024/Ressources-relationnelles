@@ -1,9 +1,9 @@
 help:
-	@echo cmig:
-	@echo runmig:
-	@echo revmig:
-	@echo fixtures:
-	@echo drop:
+	@echo cmig
+	@echo runmig
+	@echo revmig
+	@echo fixtures
+	@echo drop
 	@echo reset
 cmig:
 	npm run typeorm:generate --name=init

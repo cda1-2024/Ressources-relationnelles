@@ -3,6 +3,7 @@
 ## Users
 
 50 users identified by an index:
+
 - 1: Visitor
 - 2 or 3: Super admin
 - 4 or 5: Admin
@@ -16,6 +17,7 @@ The visibility is cyclic, folowing the `Visibility` enum. The First ressource is
 This is the same behavior with the ressourcetype in the enum `RessourceType`
 
 50 ressources status identified by an index created by standard users:
+
 - 1 to 10: published
 - 11 to 20: suspended
 - 21 to 30: toValidate
@@ -26,12 +28,15 @@ This is the same behavior with the ressourcetype in the enum `RessourceType`
 
 1 comment every 7 comments is disabled
 
+The 50 first comments are directly under a resource and the next 50 is a response to one of the first comment
+
 100 comments identified by an index:
+
 - 1 to 50: Main comment (without parents)
 - 51 to 100: Secondary comment (is a child to one main comment)
 
 ## Category
 
 10 categories identified by an index:
-- 1 to 7: Enabled
-- 8 to 10: Disabled
+
+- 1 to 10: Enabled

@@ -11,5 +11,8 @@ export default class CommentProcessor implements IProcessor<Comment> {
     if (object.index % 7 == 0) {
       object.deleted = true;
     }
+    if (object.parentComment) {
+      object.ressource = object.parentComment.ressource
+    }
   }
 }
