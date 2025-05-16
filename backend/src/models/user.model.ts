@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   OneToMany,
-  BeforeUpdate,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Comment } from './comment.model';
@@ -76,18 +75,9 @@ export class User {
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
-
-  @BeforeInsert()
-  async setDateCreatedAT() {
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
-  }
-
-  @BeforeUpdate()
-  setDateUpdateUser() {
-    this.updatedAt = new Date();
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(this.password, salt);
+    this.password = password;
   }
 
   @OneToMany(() => Comment, (comment) => comment.author)

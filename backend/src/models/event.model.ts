@@ -3,9 +3,9 @@ import { User } from './user.model';
 import { EventParticipation } from './eventParticipation.model';
 
 export enum EventType {
-  MORPION = "morpion",
-  MOTUS = "motus",
-  SONDAGE = "sondage"
+  MORPION = 'morpion',
+  MOTUS = 'motus',
+  SONDAGE = 'sondage',
 }
 
 @Entity()
@@ -29,10 +29,10 @@ export class Event {
   deleted: boolean;
 
   @Column({
-    type: "enum",
-    enum: EventType
+    type: 'enum',
+    enum: EventType,
   })
-  eventType: EventType
+  eventType: EventType;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -40,7 +40,6 @@ export class Event {
   @ManyToOne(() => User, (user) => user.createdEvents)
   manager: User;
 
-  @OneToMany(() => EventParticipation, (eventParticipation) => eventParticipation.event, 
-  { nullable: true })
-  eventParticipations: EventParticipation[]
+  @OneToMany(() => EventParticipation, (eventParticipation) => eventParticipation.event, { nullable: true })
+  eventParticipations: EventParticipation[];
 }

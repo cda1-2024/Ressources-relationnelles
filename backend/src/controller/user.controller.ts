@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Query, UnauthorizedException, UseGuards } from '@nestjs/common';
 import {
   ApiBody,
   ApiExtraModels,
@@ -17,6 +17,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { updateMyAccountDto as updateMyAccountDto } from '../dto/user/request/update-my-account.dto';
 import { UserMapper } from 'src/services/user/user.mapper';
 import { User } from 'src/models/user.model';
+import { CurrentUser } from 'src/guards/current-user.decorator';
 
 @ApiTags('Users')
 @ApiExtraModels(
@@ -38,7 +39,7 @@ export class UserController {
   @ApiNotFoundResponse({
     description: 'Auncun utilisateur a été trouvé',
   })
-  async GetUsers(@Query() params): Promise<ListUserResponseDto> {
+  async getUsers(@Query() params): Promise<ListUserResponseDto> {
     const { pageNumber = 1, pageSize = 10, ...filters } = params;
 
     const {
@@ -109,8 +110,13 @@ export class UserController {
     description: "L'utilisateur n'a pas été trouvé",
   })
   @UseGuards(AuthGuard('jwt'))
-  async updateMyAccount(@Req() req, @Body() updateMyAccountDto: updateMyAccountDto): Promise<UserResponseDto> {
-    const user = req.user;
+  async updateMyAccount(
+    @CurrentUser() user: User | undefined,
+    @Body() updateMyAccountDto: updateMyAccountDto,
+  ): Promise<UserResponseDto> {
+    if (!user) {
+      throw new UnauthorizedException('Aucun utilisateur connecté');
+    }
     const userResponse = await this.userService.updateMyAccount(user.id, updateMyAccountDto);
     return UserMapper.toResponseDto(userResponse);
   }
@@ -138,4 +144,3 @@ export class UserController {
     return UserMapper.toResponseDto(user);
   }
 }
-

@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -8,7 +7,7 @@ import {
   Post,
   Put,
   Query,
-  Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -36,6 +35,7 @@ import { User, UserRole } from 'src/models/user.model';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/guards/roles.decorator';
+import { CurrentUser } from 'src/guards/current-user.decorator';
 
 @ApiTags('Ressources')
 @Controller('api/ressources')
@@ -61,12 +61,13 @@ export class RessourceController {
   })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(UserRole.USER)
-  async create(@Body() createRessourceDto: CreateRessourceRequestDto, @Req() req): Promise<RessourceResponseDto> {
-    const user: User = req.user;
+  async create(
+    @Body() createRessourceDto: CreateRessourceRequestDto,
+    @CurrentUser() user: User | undefined,
+  ): Promise<RessourceResponseDto> {
     if (!user) {
-      throw new BadRequestException("L'utilisateur n'est pas connecté ou n'existe pas");
+      throw new UnauthorizedException('Aucun utilisateur connecté');
     }
-    console.log('user', user);
     const ressource = await this.ressourceService.createRessource(user, createRessourceDto);
     return RessourceMapper.toResponseDto(ressource);
   }
@@ -86,8 +87,8 @@ export class RessourceController {
     description: 'La recherche de la ressource a échoué',
   })
   async findPublicRessources(@Query() filters: FilterRessourceRequestDto): Promise<RessourceListResponseDto> {
-    const ressources = await this.ressourceService.findRessourcesBySearch(null, filters, false);
-    return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, ressources.length);
+    const { ressources, total } = await this.ressourceService.findRessourcesBySearch(null, filters, false);
+    return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, total);
   }
 
   @Get('/filter/')
@@ -104,10 +105,15 @@ export class RessourceController {
     description: 'La recherche de la ressource a échoué',
   })
   @UseGuards(AuthGuard('jwt'))
-  async findRessources(@Query() filters: FilterRessourceRequestDto, @Req() req): Promise<RessourceListResponseDto> {
-    const user: User = req.user;
-    const ressources = await this.ressourceService.findRessourcesBySearch(user, filters, true);
-    return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, ressources.length);
+  async findRessources(
+    @Query() filters: FilterRessourceRequestDto,
+    @CurrentUser() user: User | undefined,
+  ): Promise<RessourceListResponseDto> {
+    if (!user) {
+      throw new UnauthorizedException('Aucun utilisateur connecté');
+    }
+    const { ressources, total } = await this.ressourceService.findRessourcesBySearch(user, filters, true);
+    return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, total);
   }
 
   // Récupérer une ressource par ID
@@ -127,8 +133,7 @@ export class RessourceController {
   @ApiNotFoundResponse({
     description: "La ressource n'a pas été trouvée",
   })
-  async getRessourceById(@Param() params): Promise<FullRessourceResponseDto> {
-    const id: string = params.id;
+  async getRessourceById(@Param('id') id: string): Promise<FullRessourceResponseDto> {
     const ressource = await this.ressourceService.findRessourceById(id);
     return RessourceMapper.toFullResponseDto(ressource);
   }
@@ -207,11 +212,10 @@ export class RessourceController {
   async saveBookmark(
     @Body() collectRessourceDto: CollectRessourceRequestDto,
     @Param('id') id: string,
-    @Req() req,
+    @CurrentUser() user: User | undefined,
   ): Promise<void> {
-    const user: User = req.user;
     if (!user) {
-      throw new BadRequestException("L'utilisateur n'est pas connecté ou n'existe pas");
+      throw new UnauthorizedException('Aucun utilisateur connecté');
     }
     await this.ressourceService.saveBookmark(user, id, collectRessourceDto.type);
   }
@@ -239,14 +243,12 @@ export class RessourceController {
   @Roles(UserRole.USER)
   async deleteBookmark(
     @Body() collectRessourceDto: CollectRessourceRequestDto,
-    @Param() params,
-    @Req() req,
+    @Param('id') id: string,
+    @CurrentUser() user: User | undefined,
   ): Promise<void> {
-    const user = req.user;
     if (!user) {
-      throw new BadRequestException("L'utilisateur n'est pas connecté ou n'existe pas");
+      throw new UnauthorizedException('Aucun utilisateur connecté');
     }
-    const id: string = params.id;
     await this.ressourceService.saveBookmark(user, id, collectRessourceDto.type);
   }
 
@@ -274,11 +276,10 @@ export class RessourceController {
   async validate(
     @Body() validateRessourceDto: ValidateRessourceRequestDto,
     @Param('id') id: string,
-    @Req() req,
+    @CurrentUser() user: User | undefined,
   ): Promise<FullRessourceResponseDto> {
-    const user = req.user;
     if (!user) {
-      throw new BadRequestException("L'utilisateur n'est pas connecté ou n'existe pas");
+      throw new UnauthorizedException('Aucun utilisateur connecté');
     }
     const ressource = await this.ressourceService.validateRessource(user, id, validateRessourceDto.validate);
     return RessourceMapper.toFullResponseDto(ressource);
@@ -300,10 +301,9 @@ export class RessourceController {
     description: "La ressource n'a pas été trouvée",
   })
   @UseGuards(AuthGuard('jwt'))
-  async consulteRessource(@Param('id') id: string, @Req() req): Promise<void> {
-    const user = req.user;
+  async consulteRessource(@Param('id') id: string, @CurrentUser() user: User | undefined): Promise<void> {
     if (!user) {
-      throw new BadRequestException("L'utilisateur n'est pas connecté ou n'existe pas");
+      throw new UnauthorizedException('Aucun utilisateur connecté');
     }
     await this.ressourceService.consulteRessource(user, id);
   }

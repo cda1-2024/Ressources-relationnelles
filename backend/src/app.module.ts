@@ -8,6 +8,7 @@ import { RessourceModule } from './modules/ressource.module';
 import { CategoryModule } from './modules/category.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import datasource from './configuration/data-source';
+import { DataSourceOptions } from 'typeorm';
 
 @Module({
   imports: [
@@ -17,8 +18,8 @@ import datasource from './configuration/data-source';
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
-        const options = configService.get('datasource');
+      useFactory: (configService: ConfigService) => {
+        const options = configService.get<DataSourceOptions>('datasource');
         if (!options) {
           throw new Error('TypeOrm configuration is missing');
         }

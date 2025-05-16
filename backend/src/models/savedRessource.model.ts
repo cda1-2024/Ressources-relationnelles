@@ -2,14 +2,13 @@ import { Entity, Column, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from './user.model';
 import { Ressource } from './ressource.model';
 
-
 @Entity()
 export class SavedRessource {
   @PrimaryColumn('uuid')
-  userId: string
+  userId: string;
 
   @PrimaryColumn('uuid')
-  ressourceId: string
+  ressourceId: string;
 
   @Column({ default: false })
   isFavorite: boolean;
@@ -20,11 +19,9 @@ export class SavedRessource {
   @Column({ default: false })
   like: boolean;
 
-  @ManyToOne(() => Ressource, (ressource) => ressource.savedRessources, 
-  { nullable: true })
+  @ManyToOne(() => Ressource, (ressource) => ressource.savedRessources, { nullable: true })
   ressource: Ressource;
 
-  @ManyToOne(() => User, (user) => user.savedRessources, 
-  { nullable: true })
+  @ManyToOne(() => User, (user) => user.savedRessources, { nullable: true })
   user: User;
 }

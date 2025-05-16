@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UserRole } from 'src/models/user.model';
+import { User, UserRole } from 'src/models/user.model';
 import { ROLES_KEY } from './roles.decorator';
 
 const roleHierarchy: Record<UserRole, UserRole[]> = {
@@ -23,8 +23,9 @@ export class RolesGuard implements CanActivate {
 
     if (!requiredRoles || requiredRoles.length === 0) return true;
 
-    const { user } = context.switchToHttp().getRequest();
-    const userRole: UserRole = user?.role;
+    const request = context.switchToHttp().getRequest<Request & { user?: User }>();
+    const user = request.user;
+    const userRole: UserRole | undefined = user?.role;
 
     if (!userRole) {
       throw new ForbiddenException('Aucun rôle défini pour cet utilisateur');

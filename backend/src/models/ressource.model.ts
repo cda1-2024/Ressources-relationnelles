@@ -1,11 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  OneToMany,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, ManyToOne } from 'typeorm';
 import { Category } from './category.model';
 import { Comment } from './comment.model';
 import { User } from './user.model';
@@ -94,17 +87,9 @@ export class Ressource {
   @ManyToOne(() => User, (user) => user.validatedRessources)
   validator: User;
 
-  @OneToMany(
-    () => SavedRessource,
-    (savedRessources) => savedRessources.ressource,
-    { nullable: true },
-  )
+  @OneToMany(() => SavedRessource, (savedRessources) => savedRessources.ressource, { nullable: true })
   savedRessources: SavedRessource[];
 
-  @OneToMany(
-    () => ConsultedRessource,
-    (consultedRessources) => consultedRessources.ressource,
-    { nullable: true },
-  )
+  @OneToMany(() => ConsultedRessource, (consultedRessources) => consultedRessources.ressource, { nullable: true })
   consultedRessources: ConsultedRessource[];
 }

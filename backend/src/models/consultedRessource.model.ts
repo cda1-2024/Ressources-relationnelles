@@ -5,19 +5,17 @@ import { Ressource } from './ressource.model';
 @Entity()
 export class ConsultedRessource {
   @PrimaryColumn('uuid')
-  userId: string
+  userId: string;
 
   @PrimaryColumn('uuid')
-  ressourceId: string
+  ressourceId: string;
 
   @Column({ type: 'datetime' })
   dateTimeConsult: Date;
 
-  @ManyToOne(() => Ressource, (ressource) => ressource.consultedRessources, 
-  { nullable: true })
+  @ManyToOne(() => Ressource, (ressource) => ressource.consultedRessources, { nullable: true })
   ressource: Ressource;
 
-  @ManyToOne(() => User, (user) => user.consultedRessources, 
-  { nullable: true })
+  @ManyToOne(() => User, (user) => user.consultedRessources, { nullable: true })
   user: User;
 }

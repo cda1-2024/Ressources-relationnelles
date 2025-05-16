@@ -23,15 +23,12 @@ export class Comment {
   @ManyToOne(() => User, (user) => user.comments)
   author: User;
 
-  @ManyToOne(() => Comment, (comment) => comment.childComments,
-  { nullable: true })
+  @ManyToOne(() => Comment, (comment) => comment.childComments, { nullable: true })
   parentComment: Comment;
 
-  @OneToMany(() => Comment, (comment) => comment.parentComment, 
-  { nullable: true })
-  childComments: Comment[]
+  @OneToMany(() => Comment, (comment) => comment.parentComment, { nullable: true })
+  childComments: Comment[];
 
-  @OneToMany(() => UserReport, (userReport) => userReport.reportedComment, 
-  { nullable: true })
-  userReports: UserReport[]
+  @OneToMany(() => UserReport, (userReport) => userReport.reportedComment, { nullable: true })
+  userReports: UserReport[];
 }

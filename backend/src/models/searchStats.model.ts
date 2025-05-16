@@ -3,11 +3,11 @@ import { Entity, Column, PrimaryColumn } from 'typeorm';
 @Entity()
 export class SearchedStats {
   @PrimaryColumn()
-    search: string;
+  search: string;
 
   @PrimaryColumn('uuid')
-    userId: string;
+  userId: string;
 
   @Column({ type: 'datetime' })
-    dateTimeSearch: Date;
+  dateTimeSearch: Date;
 }
