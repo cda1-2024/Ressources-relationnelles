@@ -32,17 +32,6 @@ export class AuthService {
 
   async register(UserNew: RegisterUserDto): Promise<{ accessToken: string }> {
     const errors: Record<string, string> = {};
-    const existingUserByUsername = await this.usersService.findUserByUsername(UserNew.username);
-
-    if (existingUserByUsername) {
-      errors['username'] = 'Cet identifiant est déjà utilisé';
-    }
-
-    const existingUserByEmail = await this.usersService.findUserByEmail(UserNew.email);
-
-    if (existingUserByEmail) {
-      errors['email'] = 'Cet email est déjà utilisé';
-    }
 
     if (Object.keys(errors).length > 0) {
       throw new ValidationException(errors);
