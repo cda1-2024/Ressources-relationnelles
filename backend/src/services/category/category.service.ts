@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   forwardRef,
-  HttpException,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -13,7 +12,6 @@ import { Category } from 'src/models/category.model';
 import { User } from 'src/models/user.model';
 import { Repository } from 'typeorm';
 import { RessourceService } from './../ressource/ressource.service';
-import { CategoryDto } from 'src/dto/ressource/response/common-dtos.dto';
 import { CreateCategoryDto } from 'src/dto/category/request/create-category.dto';
 
 @Injectable()
@@ -40,7 +38,7 @@ export class CategoryService {
     const category: Category | null = await this.categoriesRepository.findOne({
       where: { id: id },
       relations: {
-        lastAutor: true,
+        lastAuthor: true,
       },
     });
     if (category == null) {
@@ -62,7 +60,7 @@ export class CategoryService {
     category.name = createCategoryDto.name;
     category.color = createCategoryDto.color;
     category.iconPath = createCategoryDto.icon;
-    category.lastAutor = user;
+    category.lastAuthor = user;
     const newCategory = await this.categoriesRepository.save(category);
     console.log('Nouvelle catégorie créée:', newCategory);
     console.log(newCategory);
@@ -90,8 +88,8 @@ export class CategoryService {
     }
 
     Object.assign(existingCategory, updateCategoryDto);
-    existingCategory.lastAutor = user;
-    const updatedCategory = await this.categoriesRepository.save(existingCategory);
+    existingCategory.lastAuthor = user;
+    await this.categoriesRepository.save(existingCategory);
     return this.findCategoryById(id);
   }
 

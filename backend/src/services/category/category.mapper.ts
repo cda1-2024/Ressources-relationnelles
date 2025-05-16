@@ -27,9 +27,9 @@ export class CategoryMapper {
       iconPath: category.iconPath,
       color: category.color,
       createdAt: category.createdAt,
-      lastAutor: {
-        id: category.lastAutor.id,
-        username: category.lastAutor.username,
+      lastAuthor: {
+        id: category.lastAuthor.id,
+        username: category.lastAuthor.username,
       },
     };
   }

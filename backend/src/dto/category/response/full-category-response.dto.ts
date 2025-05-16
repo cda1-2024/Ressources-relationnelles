@@ -13,5 +13,5 @@ export class FullCategoryResponseDto {
   @ApiProperty()
   createdAt: Date;
   @ApiProperty()
-  lastAutor: UserDto;
+  lastAuthor: UserDto;
 }
