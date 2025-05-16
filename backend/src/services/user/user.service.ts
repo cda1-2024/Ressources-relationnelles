@@ -1,10 +1,11 @@
-import { BadRequestException, ConsoleLogger, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, UserRole } from 'src/models/user.model';
+import { User } from 'src/models/user.model';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './../../dto/user/request/update-user.dto';
 import { IntToUserRole } from 'src/helper/enumMapper';
 import { updateMyAccountDto } from 'src/dto/user/request/update-my-account.dto';
+import { FilterUserRequestDto } from 'src/dto/user/request/filter-user.dto';
 @Injectable()
 export class UserService {
   private readonly usersRepository: Repository<User>;
@@ -43,12 +44,8 @@ export class UserService {
     });
   }
 
-  async findUsersWithFilters(
-    pageNumber: number,
-    pageSize: number,
-    filters?: any,
-  ): Promise<{ users: User[]; total: number; pageNumber: number; pageSize: number }> {
-    const queryBuilder = await this.usersRepository.createQueryBuilder('user');
+  async findUsersWithFilters(filters: FilterUserRequestDto): Promise<{ users: User[]; total: number }> {
+    const queryBuilder = this.usersRepository.createQueryBuilder('user');
 
     if (filters?.username) {
       queryBuilder.andWhere('user.username LIKE :username', {
@@ -58,29 +55,23 @@ export class UserService {
 
     if (filters?.disabled !== undefined) {
       queryBuilder.andWhere('user.disabled = :disabled', {
-        disabled: filters.disabled === 'true',
+        disabled: filters.disabled,
       });
     }
-
     if (filters?.banned !== undefined) {
       queryBuilder.andWhere('user.banned = :banned', {
-        banned: filters.banned === 'true',
+        banned: filters.banned,
       });
     }
 
-    const validPageNumber: number = Number(pageNumber) || 1;
-    const validPageSize: number = Number(pageSize) || 10;
+    const total = await queryBuilder.getCount();
 
-    const [users, total] = await queryBuilder
-      .skip((validPageNumber - 1) * validPageSize)
-      .take(validPageSize)
-      .getManyAndCount();
+    const users = await queryBuilder
+      .skip((filters.page - 1) * filters.pageSize)
+      .take(filters?.pageSize)
+      .getMany();
 
-    if (users.length === 0) {
-      throw new NotFoundException('Aucun utilisateur trouvé');
-    }
-
-    return { users, total, pageNumber: validPageNumber, pageSize: validPageSize };
+    return { users, total };
   }
 
   async findUserByEmail(email: string): Promise<User | null> {
@@ -138,7 +129,7 @@ export class UserService {
     }
 
     await this.usersRepository.save(userToUpdate);
-    const user = await this.usersRepository.findOneByOrFail({ id: id })!;
+    const user = await this.usersRepository.findOneByOrFail({ id: id });
     return user;
   }
 
@@ -154,7 +145,7 @@ export class UserService {
     Object.assign(userToUpdate, updateMyAccountDto);
 
     await this.usersRepository.save(userToUpdate);
-    const userResponse = await this.usersRepository.findOneByOrFail({ id: idUser })!;
+    const userResponse = await this.usersRepository.findOneByOrFail({ id: idUser });
     return userResponse;
   }
 
