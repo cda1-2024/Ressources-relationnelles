@@ -32,8 +32,10 @@ import { UpdateRessourceRequestDto } from 'src/dto/ressource/request/update-ress
 import { ValidateRessourceRequestDto } from 'src/dto/ressource/request/validate-ressource.dto';
 import { RessourceService } from 'src/services/ressource/ressource.service';
 import { RessourceMapper } from 'src/services/ressource/ressource.mapper';
-import { User } from 'src/models/user.model';
+import { User, UserRole } from 'src/models/user.model';
 import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/guards/roles.decorator';
 
 @ApiTags('Ressources')
 @Controller('api/ressources')
@@ -58,7 +60,8 @@ export class RessourceController {
   @ApiBadRequestResponse({
     description: 'La création de la ressource a échoué',
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.USER)
   async create(@Body() createRessourceDto: CreateRessourceRequestDto, @Req() req): Promise<RessourceResponseDto> {
     try {
       const user: User = req.user;
@@ -90,7 +93,7 @@ export class RessourceController {
   async findPublicRessources(@Query() filters: FilterRessourceRequestDto): Promise<RessourceListResponseDto>  {
     try {
       const ressources = await this.ressourceService.findRessourcesBySearch(null, filters, false);
-      return RessourceMapper.toResponseListDto(ressources, filters.page_number, filters.result_size, ressources.length);
+      return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, ressources.length);
     }
     catch (error) {
       throw error;
@@ -115,7 +118,7 @@ export class RessourceController {
     try {
       const user: User = req.user;
       const ressources = await this.ressourceService.findRessourcesBySearch(user, filters, true);
-      return RessourceMapper.toResponseListDto(ressources, filters.page_number, filters.result_size, ressources.length);
+      return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, ressources.length);
     }
     catch (error) { 
       throw error;
@@ -156,13 +159,6 @@ export class RessourceController {
     summary: 'Récupérer la liste des ressources (publiques et restreintes)',
     description: 'Récupérer la liste des ressourcess en fonction des critères fournis',
   })
-  @ApiQuery({
-    name: 'filters',
-    required: false,
-    type: FilterRessourceRequestDto,
-    style: 'deepObject',
-    explode: true,
-  })
   @ApiOkResponse({
     description: 'La ou les ressources ont été trouvées avec succès',
     type: RessourceListResponseDto,
@@ -200,6 +196,8 @@ export class RessourceController {
   @ApiNotFoundResponse({
     description: "La ressource n'a pas été trouvée",
   })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.USER)
   async updateRessource(@Body() updateRessourceDto: UpdateRessourceRequestDto, @Param() params): Promise<RessourceResponseDto> {
     try {
       const id: string = params.id;
@@ -230,7 +228,8 @@ export class RessourceController {
   @ApiNotFoundResponse({
     description: "La ressource n'a pas été trouvée",
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.USER)
   async saveBookmark(
     @Body() collectRessourceDto: CollectRessourceRequestDto,
     @Param() params,
@@ -267,7 +266,8 @@ export class RessourceController {
   @ApiNotFoundResponse({
     description: "La ressource n'a pas été trouvée",
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.USER)
   async deleteBookmark(
     @Body() collectRessourceDto: CollectRessourceRequestDto,
     @Param() params,
@@ -304,19 +304,21 @@ export class RessourceController {
   @ApiNotFoundResponse({
     description: "La ressource n'a pas été trouvée",
   })
-  @UseGuards(AuthGuard('jwt'))
-  async changeStatus(
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.MODERATOR)
+  async validate(
     @Body() validateRessourceDto: ValidateRessourceRequestDto,
     @Param() params,
     @Req() req,
-  ): Promise<void> {
+  ): Promise<FullRessourceResponseDto> {
     const user = req.user;
     if (!user) {
       throw new BadRequestException("L'utilisateur n'est pas connecté ou n'existe pas");
     }
     try {
       const id: string = params.id;
-      await this.ressourceService.validateRessource(user, id, validateRessourceDto.validate);
+      const ressource = await this.ressourceService.validateRessource(user, id, validateRessourceDto.validate);
+      return RessourceMapper.toFullResponseDto(ressource);
     } catch (error) {
       throw error;
     }
@@ -367,6 +369,8 @@ export class RessourceController {
   @ApiNotFoundResponse({
     description: "La ressource n'a pas été trouvée",
   })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.USER, UserRole.MODERATOR)
   async deleteRessource(@Param() params): Promise<RessourceResponseDto> {
     try {
       const id: string = params.id;
