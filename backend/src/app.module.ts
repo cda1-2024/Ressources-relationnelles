@@ -4,7 +4,7 @@ import { loadControllers } from './helper/loadControllers';
 import { AuthModule } from './modules/auth.module';
 import { UserModule } from './modules/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RessourcesModule } from './modules/ressource.module';
+import { RessourceModule } from './modules/ressource.module';
 import { CategoryModule } from './modules/category.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import datasource from './configuration/data-source';
@@ -13,7 +13,7 @@ import datasource from './configuration/data-source';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [datasource]
+      load: [datasource],
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -23,11 +23,11 @@ import datasource from './configuration/data-source';
           throw new Error('TypeOrm configuration is missing');
         }
         return options;
-      }
+      },
     }),
     AuthModule,
-    UsersModule,
-    RessourcesModule,
+    UserModule,
+    RessourceModule,
     CategoryModule,
   ],
   controllers: loadControllers(),
