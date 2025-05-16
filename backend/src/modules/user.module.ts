@@ -10,4 +10,4 @@ import { IsUsernameUniqueConstraint } from 'src/validators/is_username_unique/is
   providers: [UserService, IsEmailUniqueConstraint, IsUsernameUniqueConstraint],
   exports: [UserService, IsEmailUniqueConstraint, IsUsernameUniqueConstraint],
 })
-export class UsersModule {}
+export class UserModule {}

@@ -83,7 +83,7 @@ export class Ressource {
   @ManyToOne(() => Category, (category) => category.ressources, {
     nullable: true,
   })
-  category: Category;
+  category?: Category | null;
 
   @OneToMany(() => Comment, (comment) => comment.ressource, { nullable: true })
   comments: Comment[];

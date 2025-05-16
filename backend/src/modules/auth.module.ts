@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from 'src/controller/auth.controller';
 import * as dotenv from 'dotenv';
-import { UsersModule } from './user.module';
+import { UserModule } from './user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from 'src/services/auth.service';
 import passport from 'passport';
@@ -14,7 +14,7 @@ const jwtConstants = { secret: process.env.JWT_KEY };
 
 @Module({
   imports: [
-    UsersModule,
+    UserModule,
     PassportModule,
     JwtModule.register({
       global: true,

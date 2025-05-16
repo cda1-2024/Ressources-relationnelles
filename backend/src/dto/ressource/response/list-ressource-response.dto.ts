@@ -9,7 +9,7 @@ export class RessourceResponseDto {
   title: string;
 
   @ApiProperty()
-  category: string;
+  category?: string;
 
   @ApiProperty()
   content_link: string;
