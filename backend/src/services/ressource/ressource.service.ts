@@ -73,7 +73,7 @@ export class RessourceService {
       }
     }
 
-    query.skip((filters.page_number - 1) * filters.result_size).take(filters.result_size);
+    query.skip((filters.page - 1) * filters.pageSize).take(filters.pageSize);
 
     const ressources = await query.getMany();
     return ressources;
@@ -258,14 +258,14 @@ export class RessourceService {
     query: SelectQueryBuilder<Ressource>,
     filters: FilterRessourceRequestDto,
   ): SelectQueryBuilder<Ressource> {
-    if (filters.query_string) {
+    if (filters.query) {
       query = query.andWhere('ressource.title LIKE :title', {
-        title: `%${filters.query_string}%`,
+        title: `%${filters.query}%`,
       });
     }
-    if (filters.category) {
+    if (filters.categoryId) {
       query = query.andWhere('category.id = :categoryId', {
-        categoryId: filters.category,
+        categoryId: filters.categoryId,
       });
     }
     if (filters.type) {
@@ -273,14 +273,14 @@ export class RessourceService {
         ressourceType: filters.type,
       });
     }
-    if (filters.creator_id) {
+    if (filters.creatorId) {
       query = query.andWhere('creator.id = :creatorId', {
-        creatorId: filters.creator_id,
+        creatorId: filters.creatorId,
       });
     }
-    if (filters.validator_id) {
+    if (filters.validatorId) {
       query = query.andWhere('validator.id = :validatorId', {
-        validatorId: filters.validator_id,
+        validatorId: filters.validatorId,
       });
     }
     return query;

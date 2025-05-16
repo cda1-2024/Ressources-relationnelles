@@ -93,7 +93,7 @@ export class RessourceController {
   async findPublicRessources(@Query() filters: FilterRessourceRequestDto): Promise<RessourceListResponseDto>  {
     try {
       const ressources = await this.ressourceService.findRessourcesBySearch(null, filters, false);
-      return RessourceMapper.toResponseListDto(ressources, filters.page_number, filters.result_size, ressources.length);
+      return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, ressources.length);
     }
     catch (error) {
       throw error;
@@ -118,7 +118,7 @@ export class RessourceController {
     try {
       const user: User = req.user;
       const ressources = await this.ressourceService.findRessourcesBySearch(user, filters, true);
-      return RessourceMapper.toResponseListDto(ressources, filters.page_number, filters.result_size, ressources.length);
+      return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, ressources.length);
     }
     catch (error) { 
       throw error;
