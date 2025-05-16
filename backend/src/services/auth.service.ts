@@ -1,11 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from './user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { RegisterUserDto } from '../dto/user/request/register-user.dto';
-import { User } from 'src/models/user.model';
-import { IsNotEmpty } from 'class-validator';
 import { ValidationException } from 'src/helper/validationException';
+import { jwtPayload } from 'src/configuration/jwt.strategy';
 
 @Injectable()
 export class AuthService {
@@ -16,12 +15,13 @@ export class AuthService {
 
   async login(identifier: string, password: string): Promise<string> {
     const user = await this.usersService.findUserByIdentifier(identifier);
+    const isValid = await bcrypt.compare(password, user?.password ?? '');
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user || !isValid) {
       throw new UnauthorizedException('Identifiants invalides');
     }
 
-    const payload = {
+    const payload: jwtPayload = {
       id: user.id,
       username: user.username,
       role: user.role,
@@ -30,21 +30,15 @@ export class AuthService {
     return this.jwtService.signAsync(payload);
   }
 
-  async register(
-    UserNew: RegisterUserDto,
-  ): Promise<{ accessToken: string}> {
+  async register(UserNew: RegisterUserDto): Promise<{ accessToken: string }> {
     const errors: Record<string, string> = {};
-    const existingUserByUsername = await this.usersService.findUserByUsername(
-      UserNew.username,
-    );
+    const existingUserByUsername = await this.usersService.findUserByUsername(UserNew.username);
 
     if (existingUserByUsername) {
       errors['username'] = 'Cet identifiant est déjà utilisé';
     }
 
-    const existingUserByEmail = await this.usersService.findUserByEmail(
-      UserNew.email,
-    );
+    const existingUserByEmail = await this.usersService.findUserByEmail(UserNew.email);
 
     if (existingUserByEmail) {
       errors['email'] = 'Cet email est déjà utilisé';

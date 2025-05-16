@@ -1,27 +1,5 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpException,
-  InternalServerErrorException,
-  NotFoundException,
-  Param,
-  Post,
-  Put,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
-import {
-  ApiBody,
-  ApiExtraModels,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { ApiBody, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CategoryService } from 'src/services/category/category.service';
 import { CategoryMapper } from 'src/services/category/category.mapper';
 import { FullCategoryResponseDto } from 'src/dto/category/response/full-category-response.dto';
