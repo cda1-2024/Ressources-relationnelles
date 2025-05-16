@@ -3,7 +3,7 @@ import { User } from './user.model';
 import { Ressource } from './ressource.model';
 
 
-@Entity('Saved_Ressources')
+@Entity()
 export class SavedRessource {
   @PrimaryColumn('uuid')
   userId: string

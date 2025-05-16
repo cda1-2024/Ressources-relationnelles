@@ -3,7 +3,7 @@ import { User } from './user.model';
 import { Event } from './event.model';
 
 
-@Entity('Event_Participations')
+@Entity()
 export class EventParticipation {
   @PrimaryColumn('uuid')
   userId: string

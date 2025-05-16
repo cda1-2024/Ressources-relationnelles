@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, Ma
 import { Ressource } from './ressource.model';
 import { User } from './user.model';
 
-@Entity('Categories')
+@Entity()
 export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
