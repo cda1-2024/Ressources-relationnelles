@@ -6,7 +6,7 @@ export class CollectRessourceRequestDto {
   @IsString()
   @ApiProperty({
     example: 'Bookmark',
-    description: "Type de sauvegarde",
+    description: 'Type de sauvegarde',
     required: true,
   })
   readonly type: string;

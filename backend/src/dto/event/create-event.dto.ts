@@ -12,5 +12,4 @@ export class CreateEventDto {
     description: 'Public ou Privé',
   })
   isRestricted: boolean;
-
 }

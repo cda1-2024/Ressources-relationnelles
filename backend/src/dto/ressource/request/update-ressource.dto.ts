@@ -1,22 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateRessourceRequestDto {
   @IsOptional()
   @IsString()
-  @ApiProperty({ 
+  @ApiProperty({
     example: 'La fresque de la paix',
     description: 'Le titre de la ressource',
-    required: false 
+    required: false,
   })
   readonly title?: string;
 
   @IsOptional()
   @IsString()
-  @ApiProperty({ 
+  @ApiProperty({
     example: 'culpa qui officia deserunt mollit anim id est laborum.',
     description: 'Contenu de la ressource',
-    required: false 
+    required: false,
   })
   readonly content_text?: string;
 
@@ -32,7 +32,7 @@ export class UpdateRessourceRequestDto {
   @IsOptional()
   @IsString()
   @ApiProperty({
-    example: "57aa6c49-31b5-4152-af65-1e6b779dc772",
+    example: '57aa6c49-31b5-4152-af65-1e6b779dc772',
     description: 'La catégorie de la ressource',
     required: false,
   })
@@ -40,19 +40,19 @@ export class UpdateRessourceRequestDto {
 
   @IsOptional()
   @IsNumber()
-  @ApiProperty({ 
+  @ApiProperty({
     example: 1,
     description: 'La visibilité de la ressource',
-    required: false 
+    required: false,
   })
   readonly visibility?: number;
 
   @IsOptional()
   @IsNumber()
-  @ApiProperty({ 
+  @ApiProperty({
     example: 1,
     description: 'Le type de la ressource',
-    required: false 
+    required: false,
   })
   readonly status?: number;
 }

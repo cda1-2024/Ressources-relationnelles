@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { IsCategoryUnique } from 'src/validators/is_category_unique/is_category_unique.decorator';
 
 export class UpdateCategoryDto {

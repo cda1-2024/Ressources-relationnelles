@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBody, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CategoryService } from 'src/services/category/category.service';
 import { CategoryMapper } from 'src/services/category/category.mapper';
@@ -9,6 +20,7 @@ import { Category } from 'src/models/category.model';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateCategoryDto } from 'src/dto/category/request/update-category.dto';
 import { User } from 'src/models/user.model';
+import { CurrentUser } from 'src/guards/current-user.decorator';
 
 @ApiTags('Categories')
 @Controller('api/categories')
@@ -58,8 +70,13 @@ export class CategoryController {
     type: FullCategoryResponseDto,
   })
   @UseGuards(AuthGuard('jwt'))
-  async createCategory(@Req() req, @Body() createCategoryDto: CreateCategoryDto): Promise<FullCategoryResponseDto> {
-    const user: User = req.user;
+  async createCategory(
+    @CurrentUser() user: User | undefined,
+    @Body() createCategoryDto: CreateCategoryDto,
+  ): Promise<FullCategoryResponseDto> {
+    if (!user) {
+      throw new UnauthorizedException('Aucun utilisateur connecté');
+    }
     const category: Category = await this.categoryService.createCategory(createCategoryDto, user);
     return CategoryMapper.toResponseFullDto(category);
   }
@@ -76,12 +93,15 @@ export class CategoryController {
   })
   @UseGuards(AuthGuard('jwt'))
   async updateCategory(
-    @Req() req,
+    @CurrentUser() user: User | undefined,
     @Param('id') id: string,
     @Body() updateCategory: UpdateCategoryDto,
   ): Promise<FullCategoryResponseDto> {
-    const categoryUpdated = await this.categoryService.updateCategory(id, updateCategory, req.user);
-    return CategoryMapper.toResponseFullDto(categoryUpdated!);
+    if (!user) {
+      throw new UnauthorizedException('Aucun utilisateur connecté');
+    }
+    const categoryUpdated = await this.categoryService.updateCategory(id, updateCategory, user);
+    return CategoryMapper.toResponseFullDto(categoryUpdated);
   }
 
   @Delete('/:id')
@@ -92,9 +112,8 @@ export class CategoryController {
     },
   })
   @UseGuards(AuthGuard('jwt'))
-  async deleteCategory(@Param('id') id: string, @Req() req) {
-    const user = req.user;
-    const result = await this.categoryService.deleteCategory(id, user);
+  async deleteCategory(@Param('id') id: string): Promise<{ deleted: boolean } | void> {
+    const result = await this.categoryService.deleteCategory(id);
     if (result == true) {
       return { deleted: true };
     }

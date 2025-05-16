@@ -7,7 +7,7 @@ import { UserService } from 'src/services/user/user.service';
 export class IsUsernameUniqueConstraint implements ValidatorConstraintInterface {
   constructor(private readonly userService: UserService) {}
 
-  async validate(username: string, args: ValidationArguments): Promise<boolean> {
+  async validate(username: string): Promise<boolean> {
     const user = await this.userService.findUserByIdentifier(username);
     return !user;
   }

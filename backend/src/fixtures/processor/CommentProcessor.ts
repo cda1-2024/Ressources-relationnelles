@@ -7,12 +7,12 @@ export default class CommentProcessor implements IProcessor<Comment> {
   //   return { ...object, firstName: 'foo' };
   // }
 
-  postProcess(name: string, object: { [key: string]: any }): void {
-    if (object.index % 7 == 0) {
+  postProcess(name: string, object: Comment & { index: number }): void {
+    if (object.index % 7 === 0) {
       object.deleted = true;
     }
     if (object.parentComment) {
-      object.ressource = object.parentComment.ressource
+      object.ressource = object.parentComment.ressource;
     }
   }
 }

@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole } from 'src/models/user.model';
 
 export class FullUserResponseDto {
   @ApiProperty()
