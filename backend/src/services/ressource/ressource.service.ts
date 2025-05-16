@@ -6,7 +6,7 @@ import { Ressource, Status, Visibility } from 'src/models/ressource.model';
 import { User, UserRole } from 'src/models/user.model';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CreateRessourceRequestDto } from 'src/dto/ressource/request/create-ressource.dto';
-import { CategoryService } from '../category.service';
+import { CategoryService } from '../category/category.service';
 import { RessourceStatusFromInt, RessourceTypeFromInt, RessourceVisibilityFromInt } from 'src/helper/enumMapper';
 import { SavedRessource } from 'src/models/savedRessource.model';
 import { ConsultedRessource } from 'src/models/consultedRessource.model';
@@ -177,20 +177,17 @@ export class RessourceService {
 
     if (type === 'bookmark') {
       entity.isToLater = isNew ? true : !entity.isToLater;
-    }
-    else if (type === 'favorite') {
+    } else if (type === 'favorite') {
       entity.isFavorite = isNew ? true : !entity.isFavorite;
-    }
-    else if (type !== 'like') {
+    } else if (type !== 'like') {
       entity.like = isNew ? true : !entity.like;
       ressource.like = entity.like ? ressource.like + 1 : ressource.like - 1;
       await this.ressourcesRepository.save(ressource);
-    }
-    else {
+    } else {
       throw new BadRequestException('Type de ressource non valide');
     }
 
-    await this.savedRessourceRepository.save(entity);  
+    await this.savedRessourceRepository.save(entity);
   }
 
   async validateRessource(validator: User, ressourceId: string, validate: boolean): Promise<void> {
@@ -272,5 +269,17 @@ export class RessourceService {
       });
     }
     return query;
+  }
+
+  async deleteCategory(id: string): Promise<boolean> {
+    const ressource = await this.ressourcesRepository.find({ where: { category: { id: id } } });
+    if (!ressource) {
+      throw new NotFoundException("La ressource n'existe pas");
+    }
+    for (const ressourceItem of ressource) {
+      ressourceItem.category = null;
+      await this.ressourcesRepository.save(ressourceItem);
+    }
+    return true;
   }
 }

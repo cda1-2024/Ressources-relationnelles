@@ -16,15 +16,11 @@ export class Category {
   @Column({ length: 20 })
   color: string;
 
-  @Column({ default: false })
-  deleted: boolean;
-
   @CreateDateColumn()
   createdAt: Date;
 
-  @OneToMany(() => Ressource, (ressource) => ressource.category,
-  { nullable: true })
-  ressources: Ressource[]
+  @OneToMany(() => Ressource, (ressource) => ressource.category, { nullable: true })
+  ressources: Ressource[];
 
   @ManyToOne(() => User, (user) => user.modifiedCategories)
   lastAutor: User;

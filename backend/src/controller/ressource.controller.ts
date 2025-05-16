@@ -27,7 +27,7 @@ import { CollectRessourceRequestDto } from 'src/dto/ressource/request/collect-re
 import { CreateRessourceRequestDto } from 'src/dto/ressource/request/create-ressource.dto';
 import { FilterRessourceRequestDto } from 'src/dto/ressource/request/filter-ressource.dto';
 import { FullRessourceResponseDto } from 'src/dto/ressource/response/full-ressource-response.dto';
-import { RessourceListResponseDto, RessourceResponseDto } from 'src/dto/ressource/response/ressource-response.dto';
+import { RessourceListResponseDto, RessourceResponseDto } from 'src/dto/ressource/response/list-ressource-response.dto';
 import { UpdateRessourceRequestDto } from 'src/dto/ressource/request/update-ressource.dto';
 import { ValidateRessourceRequestDto } from 'src/dto/ressource/request/validate-ressource.dto';
 import { RessourceService } from 'src/services/ressource/ressource.service';
