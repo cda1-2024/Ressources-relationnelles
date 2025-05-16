@@ -193,9 +193,13 @@ export class RessourceService {
     await this.savedRessourceRepository.save(entity);  
   }
 
-  async validateRessource(validator: User, ressourceId: string, validate: boolean): Promise<void> {
-    const ressource = await this.ressourcesRepository.findOneBy({
-      id: ressourceId,
+  async validateRessource(validator: User, ressourceId: string, validate: boolean): Promise<Ressource> {
+    const ressource = await this.ressourcesRepository.findOne({
+      where: { id: ressourceId },
+      relations: {
+        category: true,
+        creator: true,
+      },
     });
     if (!ressource) {
       throw new NotFoundException("La ressource n'existe pas");
@@ -209,12 +213,16 @@ export class RessourceService {
       ressource.status = Status.DRAFT;
       ressource.adminValidation = false;
     }
-    await this.ressourcesRepository.save(ressource);
+    return await this.ressourcesRepository.save(ressource);
   }
 
   async consulteRessource(user: User, ressourceId: string): Promise<void> {
-    const ressource = await this.ressourcesRepository.findOneBy({
-      id: ressourceId,
+    const ressource = await this.ressourcesRepository.findOne({
+      where: { id: ressourceId },
+      relations: {
+        category: true,
+        creator: true,
+      },
     });
     if (!ressource) {
       throw new NotFoundException("La ressource n'existe pas");
@@ -228,8 +236,12 @@ export class RessourceService {
 
   async deleteRessource(id: string): Promise<Ressource> {
     try {
-      const ressource = await this.ressourcesRepository.findOneBy({
-        id: id,
+      const ressource = await this.ressourcesRepository.findOne({
+        where: { id },
+        relations: {
+          category: true,
+          creator: true,
+        },
       });
       if (!ressource) {
         throw new NotFoundException("La ressource n'existe pas");

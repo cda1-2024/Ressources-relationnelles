@@ -310,14 +310,15 @@ export class RessourceController {
     @Body() validateRessourceDto: ValidateRessourceRequestDto,
     @Param() params,
     @Req() req,
-  ): Promise<void> {
+  ): Promise<FullRessourceResponseDto> {
     const user = req.user;
     if (!user) {
       throw new BadRequestException("L'utilisateur n'est pas connecté ou n'existe pas");
     }
     try {
       const id: string = params.id;
-      await this.ressourceService.validateRessource(user, id, validateRessourceDto.validate);
+      const ressource = await this.ressourceService.validateRessource(user, id, validateRessourceDto.validate);
+      return RessourceMapper.toFullResponseDto(ressource);
     } catch (error) {
       throw error;
     }
