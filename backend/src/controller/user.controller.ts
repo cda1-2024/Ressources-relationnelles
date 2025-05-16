@@ -17,6 +17,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { updateMyAccountDto as updateMyAccountDto } from '../dto/user/request/update-my-account.dto';
 import { UserMapper } from 'src/services/user/user.mapper';
 import { User } from 'src/models/user.model';
+import { FilterUserRequestDto } from 'src/dto/user/request/filter-user.dto';
 
 @ApiTags('Users')
 @ApiExtraModels(
@@ -35,20 +36,14 @@ export class UserController {
   @ApiQuery({ name: 'pageNumber', required: false, type: Number })
   @ApiQuery({ name: 'pageSize', required: false, type: Number })
   @ApiQuery({ name: 'username', required: false, type: String })
+  @ApiQuery({ name: 'banned', required: false, type: Boolean })
+  @ApiQuery({ name: 'disabled', required: false, type: Boolean })
   @ApiNotFoundResponse({
     description: 'Auncun utilisateur a été trouvé',
   })
-  async GetUsers(@Query() params): Promise<ListUserResponseDto> {
-    const { pageNumber = 1, pageSize = 10, ...filters } = params;
-
-    const {
-      users,
-      total,
-      pageNumber: validPageNumber,
-      pageSize: validPageSize,
-    } = await this.userService.findUsersWithFilters(pageNumber, pageSize, filters);
-
-    return UserMapper.toResponseListDto(users, validPageNumber, validPageSize, total);
+  async GetUsers(@Query() filters: FilterUserRequestDto): Promise<ListUserResponseDto> {
+    const { users, total } = await this.userService.findUsersWithFilters(filters);
+    return UserMapper.toResponseListDto(users, filters.page, filters.pageSize, total);
   }
 
   @Get('check/identifier/:identifier')
@@ -85,8 +80,7 @@ export class UserController {
   @ApiNotFoundResponse({
     description: "L'utilisateur n'a pas été trouvé",
   })
-  async getUserById(@Param() params): Promise<FullUserResponseDto> {
-    const id: string = params.id;
+  async getUserById(@Param('id') id: string): Promise<FullUserResponseDto> {
     const user: User = await this.userService.findUserById(id);
     return UserMapper.toResponseFullDto(user);
   }
@@ -138,4 +132,3 @@ export class UserController {
     return UserMapper.toResponseDto(user);
   }
 }
-

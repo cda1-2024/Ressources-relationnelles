@@ -1,9 +1,9 @@
 @echo off
 echo Suppression du schéma...
-CALL npm run typeorm schema:drop -- -d src/configuration/data-source-cli.ts
+CALL npm run typeorm:drop-schema
 
 echo Exécution des migrations...
-CALL npm run typeorm -- migration:run -d src/configuration/data-source-cli.ts
+CALL npm run typeorm:run 
 
 echo Chargement des fixtures...
 CALL npm run fixtures:apply

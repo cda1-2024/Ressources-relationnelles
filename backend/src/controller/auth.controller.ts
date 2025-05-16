@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -11,9 +11,6 @@ import { loginUserServiceDto } from 'src/dto/user/request/login-service-user.dto
 import { RegisterUserDto } from 'src/dto/user/request/register-user.dto';
 import { LoginUserDto } from '../dto/user/request/login-user.dto';
 import { AuthService } from 'src/services/auth.service';
-import { UserRole } from 'src/models/user.model';
-import { ok } from 'assert';
-import { access } from 'fs';
 
 @ApiTags('Authentification')
 @Controller('api/auth')
