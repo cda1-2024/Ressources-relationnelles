@@ -1,10 +1,5 @@
 import { IProcessor } from 'typeorm-fixtures-cli';
-import {
-  Ressource,
-  RessourceType,
-  Status,
-  Visibility,
-} from '../../models/ressource.model';
+import { Ressource, RessourceType, Visibility } from '../../models/ressource.model';
 
 export default class RessourceProcessor implements IProcessor<Ressource> {
   // Fonction à garder pour l'exemple
@@ -14,6 +9,10 @@ export default class RessourceProcessor implements IProcessor<Ressource> {
 
   postProcess(name: string, object: { [key: string]: any }): void {
     let id = object.index;
+    // Every 6 resources, the ressource doesn't have a category
+    if (id % 6 == 0) {
+      object.category = null;
+    }
     // Select the type of the ressource
     let types = Object.values(RessourceType);
     let lenghtType = types.length;
@@ -22,6 +21,5 @@ export default class RessourceProcessor implements IProcessor<Ressource> {
     let visibility = Object.values(Visibility);
     let lenghtVisibility = visibility.length;
     object.visibility = visibility[id % lenghtVisibility];
-    // Todo add multiple state for the ressources
   }
 }

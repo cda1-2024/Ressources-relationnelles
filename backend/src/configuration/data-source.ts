@@ -11,6 +11,7 @@ import { SearchedStats } from '../models/searchStats.model';
 import { User } from '../models/user.model';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { UserReport } from '../models/userReport.model';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 dotenvConfig({ path: '.env' });
 
@@ -36,6 +37,7 @@ const config = {
   migrations: ['dist/migrations/*{.ts,.js}'],
   autoLoadEntities: true,
   synchronize: false,
+  namingStrategy: new SnakeNamingStrategy(),
 };
 
 export default registerAs('datasource', () => config);
