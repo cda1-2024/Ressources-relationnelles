@@ -1,5 +1,5 @@
 import { FullRessourceResponseDto } from 'src/dto/ressource/response/full-ressource-response.dto';
-import { RessourceListResponseDto, RessourceResponseDto } from 'src/dto/ressource/response/ressource-response.dto';
+import { RessourceListResponseDto, RessourceResponseDto } from 'src/dto/ressource/response/list-ressource-response.dto';
 import { RessourceStatusToInt, RessourceTypeToInt, RessourceVisibilityToInt } from 'src/helper/enumMapper';
 import { Ressource } from 'src/models/ressource.model';
 
@@ -8,7 +8,7 @@ export class RessourceMapper {
     return {
       id: ressource.id,
       title: ressource.title,
-      category: ressource.category.name,
+      category: ressource.category?.name,
       content_link: ressource.contentLink,
       content_text: ressource.contentText,
       created_at: ressource.createdAt.toISOString(),
@@ -86,8 +86,8 @@ export class RessourceMapper {
         },
       })),
       category: {
-        id: ressource.category.id,
-        title: ressource.category.name,
+        id: ressource.category?.id,
+        title: ressource.category?.name,
       },
     };
   }

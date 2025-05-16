@@ -34,10 +34,10 @@ export class UserDto {
 
   export class CategoryDto {
     @ApiProperty()
-    id: string;
+    id?: string;
   
     @ApiProperty()
-    title: string;
+    title?: string;
   }
   
   export class CommentDto {

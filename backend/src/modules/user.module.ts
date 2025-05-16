@@ -8,6 +8,6 @@ import { IsUsernameUniqueConstraint } from 'src/validators/is_username_unique/is
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   providers: [UserService, IsEmailUniqueConstraint, IsUsernameUniqueConstraint],
-  exports: [UserService, IsEmailUniqueConstraint, IsUsernameUniqueConstraint],
+  exports: [UserService],
 })
-export class UsersModule {}
+export class UserModule {}
