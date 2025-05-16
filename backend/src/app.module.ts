@@ -9,13 +9,7 @@ import { RessourceModule } from './modules/ressource.module';
 import { CategoryModule } from './modules/category.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(AppDataSource.options),
-     AuthModule,
-     UserModule,
-     RessourceModule,
-     CategoryModule,
-    ],
+  imports: [TypeOrmModule.forRoot(AppDataSource.options), AuthModule, UserModule, RessourceModule, CategoryModule],
   controllers: loadControllers(),
   providers: [AppService],
 })

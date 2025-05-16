@@ -8,6 +8,6 @@ import { RessourceModule } from './ressource.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Category]), forwardRef(() => RessourceModule)],
   providers: [CategoryService, IsCategoryUniqueConstraint],
-  exports: [CategoryService, IsCategoryUniqueConstraint],
+  exports: [CategoryService],
 })
 export class CategoryModule {}

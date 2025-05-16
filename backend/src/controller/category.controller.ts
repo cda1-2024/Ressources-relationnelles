@@ -26,14 +26,11 @@ import { CategoryService } from 'src/services/category/category.service';
 import { CategoryMapper } from 'src/services/category/category.mapper';
 import { FullCategoryResponseDto } from 'src/dto/category/response/full-category-response.dto';
 import { ListCategoryResponseDto } from 'src/dto/category/response/list-category-response.dto';
-import { Not } from 'typeorm';
 import { CreateCategoryDto } from 'src/dto/category/request/create-category.dto';
 import { Category } from 'src/models/category.model';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateCategoryDto } from 'src/dto/category/request/update-category.dto';
-import { BlockList } from 'net';
-import { BlobOptions } from 'buffer';
-import { ok } from 'assert';
+import { User } from 'src/models/user.model';
 
 @ApiTags('Categories')
 @Controller('api/categories')
@@ -84,24 +81,9 @@ export class CategoryController {
   })
   @UseGuards(AuthGuard('jwt'))
   async createCategory(@Req() req, @Body() createCategoryDto: CreateCategoryDto): Promise<FullCategoryResponseDto> {
-    if (
-      createCategoryDto.name == undefined ||
-      createCategoryDto.color == undefined ||
-      createCategoryDto.icon == undefined
-    ) {
-      throw new BadRequestException('Les champs name, icon et color sont requis');
-    }
-
-    const user = req.user;
-    const category = new Category();
-    category.name = createCategoryDto.name;
-    category.color = createCategoryDto.color;
-    category.iconPath = createCategoryDto.icon;
-    category.lastAutor = user;
-
-    return this.categoryService.createCategory(category).then((category) => {
-      return CategoryMapper.toResponseFullDto(category);
-    });
+    const user: User = req.user;
+    const category: Category = await this.categoryService.createCategory(createCategoryDto, user);
+    return CategoryMapper.toResponseFullDto(category);
   }
 
   @Put('/:id')
@@ -134,8 +116,8 @@ export class CategoryController {
   @UseGuards(AuthGuard('jwt'))
   async deleteCategory(@Param('id') id: string, @Req() req) {
     const user = req.user;
-    const result: boolean = await this.categoryService.deleteCategory(id, user);
-    if (result) {
+    const result = await this.categoryService.deleteCategory(id, user);
+    if (result == true) {
       return { deleted: true };
     }
   }

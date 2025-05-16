@@ -11,8 +11,6 @@ export class FullCategoryResponseDto {
   @ApiProperty()
   color: string;
   @ApiProperty()
-  deleted: boolean;
-  @ApiProperty()
   createdAt: Date;
   @ApiProperty()
   lastAutor: UserDto;
