@@ -1,6 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { AppException } from 'src/exceptions/app.exception';
+import { logger } from 'src/logger/pino.logger';
 
 @Catch(HttpException)
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -37,6 +38,17 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     if (error instanceof AppException) {
       body.cause = error.getCause(error);
     }
+
+    logger.error({
+      message: 'Unhandled Exception',
+      exception,
+      request: {
+        method: request.method,
+        url: request.url,
+        headers: request.headers,
+        body: request.body,
+      },
+    });
 
     response.status(status).json(body);
   }
