@@ -1,4 +1,4 @@
-import { RessourceType, Status, Visibility } from "src/models/ressource.model";
+import { RessourceType, Status, Visibility } from 'src/models/ressource.model';
 import { UserRole } from 'src/models/user.model';
 
 export const RessourceStatusToInt: Record<Status, number> = {
@@ -9,7 +9,7 @@ export const RessourceStatusToInt: Record<Status, number> = {
   [Status.TOVALIDATE]: 4,
 };
 
-export const RessourceStatusFromInt: Record<number, Status> ={
+export const RessourceStatusFromInt: Record<number, Status> = {
   0: Status.DELETED,
   1: Status.DRAFT,
   2: Status.PUBLISHED,
@@ -51,7 +51,7 @@ export const UserRoleToInt: Record<UserRole, number> = {
   [UserRole.VISITOR]: 4,
 };
 
-export const IntToUserRole: Record<number, UserRole> ={
+export const IntToUserRole: Record<number, UserRole> = {
   0: UserRole.SUPERADMIN,
   1: UserRole.ADMIN,
   2: UserRole.MODERATOR,

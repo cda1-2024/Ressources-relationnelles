@@ -1,11 +1,4 @@
-import {
-  BadRequestException,
-  forwardRef,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateCategoryDto } from 'src/dto/category/request/update-category.dto';
 import { Category } from 'src/models/category.model';
@@ -27,11 +20,7 @@ export class CategoryService {
   }
 
   async getCategoryAll(): Promise<Category[]> {
-    try {
-      return this.categoriesRepository.find();
-    } catch (error) {
-      throw new InternalServerErrorException('Erreur lors de la récupération des catégories: ' + error.message);
-    }
+    return this.categoriesRepository.find();
   }
 
   async findCategoryById(id: string): Promise<Category> {
@@ -67,17 +56,17 @@ export class CategoryService {
     return newCategory;
   }
 
-  async findCategoryByName(name: string): Promise<Category | null> {
-    try {
-      return this.categoriesRepository.findOne({
-        where: { name: name },
-      });
-    } catch (error) {
-      throw new InternalServerErrorException('Erreur lors de la récupération de la catégorie: ' + error.message);
+  async findCategoryByName(name: string): Promise<Category> {
+    const category = await this.categoriesRepository.findOne({
+      where: { name: name },
+    });
+    if (category == null) {
+      throw new NotFoundException("La catégorie n'a pas été trouvée");
     }
+    return category;
   }
 
-  async updateCategory(id: string, updateCategoryDto: UpdateCategoryDto, user: User): Promise<Category | null> {
+  async updateCategory(id: string, updateCategoryDto: UpdateCategoryDto, user: User): Promise<Category> {
     if (!updateCategoryDto || Object.values(updateCategoryDto).every((value) => value === undefined)) {
       throw new BadRequestException('Aucune donnée à mettre à jour.');
     }
@@ -93,7 +82,7 @@ export class CategoryService {
     return this.findCategoryById(id);
   }
 
-  async deleteCategory(id: string, user: User): Promise<boolean> {
+  async deleteCategory(id: string): Promise<boolean> {
     const category = await this.findCategoryById(id);
     if (!category) {
       throw new NotFoundException("La catégorie n'a pas été trouvée");
