@@ -1,11 +1,5 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
-import {
-  ApiBody,
-  ApiOperation,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Controller, Post, Put } from '@nestjs/common';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Reports')
 @Controller('api/reports/')
@@ -22,5 +16,3 @@ export class ReportController {
     return null;
   }
 }
-
-

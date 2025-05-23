@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CategoryDto, CommentDto, RessourceStatusDto, RessourceTypeDto, RessourceVisiblityDto, UserDto } from './common-dtos.dto';
+import {
+  CategoryDto,
+  CommentDto,
+  RessourceStatusDto,
+  RessourceTypeDto,
+  RessourceVisiblityDto,
+  UserDto,
+} from './common-dtos.dto';
 
 export class FullRessourceResponseDto {
   @ApiProperty()
@@ -26,13 +33,13 @@ export class FullRessourceResponseDto {
   @ApiProperty()
   like: number;
 
-  @ApiProperty({ type: RessourceStatusDto})
+  @ApiProperty({ type: RessourceStatusDto })
   status: RessourceStatusDto;
 
-  @ApiProperty({ type: RessourceVisiblityDto})
+  @ApiProperty({ type: RessourceVisiblityDto })
   visibility: RessourceVisiblityDto;
 
-  @ApiProperty({ type: RessourceTypeDto})
+  @ApiProperty({ type: RessourceTypeDto })
   type: RessourceTypeDto;
 
   @ApiProperty({ type: UserDto })
@@ -44,6 +51,6 @@ export class FullRessourceResponseDto {
   @ApiProperty({ type: [CommentDto] })
   comments: CommentDto[];
 
-  @ApiProperty({ type: CategoryDto})
+  @ApiProperty({ type: CategoryDto })
   category: CategoryDto;
 }

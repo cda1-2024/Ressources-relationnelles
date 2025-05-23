@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Post, Put } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Delete, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Comments')
 @Controller('api/comments/')
@@ -13,5 +13,4 @@ export class CommentController {
   deleteComment(): null {
     return null;
   }
-
 }

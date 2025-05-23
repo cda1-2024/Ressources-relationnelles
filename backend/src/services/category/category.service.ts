@@ -67,11 +67,15 @@ export class CategoryService {
     }
   }
 
-  async findCategoryByName(name: string): Promise<Category | null> {
+  async findCategoryByName(name: string): Promise<Category> {
     try {
-      return this.categoriesRepository.findOne({
+      const category = await this.categoriesRepository.findOne({
         where: { name: name },
       });
+      if (category == null) {
+        throw new NotFoundException("La catégorie n'a pas été trouvée");
+      }
+      return category;
     } catch (error) {
       throw new BusinessException('La recherche de la catégorie a échoué', getErrorStatusCode(error), {
         cause: error,
@@ -101,7 +105,7 @@ export class CategoryService {
     }
   }
 
-  async deleteCategory(id: string, user: User): Promise<boolean> {
+  async deleteCategory(id: string): Promise<boolean> {
     try {
       const category = await this.findCategoryById(id);
       if (!category) {

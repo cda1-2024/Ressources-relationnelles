@@ -23,10 +23,10 @@ export class RessourceResponseDto {
   @ApiProperty({ type: UserDto })
   creator: UserDto;
 
-  @ApiProperty({ type: RessourceStatusDto})
+  @ApiProperty({ type: RessourceStatusDto })
   status: RessourceStatusDto;
-  
-  @ApiProperty({ type: RessourceVisiblityDto})
+
+  @ApiProperty({ type: RessourceVisiblityDto })
   visibility: RessourceVisiblityDto;
 
   @ApiProperty({ type: RessourceTypeDto })

@@ -1,55 +1,55 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
-    @ApiProperty()
-    id: string;
-  
-    @ApiProperty()
-    username: string;
-  }
-  
-  export class RessourceTypeDto {
-    @ApiProperty()
-    id: number;
-  
-    @ApiProperty()
-    label: string;
-  }
+  @ApiProperty()
+  id: string;
 
-  export class RessourceStatusDto {
-    @ApiProperty()
-    id: number;
-  
-    @ApiProperty()
-    label: string;
-  }
+  @ApiProperty()
+  username: string;
+}
 
-  export class RessourceVisiblityDto {
-    @ApiProperty()
-    id: number;
-  
-    @ApiProperty()
-    label: string;
-  }
+export class RessourceTypeDto {
+  @ApiProperty()
+  id: number;
 
-  export class CategoryDto {
-    @ApiProperty()
-    id?: string;
-  
-    @ApiProperty()
-    title?: string;
-  }
-  
-  export class CommentDto {
-    @ApiProperty()
-    id: string;
-  
-    @ApiProperty({ type: UserDto })
-    author: UserDto;
-  
-    @ApiProperty()
-    content: string;
-  
-    @ApiProperty()
-    created_at: string;
-  }
+  @ApiProperty()
+  label: string;
+}
+
+export class RessourceStatusDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  label: string;
+}
+
+export class RessourceVisiblityDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  label: string;
+}
+
+export class CategoryDto {
+  @ApiProperty()
+  id?: string;
+
+  @ApiProperty()
+  title?: string;
+}
+
+export class CommentDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty({ type: UserDto })
+  author: UserDto;
+
+  @ApiProperty()
+  content: string;
+
+  @ApiProperty()
+  created_at: string;
+}

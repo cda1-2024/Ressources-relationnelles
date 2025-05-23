@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, isString, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { IsUsernameUnique } from 'src/validators/is_username_unique/is-username-unique.decorator';
 
 export class updateMyAccountDto {

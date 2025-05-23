@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
-import { loadControllers } from './helper/loadControllers';
 import { AuthModule } from './modules/auth.module';
 import { UserModule } from './modules/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -31,7 +30,6 @@ import { DataSourceOptions } from 'typeorm';
     RessourceModule,
     CategoryModule,
   ],
-  controllers: loadControllers(),
   providers: [AppService],
 })
 export class AppModule {}
