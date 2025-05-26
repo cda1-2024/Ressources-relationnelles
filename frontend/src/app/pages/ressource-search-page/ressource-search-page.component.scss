@@ -1,0 +1,37 @@
+aside {
+    background-color: #f6f8ff;
+}
+
+.example-card {
+    width: 400px;
+    filter: drop-shadow(0px 0px 2px #949494);
+}
+
+.mat-mdc-card-title, .mat-mdc-card-subtitle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 258px;
+}
+
+.mat-mdc-card-actions {
+    min-height: 44px;
+}
+
+.mdc-card__media:last-child {
+    border-radius: 0.5rem;
+    width: 92px;
+    height: 92px;
+}
+
+button {
+    background-color: #E8EDFF !important;
+    color: black !important;
+    padding: 4px;
+    min-width: 80px;
+    border-radius: 30px;
+}
+
+.mat-mdc-notch-piece {
+    border-right: 1px solid rgba(0, 0, 0, 0);
+}
