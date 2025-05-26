@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
-import { ToBoolean } from 'src/validators/helper_validator/helper_validator.decorator';
+import { ToBoolean } from 'src/validators/helper_validator/helper-validator.decorator';
 
 export class FilterUserRequestDto {
   @ApiProperty({

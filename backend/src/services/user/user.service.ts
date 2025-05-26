@@ -19,7 +19,7 @@ export class UserService {
 
   async findUserAll(): Promise<User[]> {
     try {
-      return this.usersRepository.find();
+      return await this.usersRepository.find();
     } catch (error) {
       throw new BusinessException('La recherche des utilisateurs a échoué', getErrorStatusCode(error), {
         cause: error,
@@ -29,7 +29,7 @@ export class UserService {
 
   async findUserByIdentifier(identifier: string): Promise<User | null> {
     try {
-      return this.usersRepository.findOne({
+      return await this.usersRepository.findOne({
         select: {
           id: true,
           username: true,
@@ -38,25 +38,6 @@ export class UserService {
           role: true,
         },
         where: [{ email: identifier }, { username: identifier }],
-      });
-    } catch (error) {
-      throw new BusinessException("La recherche de l'utilisateur a échoué", getErrorStatusCode(error), {
-        cause: error,
-      });
-    }
-  }
-
-  async findUserByUsername(username: string): Promise<User | null> {
-    try {
-      return this.usersRepository.findOne({
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          password: true,
-          role: true,
-        },
-        where: [{ username: username }],
       });
     } catch (error) {
       throw new BusinessException("La recherche de l'utilisateur a échoué", getErrorStatusCode(error), {
@@ -101,25 +82,6 @@ export class UserService {
     }
   }
 
-  async findUserByEmail(email: string): Promise<User | null> {
-    try {
-      return this.usersRepository.findOne({
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          password: true,
-          role: true,
-        },
-        where: [{ email: email }],
-      });
-    } catch (error) {
-      throw new BusinessException("La recherche de l'utilisateur a échoué", getErrorStatusCode(error), {
-        cause: error,
-      });
-    }
-  }
-
   async findUserById(id: string): Promise<User> {
     try {
       const user = await this.usersRepository.findOneBy({ id: id });
@@ -149,7 +111,7 @@ export class UserService {
 
   async countUsers(): Promise<number> {
     try {
-      return this.usersRepository.count();
+      return await this.usersRepository.count();
     } catch (error) {
       throw new BusinessException('Le compte des utilisateurs a échoué', getErrorStatusCode(error), {
         cause: error,

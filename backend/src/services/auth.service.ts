@@ -9,8 +9,8 @@ import { jwtPayload } from 'src/configuration/jwt.strategy';
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UserService,
-    private jwtService: JwtService,
+    private readonly usersService: UserService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async login(identifier: string, password: string): Promise<string> {
