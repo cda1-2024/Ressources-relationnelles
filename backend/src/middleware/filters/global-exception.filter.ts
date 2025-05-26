@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
-import { AppException } from 'src/exceptions/app.exception';
-import { logger } from 'src/logger/pino.logger';
+import { AppException } from 'src/helper/exceptions/app.exception';
+import { logger } from 'src/helper/logger/pino.logger';
 
 @Catch(HttpException)
 export class GlobalExceptionFilter implements ExceptionFilter {

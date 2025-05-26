@@ -17,7 +17,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { updateMyAccountDto as updateMyAccountDto } from '../dto/user/request/update-my-account.dto';
 import { UserMapper } from 'src/services/user/user.mapper';
 import { User } from 'src/models/user.model';
-import { CurrentUser } from 'src/guards/current-user.decorator';
+import { CurrentUser } from 'src/middleware/guards/current-user.decorator';
 import { FilterUserRequestDto } from 'src/dto/user/request/filter-user.dto';
 
 @ApiTags('Users')

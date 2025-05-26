@@ -6,24 +6,24 @@ import { SavedRessource } from './savedRessource.model';
 import { ConsultedRessource } from './consultedRessource.model';
 
 export enum RessourceType {
-  TEXT = 'text',
-  IMAGE = 'image',
-  VIDEO = 'video',
-  PDF = 'pdf',
+  TEXT = 'Texte',
+  IMAGE = 'Image',
+  VIDEO = 'Vidéo',
+  PDF = 'PDF',
 }
 
 export enum Visibility {
-  RESTRICTED = 'restricted',
-  PUBLIC = 'public',
-  PRIVATE = 'private',
+  RESTRICTED = 'Restreinte',
+  PUBLIC = 'Publique',
+  PRIVATE = 'Privée',
 }
 
 export enum Status {
-  DRAFT = 'draft',
-  TOVALIDATE = 'toValidate',
-  PUBLISHED = 'published',
-  SUSPENDED = 'suspended',
-  DELETED = 'deleted',
+  DRAFT = 'Brouillon',
+  TOVALIDATE = 'A valider',
+  PUBLISHED = 'Publiée',
+  SUSPENDED = 'Suspendue',
+  DELETED = 'Supprimée',
 }
 
 @Entity()

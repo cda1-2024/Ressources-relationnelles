@@ -15,7 +15,7 @@ items:
     # On prends les uniquement les modérateurs ou role supérieur ici
     validator: '@user{2..15}'
     dateTimeValidation: '{{date.past}}'
-    status: 'published'
+    status: 'Publiée'
 
   ressources_suspended{11..20}:
     index: ($current)
@@ -29,7 +29,7 @@ items:
     # On prends les uniquement les modérateurs ou role supérieur ici
     validator: '@user{2..15}'
     dateTimeValidation: '{{date.past}}'
-    status: 'suspended'
+    status: 'Suspendue'
 
   ressources_toValidate{21..30}:
     index: ($current)
@@ -40,7 +40,7 @@ items:
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
     category: '@category($current-20)'
-    status: 'toValidate'
+    status: 'A valider'
 
   ressources_deleted{31..40}:
     index: ($current)
@@ -51,7 +51,7 @@ items:
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
     category: '@category($current-30)'
-    status: 'deleted'
+    status: 'Supprimée'
 
   ressources_draft{41..50}:
     index: ($current)
@@ -62,5 +62,5 @@ items:
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
     category: '@category($current-40)'
-    status: 'draft'
+    status: 'Brouillon'
 

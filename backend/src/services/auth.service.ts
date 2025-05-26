@@ -3,7 +3,7 @@ import { UserService } from './user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { RegisterUserDto } from '../dto/user/request/register-user.dto';
-import { ValidationException } from 'src/helper/validationException';
+import { ValidationException } from 'src/helper/exceptions/validation.exception';
 import { jwtPayload } from 'src/configuration/jwt.strategy';
 
 @Injectable()
@@ -36,6 +36,7 @@ export class AuthService {
     if (Object.keys(errors).length > 0) {
       throw new ValidationException(errors);
     }
+    console.log('Registering user:', UserNew);
 
     const UserDB = await this.usersService.createUser(UserNew);
 

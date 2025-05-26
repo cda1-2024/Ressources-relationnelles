@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { RessourceService } from './../ressource/ressource.service';
 import { CreateCategoryDto } from 'src/dto/category/request/create-category.dto';
 import { createLoggedRepository } from 'src/helper/safe-repository';
-import { BusinessException } from 'src/exceptions/business.exception';
+import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
 
 @Injectable()

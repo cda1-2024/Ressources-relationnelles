@@ -18,11 +18,11 @@ import { EventParticipation } from './eventParticipation.model';
 import { UserReport } from './userReport.model';
 
 export enum UserRole {
-  SUPERADMIN = 'superAdmin',
-  ADMIN = 'admin',
-  MODERATOR = 'moderator',
-  USER = 'user',
-  VISITOR = 'visitor',
+  SUPERADMIN = 'Super Administrateur',
+  ADMIN = 'Administrateur',
+  MODERATOR = 'Modérateur',
+  USER = 'Utilisateur',
+  VISITOR = 'Visiteur',
 }
 
 @Entity()

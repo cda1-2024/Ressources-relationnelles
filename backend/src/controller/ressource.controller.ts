@@ -22,9 +22,9 @@ import { RessourceService } from 'src/services/ressource/ressource.service';
 import { RessourceMapper } from 'src/services/ressource/ressource.mapper';
 import { User, UserRole } from 'src/models/user.model';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/guards/roles.guard';
-import { Roles } from 'src/guards/roles.decorator';
-import { CurrentUser } from 'src/guards/current-user.decorator';
+import { RolesGuard } from 'src/middleware/guards/roles.guard';
+import { Roles } from 'src/middleware/guards/roles.decorator';
+import { CurrentUser } from 'src/middleware/guards/current-user.decorator';
 
 @ApiTags('Ressources')
 @Controller('api/ressources')

@@ -1,6 +1,6 @@
 import { FullRessourceResponseDto } from 'src/dto/ressource/response/full-ressource-response.dto';
 import { RessourceListResponseDto, RessourceResponseDto } from 'src/dto/ressource/response/list-ressource-response.dto';
-import { RessourceStatusToInt, RessourceTypeToInt, RessourceVisibilityToInt } from 'src/helper/enumMapper';
+import { RessourceStatusToInt, RessourceTypeToInt, RessourceVisibilityToInt } from 'src/helper/enum-mapper';
 import { Ressource } from 'src/models/ressource.model';
 
 export class RessourceMapper {

@@ -3,11 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/models/user.model';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './../../dto/user/request/update-user.dto';
-import { IntToUserRole } from 'src/helper/enumMapper';
+import { IntToUserRole } from 'src/helper/enum-mapper';
 import { updateMyAccountDto } from 'src/dto/user/request/update-my-account.dto';
 import { FilterUserRequestDto } from 'src/dto/user/request/filter-user.dto';
 import { createLoggedRepository } from 'src/helper/safe-repository';
-import { BusinessException } from 'src/exceptions/business.exception';
+import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
 @Injectable()
 export class UserService {
@@ -138,7 +138,8 @@ export class UserService {
   async createUser(user: Partial<User>): Promise<User> {
     try {
       const newUser = this.usersRepository.create(user);
-      return this.usersRepository.save(newUser);
+      console.log(newUser);
+      return await this.usersRepository.save(newUser);
     } catch (error) {
       throw new BusinessException("La création de l'utilisateur a échoué", getErrorStatusCode(error), {
         cause: error,

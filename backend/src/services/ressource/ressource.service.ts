@@ -7,10 +7,10 @@ import { User, UserRole } from 'src/models/user.model';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CreateRessourceRequestDto } from 'src/dto/ressource/request/create-ressource.dto';
 import { CategoryService } from '../category/category.service';
-import { RessourceStatusFromInt, RessourceTypeFromInt, RessourceVisibilityFromInt } from 'src/helper/enumMapper';
+import { RessourceStatusFromInt, RessourceTypeFromInt, RessourceVisibilityFromInt } from 'src/helper/enum-mapper';
 import { SavedRessource } from 'src/models/savedRessource.model';
 import { ConsultedRessource } from 'src/models/consultedRessource.model';
-import { BusinessException } from 'src/exceptions/business.exception';
+import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
 import { createLoggedRepository } from 'src/helper/safe-repository';
 
