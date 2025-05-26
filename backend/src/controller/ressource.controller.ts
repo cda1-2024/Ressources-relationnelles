@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  UnauthorizedException,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -63,11 +52,8 @@ export class RessourceController {
   @Roles(UserRole.USER)
   async create(
     @Body() createRessourceDto: CreateRessourceRequestDto,
-    @CurrentUser() user: User | undefined,
+    @CurrentUser() user: User,
   ): Promise<RessourceResponseDto> {
-    if (!user) {
-      throw new UnauthorizedException('Aucun utilisateur connecté');
-    }
     const ressource = await this.ressourceService.createRessource(user, createRessourceDto);
     return RessourceMapper.toResponseDto(ressource);
   }
@@ -107,11 +93,8 @@ export class RessourceController {
   @UseGuards(AuthGuard('jwt'))
   async findRessources(
     @Query() filters: FilterRessourceRequestDto,
-    @CurrentUser() user: User | undefined,
+    @CurrentUser() user: User,
   ): Promise<RessourceListResponseDto> {
-    if (!user) {
-      throw new UnauthorizedException('Aucun utilisateur connecté');
-    }
     const { ressources, total } = await this.ressourceService.findRessourcesBySearch(user, filters, true);
     return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, total);
   }
@@ -212,11 +195,8 @@ export class RessourceController {
   async saveBookmark(
     @Body() collectRessourceDto: CollectRessourceRequestDto,
     @Param('id') id: string,
-    @CurrentUser() user: User | undefined,
+    @CurrentUser() user: User,
   ): Promise<void> {
-    if (!user) {
-      throw new UnauthorizedException('Aucun utilisateur connecté');
-    }
     await this.ressourceService.saveBookmark(user, id, collectRessourceDto.type);
   }
 
@@ -244,11 +224,8 @@ export class RessourceController {
   async deleteBookmark(
     @Body() collectRessourceDto: CollectRessourceRequestDto,
     @Param('id') id: string,
-    @CurrentUser() user: User | undefined,
+    @CurrentUser() user: User,
   ): Promise<void> {
-    if (!user) {
-      throw new UnauthorizedException('Aucun utilisateur connecté');
-    }
     await this.ressourceService.saveBookmark(user, id, collectRessourceDto.type);
   }
 
@@ -276,11 +253,8 @@ export class RessourceController {
   async validate(
     @Body() validateRessourceDto: ValidateRessourceRequestDto,
     @Param('id') id: string,
-    @CurrentUser() user: User | undefined,
+    @CurrentUser() user: User,
   ): Promise<FullRessourceResponseDto> {
-    if (!user) {
-      throw new UnauthorizedException('Aucun utilisateur connecté');
-    }
     const ressource = await this.ressourceService.validateRessource(user, id, validateRessourceDto.validate);
     return RessourceMapper.toFullResponseDto(ressource);
   }
@@ -301,13 +275,11 @@ export class RessourceController {
     description: "La ressource n'a pas été trouvée",
   })
   @UseGuards(AuthGuard('jwt'))
-  async consulteRessource(@Param('id') id: string, @CurrentUser() user: User | undefined): Promise<void> {
-    if (!user) {
-      throw new UnauthorizedException('Aucun utilisateur connecté');
-    }
+  async consulteRessource(@Param('id') id: string, @CurrentUser() user: User): Promise<void> {
     await this.ressourceService.consulteRessource(user, id);
   }
 
+  // Supprimer une ressource
   @Delete('/:id')
   @ApiOperation({
     summary: 'Supprimer une ressource par ID',
