@@ -83,7 +83,7 @@ export class CategoryService {
     }
   }
 
-  async updateCategory(id: string, updateCategoryDto: UpdateCategoryDto, user: User): Promise<Category | null> {
+  async updateCategory(id: string, updateCategoryDto: UpdateCategoryDto, user: User): Promise<Category> {
     try {
       if (!updateCategoryDto || Object.values(updateCategoryDto).every((value) => value === undefined)) {
         throw new BadRequestException('Aucune donnée à mettre à jour.');

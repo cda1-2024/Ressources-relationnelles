@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as pinoms from 'pino-multi-stream';
 import { Logger } from 'pino-multi-stream';
 
-const logDir = path.join(__dirname, '..', 'logs');
+const logDir = path.join('C:\\logs');
 
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir, { recursive: true });
