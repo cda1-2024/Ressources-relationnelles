@@ -61,5 +61,5 @@ export class UpdateUserDto {
   })
   @IsString()
   @IsOptional()
-  bio: string;
+  bio?: string;
 }
