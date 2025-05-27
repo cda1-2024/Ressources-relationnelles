@@ -36,7 +36,6 @@ export class AuthService {
     if (Object.keys(errors).length > 0) {
       throw new ValidationException(errors);
     }
-    console.log('Registering user:', UserNew);
 
     const UserDB = await this.usersService.createUser(UserNew);
 

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/models/user.model';
 import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { UpdateUserDto } from 'src/dto/user/request/update-user.dto';
+import { USER_NOT_FOUND } from 'src/helper/constants/constant-exception';
 
 describe('UserService', () => {
   let service: UserService;
@@ -44,9 +45,9 @@ describe('UserService', () => {
       (mockRepository.findOneBy as jest.Mock).mockResolvedValue(null);
       await expect(service.findUserById('1')).rejects.toThrow(BusinessException);
       await expect(service.findUserById('1')).rejects.toMatchObject({
-        cause: expect.any(NotFoundException),
+        cause: expect.any(NotFoundException) as unknown,
       });
-      await expect(service.findUserById('1')).rejects.toThrow("La recherche de l'utilisateur a échoué");
+      await expect(service.findUserById('1')).rejects.toThrow(USER_NOT_FOUND);
     });
   });
 
@@ -57,7 +58,7 @@ describe('UserService', () => {
       (mockRepository.create as jest.Mock).mockReturnValue(newUser);
       (mockRepository.save as jest.Mock).mockResolvedValue(savedUser);
 
-      const result = await service.createUser(newUser as any);
+      const result = await service.createUser(newUser as Partial<User>);
       expect(mockRepository.create).toHaveBeenCalledWith(newUser);
       expect(mockRepository.save).toHaveBeenCalledWith(newUser);
       expect(result).toEqual(savedUser);
@@ -91,7 +92,7 @@ describe('UserService', () => {
       const result = service.updateUser('1', { username: 'jane' });
       await expect(result).rejects.toThrow(BusinessException);
       await expect(result).rejects.toMatchObject({
-        cause: expect.any(NotFoundException),
+        cause: expect.any(NotFoundException) as unknown,
       });
     });
   });
@@ -109,7 +110,7 @@ describe('UserService', () => {
       (mockRepository.findOneBy as jest.Mock).mockResolvedValue(null);
       await expect(service.deleteUser('1')).rejects.toThrow(BusinessException);
       await expect(service.deleteUser('1')).rejects.toMatchObject({
-        cause: expect.any(NotFoundException),
+        cause: expect.any(NotFoundException) as unknown,
       });
     });
   });
