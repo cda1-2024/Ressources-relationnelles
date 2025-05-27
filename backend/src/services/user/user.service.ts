@@ -9,6 +9,7 @@ import { FilterUserRequestDto } from 'src/dto/user/request/filter-user.dto';
 import { createLoggedRepository } from 'src/helper/safe-repository';
 import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
+import { USER_NOT_FOUND } from 'src/helper/constants/constant-exception';
 @Injectable()
 export class UserService {
   private readonly usersRepository: Repository<User>;
@@ -129,7 +130,7 @@ export class UserService {
       }
       return user;
     } catch (error) {
-      throw new BusinessException("La recherche de l'utilisateur a échoué", getErrorStatusCode(error), {
+      throw new BusinessException(USER_NOT_FOUND, getErrorStatusCode(error), {
         cause: error,
       });
     }
@@ -138,7 +139,6 @@ export class UserService {
   async createUser(user: Partial<User>): Promise<User> {
     try {
       const newUser = this.usersRepository.create(user);
-      console.log(newUser);
       return await this.usersRepository.save(newUser);
     } catch (error) {
       throw new BusinessException("La création de l'utilisateur a échoué", getErrorStatusCode(error), {
