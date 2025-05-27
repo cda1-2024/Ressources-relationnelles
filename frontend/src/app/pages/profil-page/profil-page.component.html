@@ -1,0 +1,71 @@
+<div class="flex flex-col flex-grow items-center">
+    <div class="flex flex-col items-center flex-grow w-full" [ngClass]="{'px-[15vw]': !isMobile}">
+        <div class="bg-[#f8f9ff] flex-grow w-full px-4 pb-24"
+            [ngClass]="{'border-x-2 border-[#e8edff]': !isMobile}"
+        >
+            <div class="py-4">
+                <div class="flex flex-row justify-between mt-[12px]">
+                    <h1 class="text-[30px] font-bold leading-[45px] w-full flex flex-wrap
+                    justify-center items-center md:justify-start md:items-start">Votre profil</h1>
+                    <button mat-icon-button class="" aria-label="Modifier votre profil"><mat-icon>edit</mat-icon></button>
+                </div>
+                
+                <hr>
+                <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+                    <div class="flex sm:flex-row justify-between sm:gap-8 flex-col-reverse">
+                        <div class="flex flex-grow flex-col">
+                            <mat-form-field appearance="fill" class="full-width">
+                                <mat-label>Nom d'utilisateur</mat-label>
+                                <input matInput formControlName="username" />
+                            </mat-form-field>
+                        
+                            <mat-form-field appearance="fill" class="full-width">
+                                <mat-label>Bio</mat-label>
+                                <textarea matInput formControlName="bio" rows="3"></textarea>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-col items-center justify-center sm:block">
+                            <p>Photo de profil</p>
+                            <img src="https://material.angular.dev/assets/img/examples/shiba2.jpg" alt="Photo de profil" class="w-[150px] h-[150px] rounded-full my-4 sm:mr-8 object-cover">
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button mat-flat-button type="submit" class="custom-button !rounded-[10px] mx-[10px]">Enregistrer</button>
+                    </div>
+                </form>
+                <div class="mt-4">
+                    <h2 class="text-2xl font-bold">Mot de passe</h2>
+                    <hr>
+                    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Ancien mot de passe</mat-label>
+                            <input matInput formControlName="password" type="password" />
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Nouveau mot de passe</mat-label>
+                            <input matInput formControlName="password" type="password" />
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Confirmez votre mot de passe</mat-label>
+                            <input matInput formControlName="password" type="password" />
+                        </mat-form-field>
+
+                    
+                        <div class="actions">
+                            <button mat-flat-button type="submit" class="custom-button !rounded-[10px] mx-[10px]">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="mt-4">
+                    <h2 class="text-2xl font-bold">Supprimer le profil</h2>
+                    <hr> 
+                    <div>
+                        <p class="mb-4 text-justify">Attention : Si vous supprimez votre profil, toutes vos données seront perdues.</p>
+                        <button mat-flat-button type="button" class="custom-button !rounded-[10px] mx-[10px]" (click)="confirmDelete()">Supprimer le profil</button>
+                    </div>
+                </div>      
+            </div>
+        </div>     
+    </div>
+</div>
+      
