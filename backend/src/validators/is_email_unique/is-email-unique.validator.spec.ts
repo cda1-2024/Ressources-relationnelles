@@ -21,7 +21,7 @@ describe('IsCategoryUniqueConstraint', () => {
     });
 
     it('should return false if the email already exists', async () => {
-      (mockService.findUserByIdentifier as jest.Mock).mockResolvedValue({ id: 1, name: 'used@gmail.com' });
+      (mockService.findUserByIdentifier as jest.Mock).mockResolvedValue({ id: 1, email: 'used@gmail.com' });
       const result = await isUnique.validate('used@gmail.com');
       expect(mockService.findUserByIdentifier).toHaveBeenCalledWith('used@gmail.com');
       expect(result).toBe(false);

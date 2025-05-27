@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/models/user.model';
 import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { UpdateUserDto } from 'src/dto/user/request/update-user.dto';
-import { USER_NOT_FOUND } from 'src/helper/constants/constant-exception';
+import { USER_NOT_FOUND } from 'src/helper/constants/user-constant-exception';
 
 describe('UserService', () => {
   let service: UserService;

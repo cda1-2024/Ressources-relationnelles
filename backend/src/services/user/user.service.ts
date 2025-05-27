@@ -9,7 +9,7 @@ import { FilterUserRequestDto } from 'src/dto/user/request/filter-user.dto';
 import { createLoggedRepository } from 'src/helper/safe-repository';
 import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
-import { USER_NOT_FOUND } from 'src/helper/constants/constant-exception';
+import { USER_NOT_FOUND } from 'src/helper/constants/user-constant-exception';
 @Injectable()
 export class UserService {
   private readonly usersRepository: Repository<User>;
