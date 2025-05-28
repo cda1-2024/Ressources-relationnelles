@@ -5,13 +5,18 @@ import { useContainer } from 'class-validator';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { GlobalExceptionFilter } from './middleware/filters/global-exception.filter';
 import { GlobalValidationPipe } from './validators/global-validation.pipe';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:4200',
+    credentials: true,
+  });
   app.useGlobalPipes(GlobalValidationPipe);
   app.useGlobalFilters(new GlobalExceptionFilter());
+  app.use(cookieParser());
 
   const options = new DocumentBuilder()
     .setTitle('API Ressources Relationnelles')

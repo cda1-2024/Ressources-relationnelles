@@ -10,6 +10,8 @@ import { createLoggedRepository } from 'src/helper/safe-repository';
 import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
 import { USER_NOT_FOUND } from 'src/helper/constants/constant-exception';
+import * as bcrypt from 'bcrypt';
+
 @Injectable()
 export class UserService {
   private readonly usersRepository: Repository<User>;
@@ -179,6 +181,27 @@ export class UserService {
       return false;
     } catch (error) {
       throw new BusinessException("La suppression de l'utilisateur a échoué", getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
+
+  async updateRefreshToken(userId: string, newRefreshToken: string): Promise<void> {
+    try {
+      const refreshToken = await bcrypt.hash(newRefreshToken, 10);
+      await this.usersRepository.update(userId, { refreshToken });
+    } catch (error) {
+      throw new BusinessException('La mise à jour du refresh token a échoué', getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
+
+  async deleteRefreshToken(userId: string): Promise<void> {
+    try {
+      await this.usersRepository.update(userId, { refreshToken: '' });
+    } catch (error) {
+      throw new BusinessException('La suppression du refresh token a échoué', getErrorStatusCode(error), {
         cause: error,
       });
     }

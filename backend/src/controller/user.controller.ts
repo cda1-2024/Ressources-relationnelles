@@ -105,12 +105,9 @@ export class UserController {
   })
   @UseGuards(AuthGuard('jwt'))
   async updateMyAccount(
-    @CurrentUser() user: User | undefined,
+    @CurrentUser() user: User,
     @Body() updateMyAccountDto: updateMyAccountDto,
   ): Promise<UserResponseDto> {
-    if (!user) {
-      throw new UnauthorizedException('Aucun utilisateur connecté');
-    }
     const userResponse = await this.userService.updateMyAccount(user.id, updateMyAccountDto);
     return UserMapper.toResponseDto(userResponse);
   }
