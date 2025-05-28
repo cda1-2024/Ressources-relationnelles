@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -38,8 +39,8 @@ export class AuthController {
   @ApiBadRequestResponse({
     description: "La création de l'utilisateur a échoué",
   })
-  async register(@Body() registerUserDto: RegisterUserDto) {
-    const result = await this.authService.register(registerUserDto);
+  async register(@Res({ passthrough: true }) res: Response, @Body() registerUserDto: RegisterUserDto) {
+    const result = await this.authService.register(res, registerUserDto);
     return result;
   }
 
@@ -56,9 +57,13 @@ export class AuthController {
   @ApiBadRequestResponse({
     description: "La connection de l'utilisateur a échoué",
   })
-  async login(@Body() loginDto: LoginUserDto) {
-    const accessToken = await this.authService.login(loginDto.identifier, loginDto.password);
-    return { accessToken };
+  async login(@Body() loginDto: LoginUserDto, @Res({ passthrough: true }) res: Response): Promise<void> {
+    return this.authService.login(loginDto.identifier, loginDto.password, res);
+  }
+
+  @Post('refresh')
+  async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<void> {
+    return await this.authService.refreshTokens(req, res);
   }
 
   @Post('loginByService')

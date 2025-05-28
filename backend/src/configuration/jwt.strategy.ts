@@ -4,6 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import * as dotenv from 'dotenv';
 import { UserService } from 'src/services/user/user.service';
 import { User } from 'src/models/user.model';
+import { Request } from 'express';
 
 dotenv.config();
 
@@ -11,12 +12,14 @@ export type jwtPayload = {
   id: string;
   username: string;
   role: string;
+  iat?: number;
+  exp?: number;
 };
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private userService: UserService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([(req: Request) => req?.cookies?.['access_token'] as string]),
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_KEY || 'defaultSecretKey',
     });

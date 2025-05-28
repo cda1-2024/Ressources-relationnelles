@@ -5,6 +5,9 @@ import * as bcrypt from 'bcrypt';
 import { RegisterUserDto } from '../dto/user/request/register-user.dto';
 import { ValidationException } from 'src/helper/exceptions/validation.exception';
 import { jwtPayload } from 'src/configuration/jwt.strategy';
+import { Request, Response } from 'express';
+import { BusinessException } from 'src/helper/exceptions/business.exception';
+import { getErrorStatusCode } from 'src/helper/exception-utils';
 
 @Injectable()
 export class AuthService {
@@ -13,40 +16,110 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(identifier: string, password: string): Promise<string> {
-    const user = await this.usersService.findUserByIdentifier(identifier);
-    const isValid = await bcrypt.compare(password, user?.password ?? '');
+  async login(identifier: string, password: string, res: Response): Promise<void> {
+    try {
+      const user = await this.usersService.findUserByIdentifier(identifier);  
+      const isValid = await bcrypt.compare(password, user?.password ?? '');
 
-    if (!user || !isValid) {
-      throw new UnauthorizedException('Identifiants invalides');
+      if (!user || !isValid) {
+        throw new UnauthorizedException('Identifiants invalides');
+      }
+
+      const payload: jwtPayload = {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      };
+
+      await this.createTokens(res, payload);
+      res.send({ message: 'Connexion réussie' });
+    } catch (error) {
+      throw new BusinessException('La connexion a échoué', getErrorStatusCode(error), {
+        cause: error,
+      });
     }
-
-    const payload: jwtPayload = {
-      id: user.id,
-      username: user.username,
-      role: user.role,
-    };
-
-    return this.jwtService.signAsync(payload);
   }
 
-  async register(UserNew: RegisterUserDto): Promise<{ accessToken: string }> {
-    const errors: Record<string, string> = {};
+  async register(res: Response, UserNew: RegisterUserDto): Promise<void> {
+    try {
+      const errors: Record<string, string> = {};
 
-    if (Object.keys(errors).length > 0) {
-      throw new ValidationException(errors);
+      if (Object.keys(errors).length > 0) {
+        throw new ValidationException(errors);
+      }
+
+      const UserDB = await this.usersService.createUser(UserNew);
+
+      const payload = {
+        id: UserDB.id,
+        username: UserDB.username,
+        role: UserDB.role,
+      };
+
+      await this.createTokens(res, payload);
+      res.send({ message: 'Création du compte réussi' });
+    } catch (error) {
+      throw new BusinessException("La création de l'utilisateur a échoué", getErrorStatusCode(error), {
+        cause: error,
+      });
     }
+  }
 
-    const UserDB = await this.usersService.createUser(UserNew);
+  async refreshTokens(req: Request, res: Response): Promise<void> {
+    try {
+      const refreshToken = req.cookies?.['refresh_token'] as string | undefined;
+      if (!refreshToken) throw new UnauthorizedException('Refresh token invalide');
 
-    const payload = {
-      id: UserDB.id,
-      username: UserDB.username,
-      role: UserDB.role,
-    };
+      const decoded = await this.jwtService.verifyAsync<jwtPayload>(refreshToken, {
+        secret: process.env.JWT_KEY,
+      });
 
-    return {
-      accessToken: await this.jwtService.signAsync(payload),
-    };
+      const user = await this.usersService.findUserById(decoded.id);
+      if (!user || !user.refreshToken) {
+        throw new UnauthorizedException('Refresh token invalide');
+      }
+
+      const isValid = await bcrypt.compare(refreshToken, user.refreshToken);
+      if (!isValid) {
+        throw new UnauthorizedException('Refresh token invalide');
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { exp, iat, ...payload } = decoded;
+
+      await this.createTokens(res, payload);
+      res.send({ message: 'Tokens renouvelés' });
+    } catch (error) {
+      throw new BusinessException('Le rafraîchissement des tokens a échoué', getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
+
+  async createTokens(res: Response, payload: jwtPayload): Promise<void> {
+    try {
+      const newAccessToken = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
+      const newRefreshToken = await this.jwtService.signAsync(payload, { expiresIn: '7d' });
+
+      await this.usersService.updateRefreshToken(payload.id, newRefreshToken);
+
+      res.cookie('access_token', newAccessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'none',
+        maxAge: 60 * 60 * 1000,
+      });
+
+      res.cookie('refresh_token', newRefreshToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'none',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+    } catch (error) {
+      throw new BusinessException('La création des tokens a échoué', getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
   }
 }
