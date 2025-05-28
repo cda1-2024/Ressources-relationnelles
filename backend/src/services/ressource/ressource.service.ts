@@ -13,6 +13,7 @@ import { ConsultedRessource } from 'src/models/consultedRessource.model';
 import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
 import { createLoggedRepository } from 'src/helper/safe-repository';
+import { RessourceListResponseDto } from 'src/dto/ressource/response/list-ressource-response.dto';
 
 @Injectable()
 export class RessourceService {
@@ -36,6 +37,7 @@ export class RessourceService {
       const ressources = await this.ressourcesRepository.find({
         relations: {
           category: true,
+          comments: true,
           creator: true,
           validator: true,
         },
@@ -52,34 +54,31 @@ export class RessourceService {
     isRestricted: boolean,
   ): Promise<{ ressources: Ressource[]; total: number }> {
     try {
-      let query = this.ressourcesRepository
+      if (filters.page < 1 || filters.pageSize < 1) {
+        throw new BadRequestException('Les paramètres de pagination doivent être supérieurs à 0');
+      }
+
+      const query = this.ressourcesRepository
         .createQueryBuilder('ressource')
         .leftJoinAndSelect('ressource.category', 'category')
         .leftJoinAndSelect('ressource.creator', 'creator')
-        .leftJoin('ressource.validator', 'validator');
+        .leftJoin('ressource.validator', 'validator')
+        .leftJoinAndSelect('ressource.comments', 'comments');
 
-      query = this.applyCommonFilters(query, filters);
+      this.applyCommonFilters(query, filters);
 
-      if (isRestricted) {
-        query = query.andWhere('ressource.visibility IN (:...visibility)', {
-          visibility: [Visibility.PUBLIC, Visibility.RESTRICTED],
-        });
-      } else {
-        query = query.andWhere('ressource.visibility = :visibility', {
-          visibility: Visibility.PUBLIC,
-        });
-      }
+      query.andWhere('ressource.visibility IN (:...visibility)', {
+        visibility: isRestricted ? [Visibility.PUBLIC, Visibility.RESTRICTED] : [Visibility.PUBLIC],
+      });
 
-      if (
-        user &&
-        (user.role === UserRole.MODERATOR || user.role === UserRole.ADMIN || user.role === UserRole.SUPERADMIN)
-      ) {
+      if (user?.role && [UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPERADMIN].includes(user.role)) {
         if (filters.status) {
-          query = query.andWhere('ressource.state = :status', {
-            status: filters.status,
-          });
+          query.andWhere('ressource.status = :status', { status: filters.status });
         }
+      } else {
+        query.andWhere('ressource.status = :status', { status: Status.PUBLISHED });
       }
+
       const total = await query.getCount();
 
       query.skip((filters.page - 1) * filters.pageSize).take(filters.pageSize);
@@ -204,7 +203,7 @@ export class RessourceService {
         entity.isToLater = isNew ? true : !entity.isToLater;
       } else if (type === 'favorite') {
         entity.isFavorite = isNew ? true : !entity.isFavorite;
-      } else if (type !== 'like') {
+      } else if (type === 'like') {
         entity.like = isNew ? true : !entity.like;
         ressource.like = entity.like ? ressource.like + 1 : ressource.like - 1;
         await this.ressourcesRepository.save(ressource);
@@ -340,6 +339,29 @@ export class RessourceService {
       return true;
     } catch (error) {
       throw new BusinessException('La suppression de la catégorie a échoué', getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
+
+  async isRessourceLikedByUser(
+    listRessourceDto: RessourceListResponseDto,
+    userId?: string,
+  ): Promise<RessourceListResponseDto> {
+    try {
+      for (const ressource of listRessourceDto.ressources) {
+        if (userId) {
+          const savedRessource = await this.savedRessourceRepository.findOne({
+            where: { user: { id: userId }, ressource: { id: ressource.id } },
+          });
+          ressource.isLiked = savedRessource ? savedRessource.like : false;
+        } else {
+          ressource.isLiked = false;
+        }
+      }
+      return listRessourceDto;
+    } catch (error) {
+      throw new BusinessException('La recherche des ressources aimées a échoué', getErrorStatusCode(error), {
         cause: error,
       });
     }
