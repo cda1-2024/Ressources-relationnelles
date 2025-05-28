@@ -79,13 +79,12 @@ export class AuthService {
   getToken(): string | null {
     
     let token: string | null = null;
-
-    if(typeof localStorage !== 'undefined'){
-        token = localStorage.getItem(this.tokenKey);
+    if(typeof localStorage !== 'undefined'){     
+      token = localStorage.getItem(this.tokenKey);       
     }
     
     if(typeof sessionStorage !== 'undefined' && token == null){
-        token = sessionStorage.getItem(this.tokenKey);
+      token = sessionStorage.getItem(this.tokenKey);
     }
     return token;
   }
