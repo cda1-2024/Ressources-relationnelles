@@ -27,4 +27,17 @@ describe('IsCategoryUniqueConstraint', () => {
       expect(result).toBe(false);
     });
   });
+  describe('defaultMessage', () => {
+    it('should return the default error message', () => {
+      const value:string = 'test@gmail.com'
+      const message = isUnique.defaultMessage({
+        value,
+        constraints: [],
+        targetName: '',
+        object: {},
+        property: '',
+      });
+      expect(message).toBe(`Le nom d'utilisateur "${value}" est déjà pris.`);
+    });
+  });
 });
