@@ -8,6 +8,7 @@ import { jwtPayload } from 'src/configuration/jwt.strategy';
 import { Request, Response } from 'express';
 import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
+import { LoginUserDto } from 'src/dto/user/request/login-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,10 +17,10 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(identifier: string, password: string, res: Response): Promise<void> {
+  async login(loginDto: LoginUserDto, res: Response): Promise<void> {
     try {
-      const user = await this.usersService.findUserByIdentifier(identifier);
-      const isValid = await bcrypt.compare(password, user?.password ?? '');
+      const user = await this.usersService.findUserByIdentifier(loginDto.identifier);
+      const isValid = await bcrypt.compare(loginDto.password, user?.password ?? '');
 
       if (!user || !isValid) {
         throw new UnauthorizedException('Identifiants invalides');
@@ -30,6 +31,9 @@ export class AuthService {
         username: user.username,
         role: user.role,
       };
+      if (loginDto.rememberMe === true) {
+        payload.rememberMe = true;
+      }
 
       await this.createTokens(res, payload);
       res.send({ message: 'Connexion réussie' });
@@ -98,8 +102,12 @@ export class AuthService {
 
   async createTokens(res: Response, payload: jwtPayload): Promise<void> {
     try {
+      let defaultExpiresIn: string = '7d';
+      if (payload.rememberMe === true) {
+        defaultExpiresIn = '30d';
+      }
       const newAccessToken = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
-      const newRefreshToken = await this.jwtService.signAsync(payload, { expiresIn: '7d' });
+      const newRefreshToken = await this.jwtService.signAsync(payload, { expiresIn: defaultExpiresIn });
 
       await this.usersService.updateRefreshToken(payload.id, newRefreshToken);
 

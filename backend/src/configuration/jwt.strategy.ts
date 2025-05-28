@@ -12,6 +12,7 @@ export type jwtPayload = {
   id: string;
   username: string;
   role: string;
+  rememberMe?: boolean;
   iat?: number;
   exp?: number;
 };

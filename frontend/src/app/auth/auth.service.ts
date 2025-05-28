@@ -5,7 +5,6 @@ import { AuthResponse, LoginPayload } from './auth.model';
 import { ApiService } from '../services/api.service';
 import { JwtHelperService } from '@auth0/angular-jwt'; // Un bundle bien pratique !
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -16,7 +15,7 @@ export class AuthService {
   private userId = new BehaviorSubject<string | null>(this.getUserId());
   private username = new BehaviorSubject<string | null>(this.getUsername());
 
-  isLoggedIn$ : Observable<boolean> = this.loggedIn.asObservable();
+  isLoggedIn$: Observable<boolean> = this.loggedIn.asObservable();
   userId$: Observable<string | null> = this.userId.asObservable();
   username$: Observable<string | null> = this.username.asObservable();
 
@@ -25,10 +24,14 @@ export class AuthService {
   // Vérifie si le token est présent et valide
   private hasToken(): boolean {
     try {
-
       let token: string | null = this.getToken();
 
-      if ( typeof token == 'undefined' || token == null || token == 'null' || token == 'undefined') {
+      if (
+        typeof token == 'undefined' ||
+        token == null ||
+        token == 'null' ||
+        token == 'undefined'
+      ) {
         return false;
       }
 
@@ -39,7 +42,6 @@ export class AuthService {
         return false;
       }
       return true;
-
     } catch (e) {
       console.error('Storage is not available:', e);
       return false;
@@ -47,8 +49,12 @@ export class AuthService {
   }
 
   // Contacte l'API pour se connecter
-  // et stocke le token dans localStorage ou sessionStorage
-  login(email: string, password: string, rememberMe: boolean): Observable<AuthResponse> {
+  // et stocke le token dans le cookie
+  login(
+    email: string,
+    password: string,
+    rememberMe: boolean
+  ): Observable<AuthResponse> {
     const payload: LoginPayload = {
       identifier: email,
       password,
@@ -57,7 +63,7 @@ export class AuthService {
     return this.api.post<AuthResponse>('/auth/login', payload).pipe(
       tap((response) => {
         const storage = rememberMe ? localStorage : sessionStorage;
-        storage.setItem(this.tokenKey, response.accessToken	);
+        storage.setItem(this.tokenKey, response.accessToken);
         this.loggedIn.next(true);
         this.userId.next(this.getUserId());
         this.username.next(this.getUsername());
@@ -71,21 +77,20 @@ export class AuthService {
     sessionStorage.removeItem(this.tokenKey);
     this.userId.next(null);
     this.username.next(null);
-    
+
     this.loggedIn.next(false);
   }
 
   // Renvoie le token stocké
   getToken(): string | null {
-    
     let token: string | null = null;
 
-    if(typeof localStorage !== 'undefined'){
-        token = localStorage.getItem(this.tokenKey);
+    if (typeof localStorage !== 'undefined') {
+      token = localStorage.getItem(this.tokenKey);
     }
-    
-    if(typeof sessionStorage !== 'undefined' && token == null){
-        token = sessionStorage.getItem(this.tokenKey);
+
+    if (typeof sessionStorage !== 'undefined' && token == null) {
+      token = sessionStorage.getItem(this.tokenKey);
     }
     return token;
   }
@@ -115,20 +120,23 @@ export class AuthService {
     return null;
   }
 
-
   // Crée un nouvel utilisateur
-  register(email: string, username: string, password: string, rememberMe: boolean): Observable<AuthResponse> {
+  register(
+    email: string,
+    username: string,
+    password: string,
+    rememberMe: boolean
+  ): Observable<AuthResponse> {
     const payload = {
       email,
       username,
       password,
     };
 
-
     return this.api.post<AuthResponse>('/auth/register', payload).pipe(
       tap((response) => {
         const storage = rememberMe ? localStorage : sessionStorage;
-        storage.setItem(this.tokenKey, response.accessToken	);
+        storage.setItem(this.tokenKey, response.accessToken);
         this.loggedIn.next(true);
         this.userId.next(this.getUserId());
         this.username.next(this.getUsername());
@@ -136,4 +144,7 @@ export class AuthService {
     );
   }
 
+  refreshToken(): Observable<void> {
+    return this.api.post<void>('/api/auth/refresh', {});
+  }
 }

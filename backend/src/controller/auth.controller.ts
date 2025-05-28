@@ -61,7 +61,7 @@ export class AuthController {
     description: "La connection de l'utilisateur a échoué",
   })
   async login(@Body() loginDto: LoginUserDto, @Res({ passthrough: true }) res: Response): Promise<void> {
-    return this.authService.login(loginDto.identifier, loginDto.password, res);
+    return this.authService.login(loginDto, res);
   }
 
   @Post('refresh')
