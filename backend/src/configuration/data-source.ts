@@ -38,6 +38,7 @@ const config = {
   autoLoadEntities: true,
   synchronize: false,
   namingStrategy: new SnakeNamingStrategy(),
+  logging: true,
 };
 
 export default registerAs('datasource', () => config);

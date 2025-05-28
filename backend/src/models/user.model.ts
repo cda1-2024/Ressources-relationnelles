@@ -42,7 +42,7 @@ export class User {
   @Column({ default: '', length: 1000 })
   bio: string;
 
-  @Column({ select: false })
+  @Column({ select: false, length: 100 })
   password: string;
 
   @Column({ default: false })
@@ -59,6 +59,9 @@ export class User {
 
   @Column({ default: '', length: 100 })
   country: string;
+
+  @Column({ length: 100, nullable: true })
+  refreshToken?: string;
 
   @CreateDateColumn()
   createdAt: Date;

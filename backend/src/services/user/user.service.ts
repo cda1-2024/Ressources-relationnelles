@@ -9,6 +9,9 @@ import { FilterUserRequestDto } from 'src/dto/user/request/filter-user.dto';
 import { createLoggedRepository } from 'src/helper/safe-repository';
 import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
+import { USER_NOT_FOUND } from 'src/helper/constants/constant-exception';
+import * as bcrypt from 'bcrypt';
+
 @Injectable()
 export class UserService {
   private readonly usersRepository: Repository<User>;
@@ -19,7 +22,7 @@ export class UserService {
 
   async findUserAll(): Promise<User[]> {
     try {
-      return this.usersRepository.find();
+      return await this.usersRepository.find();
     } catch (error) {
       throw new BusinessException('La recherche des utilisateurs a échoué', getErrorStatusCode(error), {
         cause: error,
@@ -29,7 +32,7 @@ export class UserService {
 
   async findUserByIdentifier(identifier: string): Promise<User | null> {
     try {
-      return this.usersRepository.findOne({
+      return await this.usersRepository.findOne({
         select: {
           id: true,
           username: true,
@@ -38,25 +41,6 @@ export class UserService {
           role: true,
         },
         where: [{ email: identifier }, { username: identifier }],
-      });
-    } catch (error) {
-      throw new BusinessException("La recherche de l'utilisateur a échoué", getErrorStatusCode(error), {
-        cause: error,
-      });
-    }
-  }
-
-  async findUserByUsername(username: string): Promise<User | null> {
-    try {
-      return this.usersRepository.findOne({
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          password: true,
-          role: true,
-        },
-        where: [{ username: username }],
       });
     } catch (error) {
       throw new BusinessException("La recherche de l'utilisateur a échoué", getErrorStatusCode(error), {
@@ -101,25 +85,6 @@ export class UserService {
     }
   }
 
-  async findUserByEmail(email: string): Promise<User | null> {
-    try {
-      return this.usersRepository.findOne({
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          password: true,
-          role: true,
-        },
-        where: [{ email: email }],
-      });
-    } catch (error) {
-      throw new BusinessException("La recherche de l'utilisateur a échoué", getErrorStatusCode(error), {
-        cause: error,
-      });
-    }
-  }
-
   async findUserById(id: string): Promise<User> {
     try {
       const user = await this.usersRepository.findOneBy({ id: id });
@@ -129,7 +94,7 @@ export class UserService {
       }
       return user;
     } catch (error) {
-      throw new BusinessException("La recherche de l'utilisateur a échoué", getErrorStatusCode(error), {
+      throw new BusinessException(USER_NOT_FOUND, getErrorStatusCode(error), {
         cause: error,
       });
     }
@@ -138,7 +103,6 @@ export class UserService {
   async createUser(user: Partial<User>): Promise<User> {
     try {
       const newUser = this.usersRepository.create(user);
-      console.log(newUser);
       return await this.usersRepository.save(newUser);
     } catch (error) {
       throw new BusinessException("La création de l'utilisateur a échoué", getErrorStatusCode(error), {
@@ -149,7 +113,7 @@ export class UserService {
 
   async countUsers(): Promise<number> {
     try {
-      return this.usersRepository.count();
+      return await this.usersRepository.count();
     } catch (error) {
       throw new BusinessException('Le compte des utilisateurs a échoué', getErrorStatusCode(error), {
         cause: error,
@@ -217,6 +181,27 @@ export class UserService {
       return false;
     } catch (error) {
       throw new BusinessException("La suppression de l'utilisateur a échoué", getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
+
+  async updateRefreshToken(userId: string, newRefreshToken: string): Promise<void> {
+    try {
+      const refreshToken = await bcrypt.hash(newRefreshToken, 10);
+      await this.usersRepository.update(userId, { refreshToken });
+    } catch (error) {
+      throw new BusinessException('La mise à jour du refresh token a échoué', getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
+
+  async deleteRefreshToken(userId: string): Promise<void> {
+    try {
+      await this.usersRepository.update(userId, { refreshToken: '' });
+    } catch (error) {
+      throw new BusinessException('La suppression du refresh token a échoué', getErrorStatusCode(error), {
         cause: error,
       });
     }

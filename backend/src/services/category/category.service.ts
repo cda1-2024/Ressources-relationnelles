@@ -24,7 +24,7 @@ export class CategoryService {
 
   async getCategoryAll(): Promise<Category[]> {
     try {
-      return this.categoriesRepository.find();
+      return await this.categoriesRepository.find();
     } catch (error) {
       throw new BusinessException('La recherche des catégories a échoué', getErrorStatusCode(error), {
         cause: error,
