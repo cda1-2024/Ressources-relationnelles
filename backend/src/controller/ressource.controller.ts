@@ -74,7 +74,14 @@ export class RessourceController {
   })
   async findPublicRessources(@Query() filters: FilterRessourceRequestDto): Promise<RessourceListResponseDto> {
     const { ressources, total } = await this.ressourceService.findRessourcesBySearch(null, filters, false);
-    return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, total);
+    const listRessourceLikedByUser: RessourceListResponseDto = RessourceMapper.toResponseListDto(
+      ressources,
+      filters.page,
+      filters.pageSize,
+      total,
+    );
+
+    return this.ressourceService.isRessourceLikedByUser(listRessourceLikedByUser);
   }
 
   @Get('/filter/')
@@ -96,7 +103,13 @@ export class RessourceController {
     @CurrentUser() user: User,
   ): Promise<RessourceListResponseDto> {
     const { ressources, total } = await this.ressourceService.findRessourcesBySearch(user, filters, true);
-    return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, total);
+    const listRessourceLikedByUser: RessourceListResponseDto = RessourceMapper.toResponseListDto(
+      ressources,
+      filters.page,
+      filters.pageSize,
+      total,
+    );
+    return this.ressourceService.isRessourceLikedByUser(listRessourceLikedByUser, user.id);
   }
 
   // Récupérer une ressource par ID

@@ -31,6 +31,15 @@ export class RessourceResponseDto {
 
   @ApiProperty({ type: RessourceTypeDto })
   type: RessourceTypeDto;
+
+  @ApiProperty()
+  nbLike: number;
+
+  @ApiProperty()
+  nbComment: number;
+
+  @ApiProperty()
+  isLiked?: boolean;
 }
 
 export class RessourceListResponseDto {
