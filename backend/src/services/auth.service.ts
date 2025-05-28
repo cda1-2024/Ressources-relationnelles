@@ -18,7 +18,7 @@ export class AuthService {
 
   async login(identifier: string, password: string, res: Response): Promise<void> {
     try {
-      const user = await this.usersService.findUserByIdentifier(identifier);  
+      const user = await this.usersService.findUserByIdentifier(identifier);
       const isValid = await bcrypt.compare(password, user?.password ?? '');
 
       if (!user || !isValid) {
@@ -118,6 +118,19 @@ export class AuthService {
       });
     } catch (error) {
       throw new BusinessException('La création des tokens a échoué', getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
+
+  async logout(res: Response, userId: string): Promise<void> {
+    try {
+      await this.usersService.deleteRefreshToken(userId);
+      res.clearCookie('access_token');
+      res.clearCookie('refresh_token');
+      res.send({ message: 'Déconnexion réussie' });
+    } catch (error) {
+      throw new BusinessException('La déconnexion a échoué', getErrorStatusCode(error), {
         cause: error,
       });
     }

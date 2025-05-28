@@ -60,8 +60,8 @@ export class User {
   @Column({ default: '', length: 100 })
   country: string;
 
-  @Column({ default: '', length: 100 })
-  refreshToken: string;
+  @Column({ length: 100, nullable: true })
+  refreshToken?: string;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -196,4 +196,14 @@ export class UserService {
       });
     }
   }
+
+  async deleteRefreshToken(userId: string): Promise<void> {
+    try {
+      await this.usersRepository.update(userId, { refreshToken: '' });
+    } catch (error) {
+      throw new BusinessException('La suppression du refresh token a échoué', getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
 }

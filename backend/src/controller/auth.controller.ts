@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 import {
   ApiBadRequestResponse,
@@ -12,6 +12,9 @@ import { loginUserServiceDto } from 'src/dto/user/request/login-service-user.dto
 import { RegisterUserDto } from 'src/dto/user/request/register-user.dto';
 import { LoginUserDto } from '../dto/user/request/login-user.dto';
 import { AuthService } from 'src/services/auth.service';
+import { CurrentUser } from 'src/middleware/guards/current-user.decorator';
+import { User } from 'src/models/user.model';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Authentification')
 @Controller('api/auth')
@@ -64,6 +67,12 @@ export class AuthController {
   @Post('refresh')
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<void> {
     return await this.authService.refreshTokens(req, res);
+  }
+
+  @Post('logout')
+  @UseGuards(AuthGuard('jwt'))
+  async logout(@Res({ passthrough: true }) res: Response, @CurrentUser() user: User): Promise<void> {
+    return this.authService.logout(res, user.id);
   }
 
   @Post('loginByService')
