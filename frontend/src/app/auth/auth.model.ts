@@ -1,8 +1,13 @@
 export interface LoginPayload {
   identifier: string;
   password: string;
+  rememberMe?: boolean;
 }
 
-export interface AuthResponse {
-  accessToken	: string;
+//provisoire
+
+export interface User {
+  id: string;
+  username: string;
+  email: string;
 }
