@@ -41,7 +41,7 @@ export class AuthService {
   }
 
   refreshUserInfo(): void {
-    this.api.get<User>('/auth/me').subscribe({
+    this.api.get<User>('/users/me').subscribe({
       next: (user) => {
         this.loggedIn.next(true);
         this.userId.next(user.id);

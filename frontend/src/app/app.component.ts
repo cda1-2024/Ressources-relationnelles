@@ -9,7 +9,6 @@ import { NgIf } from '@angular/common';
 import { NavbarMobileComponent } from './navbar/navbar-mobile/navbar-mobile.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/auth.interceptor';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -45,9 +44,5 @@ export class AppComponent {
     this.authService.isLoggedIn$.subscribe((loggedIn) => {
       this.isLoggedIn = loggedIn;
     });
-  }
-
-  ngOnInit(): void {
-    this.authService.refreshUserInfo();
   }
 }
