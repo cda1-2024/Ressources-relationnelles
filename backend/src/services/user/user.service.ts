@@ -11,6 +11,7 @@ import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
 import { USER_NOT_FOUND } from 'src/helper/constants/constant-exception';
 import * as bcrypt from 'bcrypt';
+import { updateMyPasswordDto } from 'src/dto/user/request/update-my-password.dto';
 
 @Injectable()
 export class UserService {
@@ -168,17 +169,57 @@ export class UserService {
     }
   }
 
-  async deleteUser(id: string): Promise<boolean> {
+  async updateMyPassword(idUser: string, updateMyPasswordDto: updateMyPasswordDto): Promise<User> {
+    try {
+      if (!updateMyPasswordDto || Object.values(updateMyPasswordDto).every((value) => value === undefined)) {
+        throw new BadRequestException('Aucune donnée à mettre à jour');
+      }
+
+      const userToUpdate = await this.usersRepository.findOne({
+        select: {
+          id: true,
+          password: true,
+        },
+        where: [{ id: idUser }],
+      });
+      if (!userToUpdate) {
+        throw new NotFoundException("L'utilisateur n'a pas été trouvé");
+      }
+      await bcrypt.compare(updateMyPasswordDto.oldPassword, userToUpdate.password).then((isMatch) => {
+        if (!isMatch) {
+          throw new BadRequestException('Le mot de passe est incorrect');
+        }
+      });
+      userToUpdate.password = await bcrypt.hash(updateMyPasswordDto.newPassword, 10);
+
+      await this.usersRepository.save(userToUpdate);
+      const userResponse = await this.usersRepository.findOneByOrFail({ id: idUser });
+      return userResponse;
+    } catch (error) {
+      throw new BusinessException('La mise à jour du mot de passe a échoué', getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
+
+  async deleteUser(id: string): Promise<User> {
     try {
       const userToDelete = await this.usersRepository.findOneBy({ id: id });
       if (!userToDelete) {
         throw new NotFoundException("L'utilisateur n'a pas été trouvé");
       }
-
-      if (await this.usersRepository.delete(userToDelete.id)) {
-        return true;
+      if (userToDelete.disabled) {
+        throw new BadRequestException("L'utilisateur est déjà désactivé");
       }
-      return false;
+
+      userToDelete.disabled = true;
+      userToDelete.bio = '';
+      userToDelete.username = 'Utilisateur supprimé ' + userToDelete.id;
+      userToDelete.email = 'email.supprime.' + userToDelete.id + '@example.com';
+      userToDelete.password = '';
+      userToDelete.refreshToken = '';
+      await this.usersRepository.save(userToDelete);
+      return userToDelete;
     } catch (error) {
       throw new BusinessException("La suppression de l'utilisateur a échoué", getErrorStatusCode(error), {
         cause: error,

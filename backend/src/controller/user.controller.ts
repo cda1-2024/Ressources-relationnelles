@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Param, Put, Query, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put, Query, UseGuards } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiBody,
   ApiExtraModels,
   ApiNotFoundResponse,
@@ -19,6 +20,7 @@ import { UserMapper } from 'src/services/user/user.mapper';
 import { User } from 'src/models/user.model';
 import { CurrentUser } from 'src/middleware/guards/current-user.decorator';
 import { FilterUserRequestDto } from 'src/dto/user/request/filter-user.dto';
+import { updateMyPasswordDto } from 'src/dto/user/request/update-my-password.dto';
 
 @ApiTags('Users')
 @ApiExtraModels(
@@ -34,11 +36,14 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('/')
-  @ApiQuery({ name: 'pageNumber', required: false, type: Number })
-  @ApiQuery({ name: 'pageSize', required: false, type: Number })
-  @ApiQuery({ name: 'username', required: false, type: String })
-  @ApiQuery({ name: 'banned', required: false, type: Boolean })
-  @ApiQuery({ name: 'disabled', required: false, type: Boolean })
+  @ApiOperation({
+    summary: 'Récupérer la liste des utilisateurs',
+    description: 'Récupérer la liste des utilisateurs à l’aide de filtres',
+  })
+  @ApiOkResponse({
+    description: 'Les informations de l’utilisateur',
+    type: ListUserResponseDto,
+  })
   @ApiNotFoundResponse({
     description: 'Auncun utilisateur a été trouvé',
   })
@@ -69,6 +74,23 @@ export class UserController {
     }
   }
 
+  @Get('/me')
+  @ApiOperation({
+    summary: "Récupérer l'utilisateur connecté",
+    description: "Récupérer l'utilisateur connecté",
+  })
+  @ApiOkResponse({
+    description: 'Les informations de l’utilisateur',
+    type: UserResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: "L'utilisateur n'a pas été trouvé",
+  })
+  @UseGuards(AuthGuard('jwt'))
+  getMe(@CurrentUser() user: User): Promise<UserResponseDto> {
+    return Promise.resolve(UserMapper.toResponseDto(user));
+  }
+
   @Get('/:id')
   @ApiOperation({
     summary: 'Récupérer un utilisateur',
@@ -93,12 +115,12 @@ export class UserController {
   })
   @ApiBody({
     type: updateMyAccountDto,
-    description: 'Structure du JSON pour mettre son compte',
+    description: 'Structure du JSON pour mettre à jour son compte',
   })
   @ApiExtraModels(updateMyAccountDto)
   @ApiOkResponse({
     description: 'Les informations de l’utilisateur',
-    type: FullUserResponseDto,
+    type: UserResponseDto,
   })
   @ApiNotFoundResponse({
     description: "L'utilisateur n'a pas été trouvé",
@@ -112,16 +134,42 @@ export class UserController {
     return UserMapper.toResponseDto(userResponse);
   }
 
+  @Put('/myPassword')
+  @ApiOperation({
+    summary: 'Modifier son mot de passe',
+    description: 'Modifier son mot de passe',
+  })
+  @ApiBody({
+    type: updateMyPasswordDto,
+    description: 'Structure du JSON pour mettre à jour son mot de passe',
+  })
+  @ApiExtraModels(updateMyPasswordDto)
+  @ApiOkResponse({
+    description: 'Les informations de l’utilisateur',
+    type: UserResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: "L'utilisateur n'a pas été trouvé",
+  })
+  @UseGuards(AuthGuard('jwt'))
+  async updateMyPassword(
+    @CurrentUser() user: User,
+    @Body() updateMyPasswordDto: updateMyPasswordDto,
+  ): Promise<UserResponseDto> {
+    const userResponse = await this.userService.updateMyPassword(user.id, updateMyPasswordDto);
+    return UserMapper.toResponseDto(userResponse);
+  }
+
   @Put('/:id')
   @ApiOperation({
-    summary: 'Modifier un utilisateur | Admin',
+    summary: 'Modifier un utilisateur | administrateur',
     description: "Modifier un utilisateur en fonction de l'identifiant ou de l'UUID fourni",
   })
   @ApiBody({
     type: UpdateUserDto,
     description: 'Structure du JSON pour mettre à jour un utilisateur',
   })
-  @ApiQuery({ name: 'id', required: false, type: Number })
+  @ApiQuery({ name: 'id', required: false, type: String })
   @ApiExtraModels(UpdateUserDto)
   @ApiOkResponse({
     description: 'Les informations de l’utilisateur',
@@ -132,6 +180,27 @@ export class UserController {
   })
   async updateUser(@Body() updateUserDto: UpdateUserDto, @Param('id') id: string): Promise<UserResponseDto> {
     const user = await this.userService.updateUser(id, updateUserDto);
+    return UserMapper.toResponseDto(user);
+  }
+
+  @Delete('/:id')
+  @ApiOperation({
+    summary: 'Supprimer un utilisateur | administrateur',
+    description: "Supprimer un utilisateur en fonction de l'identifiant ou de l'UUID fourni",
+  })
+  @ApiQuery({ name: 'id', required: false, type: String })
+  @ApiOkResponse({
+    description: "L'utilisateur a été supprimée avec succès",
+    type: UserResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: "La suppression de l'utilisateur a échoué",
+  })
+  @ApiNotFoundResponse({
+    description: "L'utilisateur n'a pas été trouvée",
+  })
+  async deleteUser(@Param('id') id: string): Promise<UserResponseDto> {
+    const user = await this.userService.deleteUser(id);
     return UserMapper.toResponseDto(user);
   }
 }

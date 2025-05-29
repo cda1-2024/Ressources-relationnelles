@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User, UserFull } from '../../models/user.model';
+import { User } from './user.model';
 import { ApiService } from '../api.service';
 
 
@@ -10,7 +10,19 @@ import { ApiService } from '../api.service';
 export class UserService {
   constructor(private api: ApiService) {}
 
-  getUser(userId: string): Observable<User> {
-    return this.api.get<User>('/auth/user/' + userId)
+  getUser(): Observable<User> {
+    return this.api.get<User>('/users/me');
+  }
+
+  updateProfile(username: string, bio: string): Observable<User> {
+    return this.api.put<User>('/users/myAccount', {username, bio});
+  }
+
+  updatePassword(oldPassword: string, newPassword: string): Observable<User> {
+    return this.api.put<User>('/users/myPassword', {oldPassword, newPassword});
+  }
+
+  deleteUser(userId: string): Observable<User> {
+    return this.api.delete<User>('/users/' + userId);
   }
 }

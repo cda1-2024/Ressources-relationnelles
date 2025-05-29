@@ -71,7 +71,8 @@ export class AuthService {
 
   async refreshTokens(req: Request, res: Response): Promise<void> {
     try {
-      const refreshToken = req.cookies?.['refresh_token'] as string | undefined;
+      const cookies = req.cookies as Record<string, string>;
+      const refreshToken = cookies?.['refresh_token'];
       if (!refreshToken) throw new UnauthorizedException('Refresh token invalide');
 
       const decoded = await this.jwtService.verifyAsync<jwtPayload>(refreshToken, {

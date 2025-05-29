@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators, FormBuilder, FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  FormControl,
+  Validators,
+  FormBuilder,
+  FormGroup,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -26,10 +33,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatCheckboxModule,
     MatDialogModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './register-modal.component.html',
-  styleUrl: './register-modal.component.scss'
+  styleUrl: './register-modal.component.scss',
 })
 export class RegisterModalComponent {
   hidePsw = true;
@@ -37,10 +44,12 @@ export class RegisterModalComponent {
   form: FormGroup;
   error: string | null = null;
 
-  private validateSamePassword(control: AbstractControl): ValidationErrors | null {
-      const password = control.parent?.get('password');
-      const confirmPassword = control.parent?.get('confirmPassword');
-      return password?.value == confirmPassword?.value ? null : { 'notSame': true };
+  private validateSamePassword(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    const password = control.parent?.get('password');
+    const confirmPassword = control.parent?.get('confirmPassword');
+    return password?.value == confirmPassword?.value ? null : { notSame: true };
   }
 
   constructor(
@@ -52,30 +61,37 @@ export class RegisterModalComponent {
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      username: ['', [
-        Validators.required,
-        Validators.pattern(/^(?!^\d+$)(?!^[\W]+$)[a-zA-Z0-9._-]{3,}$/)
-      ]],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
-      ]],
+      username: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^(?!^\d+$)(?!^[\W]+$)[a-zA-Z0-9._-]{3,}$/),
+        ],
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+          ),
+        ],
+      ],
       confirmPassword: ['', [Validators.required, this.validateSamePassword]],
-      rememberMe: [false]
+      rememberMe: [false],
     });
-
   }
 
   ngOnInit(): void {
-      // These subscriptions need to be in ngOnInit
-      this.form.get('password')?.valueChanges.subscribe(() => {
-        this.form.updateValueAndValidity();
-      });
+    // These subscriptions need to be in ngOnInit
+    this.form.get('password')?.valueChanges.subscribe(() => {
+      this.form.updateValueAndValidity();
+    });
 
-      this.form.get('confirmPassword')?.valueChanges.subscribe(() => {
-        this.form.updateValueAndValidity();
-      });
+    this.form.get('confirmPassword')?.valueChanges.subscribe(() => {
+      this.form.updateValueAndValidity();
+    });
   }
 
   onSubmit() {
@@ -95,17 +111,17 @@ export class RegisterModalComponent {
         error: (err) => {
           this.error = err.message;
           console.error('Register failed', err);
-        }
+        },
       });
     } else {
-        console.log("Form is invalid")
+      console.log('Form is invalid');
     }
   }
 
   openLoginModal() {
     this.dialogRef.close();
     this.dialog.open(LoginComponent, {
-      width: '400px'
+      width: '400px',
     });
   }
 }

@@ -1,14 +1,13 @@
 export interface User {
+  id: string;
+  email: string;
   username: string;
   bio: string;
   profilePicture: string;
 }
 
-export interface UserFull {
-  username: string;
-  bio: string;
-  profilePicture: string;
-  email: string;
+export interface UserFull extends User {
+  role: string;
   comments: Comment[];
   createdRessources: Ressource[];
   createdEvents: Event[];
