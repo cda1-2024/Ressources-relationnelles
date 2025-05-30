@@ -1,0 +1,31 @@
+<mat-card class="resource-card">
+  <div class="image-container">
+    <img
+      mat-card-image
+      [src]="resource.imageUrl"
+      alt="Image de la ressource"
+    />
+    <div class="overlay">
+      <span class="title">{{resource.title}}</span>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="user-info">
+      <img
+        class="avatar"
+        [src]="resource.user.avatarUrl"
+        alt="Avatar utilisateur"
+      />
+      <div class="div-username">
+        <span class="username">{{ resource.user.name }}</span>
+      </div>
+    </div>
+
+    <div class="stats">
+      <mat-icon>favorite</mat-icon>
+      <span>{{ resource.likes }}</span>
+      <mat-icon>chat_bubble</mat-icon>
+      <span>{{ resource.comments }}</span>
+    </div>
+  </div>
+</mat-card>

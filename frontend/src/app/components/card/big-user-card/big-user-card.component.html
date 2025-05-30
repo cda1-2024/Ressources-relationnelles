@@ -1,0 +1,16 @@
+<mat-card class="user-card">
+  <div class="profile">
+    <img class="avatar" [src]="user.avatarUrl" alt="Avatar de l'utilisateur" />
+  </div>
+
+  <div class="user-info">
+    <h3 class="username">{{ user.username }}</h3>
+    <p class="bio">{{ user.bio }}</p>
+
+    <div class="stats">
+      <span>{{user.ressources}} ressources</span>
+      <span>·</span>
+      <span>{{user.events}} événements</span>
+    </div>
+  </div>
+</mat-card>

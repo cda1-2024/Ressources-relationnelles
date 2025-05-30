@@ -1,0 +1,31 @@
+<mat-card class="event-card">
+  <div class="image-container">
+    <img
+      mat-card-image
+      [src]="event.imageUrl"
+      alt="Image de l'évènement"
+    />
+    <div class="overlay">
+      <span class="title">{{event.title}}</span>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="user-info">
+      <img
+        class="avatar"
+        [src]="event.user.avatarUrl"
+        alt="Avatar utilisateur"
+      />
+      <div class="div-username">
+        <span class="username">{{ event.user.name }}</span>
+      </div>
+    </div>
+
+    <div class="stats">
+      <mat-icon>person</mat-icon>
+      <span>{{ event.people }}</span>
+      <mat-icon>chat_bubble</mat-icon>
+      <span>{{ event.tchats }}</span>
+    </div>
+  </div>
+</mat-card>
