@@ -13,13 +13,13 @@ import { LoginUserDto } from 'src/dto/user/request/login-user.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UserService,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
   async login(loginDto: LoginUserDto, res: Response): Promise<void> {
     try {
-      const user = await this.usersService.findUserByIdentifier(loginDto.identifier);
+      const user = await this.userService.findUserByIdentifier(loginDto.identifier);
       const isValid = await bcrypt.compare(loginDto.password, user?.password ?? '');
 
       if (!user || !isValid) {
@@ -52,7 +52,7 @@ export class AuthService {
         throw new ValidationException(errors);
       }
 
-      const UserDB = await this.usersService.createUser(UserNew);
+      const UserDB = await this.userService.createUser(UserNew);
 
       const payload = {
         id: UserDB.id,
@@ -79,7 +79,7 @@ export class AuthService {
         secret: process.env.JWT_KEY,
       });
 
-      const user = await this.usersService.findUserById(decoded.id);
+      const user = await this.userService.findUserById(decoded.id);
       if (!user || !user.refreshToken) {
         throw new UnauthorizedException('Refresh token invalide');
       }
@@ -110,7 +110,7 @@ export class AuthService {
       const newAccessToken = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
       const newRefreshToken = await this.jwtService.signAsync(payload, { expiresIn: defaultExpiresIn });
 
-      await this.usersService.updateRefreshToken(payload.id, newRefreshToken);
+      await this.userService.updateRefreshToken(payload.id, newRefreshToken);
 
       res.cookie('access_token', newAccessToken, {
         httpOnly: true,
@@ -134,7 +134,7 @@ export class AuthService {
 
   async logout(res: Response, userId: string): Promise<void> {
     try {
-      await this.usersService.deleteRefreshToken(userId);
+      await this.userService.deleteRefreshToken(userId);
       res.clearCookie('access_token');
       res.clearCookie('refresh_token');
       res.send({ message: 'Déconnexion réussie' });
