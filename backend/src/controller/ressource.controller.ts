@@ -138,7 +138,7 @@ export class RessourceController {
   @Get('/')
   @ApiOperation({
     summary: 'Récupérer la liste des ressources (publiques et restreintes)',
-    description: 'Récupérer la liste des ressourcess en fonction des critères fournis',
+    description: 'Récupérer la liste des ressources en fonction des critères fournis',
   })
   @ApiOkResponse({
     description: 'La ou les ressources ont été trouvées avec succès',
@@ -277,7 +277,7 @@ export class RessourceController {
     summary: 'Enregistrer une consultation d’une ressource par l’utilisateur connecté',
     description: 'Enregistrer une consultation d’une ressource par l’utilisateur connecté',
   })
-  @ApiQuery({ name: 'id', required: true, type: String })
+  @ApiParam({ name: 'id', required: true, type: String })
   @ApiOkResponse({
     description: 'La ressource a été consulté avec succès',
   })
@@ -298,7 +298,7 @@ export class RessourceController {
     summary: 'Supprimer une ressource par ID',
     description: 'Supprimer une ressource en fonction de l’identifiant fourni',
   })
-  @ApiQuery({ name: 'id', required: true, type: String })
+  @ApiParam({ name: 'id', required: true, type: String })
   @ApiOkResponse({
     description: 'La ressource a été supprimée avec succès',
     type: RessourceResponseDto,

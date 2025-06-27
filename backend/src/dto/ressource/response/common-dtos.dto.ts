@@ -32,6 +32,14 @@ export class RessourceVisiblityDto {
   label: string;
 }
 
+export class EventTypeDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  label: string;
+}
+
 export class CategoryDto {
   @ApiProperty()
   id?: string;

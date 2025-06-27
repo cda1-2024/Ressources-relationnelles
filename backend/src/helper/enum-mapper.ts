@@ -1,3 +1,4 @@
+import { EventType } from 'src/models/event.model';
 import { RessourceType, Status, Visibility } from 'src/models/ressource.model';
 import { UserRole } from 'src/models/user.model';
 
@@ -41,6 +42,18 @@ export const RessourceTypeFromInt: Record<number, RessourceType> = {
   1: RessourceType.PDF,
   2: RessourceType.TEXT,
   3: RessourceType.VIDEO,
+};
+
+export const EventTypeToInt: Record<EventType, number> = {
+  [EventType.MORPION]: 0,
+  [EventType.MOTUS]: 1,
+  [EventType.SONDAGE]: 2,
+};
+
+export const EventTypeFromInt: Record<number, EventType> = {
+  0: EventType.MORPION,
+  1: EventType.MOTUS,
+  2: EventType.SONDAGE,
 };
 
 export const UserRoleToInt: Record<UserRole, number> = {
