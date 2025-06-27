@@ -8,6 +8,7 @@ import { CategoryModule } from './modules/category.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import datasource from './configuration/data-source';
 import { DataSourceOptions } from 'typeorm';
+import { EventModule } from './modules/event.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { DataSourceOptions } from 'typeorm';
     UserModule,
     RessourceModule,
     CategoryModule,
+    EventModule,
   ],
   providers: [AppService],
 })
