@@ -124,4 +124,7 @@ export class User {
     nullable: true,
   })
   reportedUsers: UserReport[];
+
+  eventsCount: number;
+  ressourcesCount: number;
 }

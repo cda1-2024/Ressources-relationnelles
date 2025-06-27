@@ -49,6 +49,9 @@ export class EventService {
       const query = this.eventsRepository.createQueryBuilder('Event').leftJoinAndSelect('Event.manager', 'manager');
 
       this.applyCommonFilters(query, filters);
+      query.andWhere('Event.deleted = false');
+      query.andWhere('Event.suspended = false');
+      query.andWhere('Event.isRestricted = false');
 
       const total = await query.getCount();
 

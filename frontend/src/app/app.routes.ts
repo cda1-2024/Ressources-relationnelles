@@ -5,6 +5,7 @@ import { ProfilPageComponent } from './pages/profil-page/profil-page.component';
 
 export const routes: Routes = [
   { path: '', component: PresentationPageComponent },
-  { path: 'presentation', component: HomeComponent },
+  { path: 'presentation', component: PresentationPageComponent },
+  { path: 'accueil', component: HomeComponent },
   { path: 'profil', component: ProfilPageComponent },
 ];

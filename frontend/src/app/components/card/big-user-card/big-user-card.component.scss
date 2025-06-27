@@ -1,0 +1,54 @@
+.user-card {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  text-align: start;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background-color: #f8f9ff;
+  cursor: pointer;
+
+  .profile {
+    margin-bottom: 1.5rem;
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  .user-info {
+    .username {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .bio {
+      font-size: 0.8rem;
+      color: #555;
+      margin-bottom: 0.75rem;
+      min-height: 60px;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stats {
+      font-size: 0.7rem;
+      color: #888;
+      display: flex;
+      gap: 0.4rem;
+      justify-content: start;
+    }
+  }
+}

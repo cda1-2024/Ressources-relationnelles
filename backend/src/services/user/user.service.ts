@@ -52,7 +52,10 @@ export class UserService {
 
   async findUsersWithFilters(filters: FilterUserRequestDto): Promise<{ users: User[]; total: number }> {
     try {
-      const queryBuilder = this.usersRepository.createQueryBuilder('user');
+      const queryBuilder = this.usersRepository
+        .createQueryBuilder('user')
+        .loadRelationCountAndMap('user.ressourcesCount', 'user.createdRessources')
+        .loadRelationCountAndMap('user.eventsCount', 'user.createdEvents');
 
       if (filters?.username) {
         queryBuilder.andWhere('user.username LIKE :username', {

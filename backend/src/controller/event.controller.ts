@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBadRequestResponse,
@@ -23,7 +23,7 @@ import { EventMapper } from 'src/services/event/event.mapper';
 import { EventService } from 'src/services/event/event.service';
 
 @ApiTags('Events')
-@Controller('api/envents/')
+@Controller('api/events/')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
@@ -127,7 +127,7 @@ export class EventController {
     await this.eventService.participateEvent(user, id);
   }
 
-  @Post('/suspend/:id')
+  @Put('/suspend/:id')
   @ApiOperation({
     summary: 'Suspendre un évènement par ID',
     description: 'Suspendre un évènement en fonction de l’identifiant fourni',

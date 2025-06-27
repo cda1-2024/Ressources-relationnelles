@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from './user.model';
+import { UserResponse, UserListResponse } from './user.model';
 import { ApiService } from '../api.service';
 
 
@@ -10,19 +10,35 @@ import { ApiService } from '../api.service';
 export class UserService {
   constructor(private api: ApiService) {}
 
-  getUser(): Observable<User> {
-    return this.api.get<User>('/users/me');
+  getFilterUsers(number: number, disabled: boolean): Observable<UserListResponse> {
+    return this.api.get<UserListResponse>('/users?pageSize=' + number + '&disabled=' + disabled);
   }
 
-  updateProfile(username: string, bio: string): Observable<User> {
-    return this.api.put<User>('/users/myAccount', {username, bio});
+  getAllUsers(): Observable<UserListResponse> {
+    return this.api.get<UserListResponse>('/users/');
   }
 
-  updatePassword(oldPassword: string, newPassword: string): Observable<User> {
-    return this.api.put<User>('/users/myPassword', {oldPassword, newPassword});
+  getUserById(id: string): Observable<UserResponse> {
+    return this.api.get<UserResponse>('/users/' + id);
   }
 
-  deleteUser(userId: string): Observable<User> {
-    return this.api.delete<User>('/users/' + userId);
+  getUserByIdentifier(id: string): Observable<UserResponse> {
+    return this.api.get<UserResponse>('/users/' + id);
+  }
+
+  getUser(): Observable<UserResponse> {
+    return this.api.get<UserResponse>('/users/me');
+  }
+
+  updateProfile(username: string, bio: string): Observable<UserResponse> {
+    return this.api.put<UserResponse>('/users/myAccount', {username, bio});
+  }
+
+  updatePassword(oldPassword: string, newPassword: string): Observable<UserResponse> {
+    return this.api.put<UserResponse>('/users/myPassword', {oldPassword, newPassword});
+  }
+
+  deleteUser(userId: string): Observable<UserResponse> {
+    return this.api.delete<UserResponse>('/users/' + userId);
   }
 }
