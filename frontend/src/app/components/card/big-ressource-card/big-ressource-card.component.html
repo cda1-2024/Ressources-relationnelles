@@ -2,30 +2,30 @@
   <div class="image-container">
     <img
       mat-card-image
-      [src]="resource.imageUrl"
+      [src]="ressource.imageUrl"
       alt="Image de la ressource"
     />
     <div class="overlay">
-      <span class="title">{{resource.title}}</span>
+      <span class="title">{{ressource.title}}</span>
     </div>
   </div>
   <div class="card-footer">
     <div class="user-info">
       <img
         class="avatar"
-        [src]="resource.user.avatarUrl"
+        [src]="ressource.user.avatarUrl"
         alt="Avatar utilisateur"
       />
       <div class="div-username">
-        <span class="username">{{ resource.user.name }}</span>
+        <span class="username">{{ ressource.user.name }}</span>
       </div>
     </div>
 
     <div class="stats">
       <mat-icon>favorite</mat-icon>
-      <span>{{ resource.likes }}</span>
+      <span>{{ ressource.likes }}</span>
       <mat-icon>chat_bubble</mat-icon>
-      <span>{{ resource.comments }}</span>
+      <span>{{ ressource.comments }}</span>
     </div>
   </div>
 </mat-card>

@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './big-ressource-card.component.scss'
 })
 export class BigRessourceCardComponent {
-  @Input() resource!: {
+  @Input() ressource!: {
     title: string;
     imageUrl: string;
     user: {

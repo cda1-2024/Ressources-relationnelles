@@ -1,0 +1,10 @@
+entity: Event
+processor: ./processor/EventProcessor
+items:
+  event{1..50}:
+    index: ($current)
+    title: '{{lorem.sentence}}'
+    content: '{{lorem.paragraph}}'
+    manager: '@user{1..10}'
+    createdAt: '{{date.past}}'
+    updatedAt: '{{date.recent}}'

@@ -13,6 +13,8 @@ export class UserMapper {
       banned: user.banned,
       disabled: user.disabled,
       role: UserRoleToInt[user.role],
+      eventsCount: user.eventsCount,
+      ressourcesCount: user.ressourcesCount,
     };
   }
 

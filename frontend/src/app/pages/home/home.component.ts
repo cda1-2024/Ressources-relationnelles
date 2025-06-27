@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
@@ -6,6 +6,11 @@ import { BigRessourceCardComponent } from '../../components/card/big-ressource-c
 import { BigEventCardComponent } from '../../components/card/big-event-card/big-event-card.component';
 import { BigUserCardComponent } from '../../components/card/big-user-card/big-user-card.component';
 import { BreakpointService } from '../../services/breackpoint.service';
+import { EventService } from '../../services/event/event.service';
+import { EventListResponse } from '../../services/event/event.model';
+import { getImageForEventType } from '../../utils/event.util';
+import { UserService } from '../../services/user/user.service';
+import { Ressourceservice } from '../../services/ressource/ressource.service';
 
 @Component({
   selector: 'app-home',
@@ -20,135 +25,67 @@ import { BreakpointService } from '../../services/breackpoint.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   isMobile: boolean = false;
-  resources = [
-    {
-      id: 1,
-      title: 'Titre 1',
-      imageUrl: 'https://picsum.photos/400/250?random=1',
-      user: {
-        name: 'Alice',
-        avatarUrl: 'https://i.pravatar.cc/40?u=alice'
-      },
-      likes: 42,
-      comments: 13
-    },
-    {
-      id: 2,
-      title: 'Titre 2',
-      imageUrl: 'https://picsum.photos/400/250?random=2',
-      user: {
-        name: 'Bob',
-        avatarUrl: 'https://i.pravatar.cc/40?u=bob'
-      },
-      likes: 8,
-      comments: 5
-    },
-    {
-      id: 3,
-      title: 'Titre 3',
-      imageUrl: 'https://picsum.photos/400/250?random=3',
-      user: {
-        name: 'Bob',
-        avatarUrl: 'https://i.pravatar.cc/40?u=bob'
-      },
-      likes: 8,
-      comments: 5
-    },
-    {
-      id: 4,
-      title: 'Titre 4',
-      imageUrl: 'https://picsum.photos/400/250?random=4',
-      user: {
-        name: 'Bob',
-        avatarUrl: 'https://i.pravatar.cc/40?u=bob'
-      },
-      likes: 8,
-      comments: 5
-    }
-  ];
+  
 
-  events = [
-    {
-      id: 1,
-      title: 'Titre 1',
-      imageUrl: 'assets/img/presentationPage/imgActivite.jpg',
-      user: {
-        name: 'Alice',
-        avatarUrl: 'https://i.pravatar.cc/40?u=alice'
-      },
-      people: 42,
-      tchats: 13
-    },
-    {
-      id: 2,
-      title: 'Titre 2',
-      imageUrl: 'assets/img/presentationPage/imgActivite.jpg',
-      user: {
-        name: 'Bob',
-        avatarUrl: 'https://i.pravatar.cc/40?u=bob'
-      },
-      people: 8,
-      tchats: 5
-    },
-    {
-      id: 3,
-      title: 'Titre 3',
-      imageUrl: 'assets/img/presentationPage/imgActivite.jpg',
-      user: {
-        name: 'Bob',
-        avatarUrl: 'https://i.pravatar.cc/40?u=bob'
-      },
-      people: 8,
-      tchats: 5
-    },
-    {
-      id: 4,
-      title: 'Titre 4',
-      imageUrl: 'assets/img/presentationPage/imgActivite.jpg',
-      user: {
-        name: 'Bob',
-        avatarUrl: 'https://i.pravatar.cc/40?u=bob'
-      },
-      people: 8,
-      tchats: 5
-    }
-  ];
+  events: any[] = [];
 
-  users = [
-    {
-      id: 1,
-      username: 'Alice',
-      avatarUrl: 'https://i.pravatar.cc/40?u=alice',
-      bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      ressources: 42,
-      events: 13
-    },
-    {
-      id: 2,
-      username: 'Bob',
-      avatarUrl: 'https://i.pravatar.cc/40?u=bob',
-      bio: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      ressources: 8,
-      events: 5
-    },
-    {
-      id: 3,
-      username: 'Charlie',
-      avatarUrl: 'https://i.pravatar.cc/40?u=charlie',
-      bio: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      ressources: 15,
-      events: 7
-    }
-  ];
+  users: any[] = [];
+
+  ressources: any[] = [];
 
   constructor(
     private breakpointService: BreakpointService,
+    private eventService: EventService,
+    private userService: UserService,
+    private ressourceService: Ressourceservice
   ) {
     this.isMobile = this.breakpointService.isMobile();
     this.breakpointService.isMobile$.subscribe((isMobile) => {
       this.isMobile = isMobile;
+    });
+  }
+  ngOnInit(): void {
+    this.eventService.getFilterEvents(6).subscribe((res: EventListResponse) => {
+      this.events = res.events
+      .map(event => ({
+        id: event.id,
+        title: event.title,
+        imageUrl: getImageForEventType(event.type.id),
+        user: {
+          name: event.manager.username,
+          avatarUrl: 'https://i.pravatar.cc/40?u='
+        },
+        people: Math.floor(Math.random() * 100),
+        tchats: Math.floor(Math.random() * 20)
+      }),);
+    });
+    this.userService.getFilterUsers(3, false).subscribe((res) => {
+      this.users = res.users
+        .map(user => ({
+          id: user.id,
+          username: user.username,
+          avatarUrl: 'https://i.pravatar.cc/40?u=' + user.id,
+          bio: user.bio || 'No bio available',
+          events: user.ressourcesCount,
+          ressources: user.eventsCount,
+        }));
+    });
+    this.ressourceService.getFilterRessources(6).subscribe((res) => {
+      console.log(res);
+      this.ressources = res.ressources
+        .map(ressource => ({
+          id: ressource.id,
+          title: ressource.title,
+          imageUrl: ressource.content_link || 'https://picsum.photos/300/200?random=' + ressource.id,
+          user: {
+            name: ressource.creator.username,
+            avatarUrl: 'https://i.pravatar.cc/40?u=' + ressource.creator.id
+          },
+          likes: ressource.likeCount,
+          comments: ressource.commentCount
+        }));
     });
   }
 }

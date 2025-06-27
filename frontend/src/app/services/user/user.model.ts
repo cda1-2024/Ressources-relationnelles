@@ -1,16 +1,21 @@
-export interface User {
+export interface UserListResponse {
+  users: UserResponse[];
+  pageNumber: number;
+  pageSize: number;
+  totalNumberUsers: number;
+  totalPages: number;
+}
+
+export interface UserResponse {
   id: string;
   email: string;
   username: string;
   bio: string;
-  profilePicture: string;
-}
-
-export interface UserFull extends User {
-  role: string;
-  comments: Comment[];
-  createdRessources: Ressource[];
-  createdEvents: Event[];
+  banned: boolean;
+  disabled: boolean;
+  role: number;
+  ressourcesCount: number;
+  eventsCount: number;
 }
 
 export interface Comment {
@@ -32,11 +37,4 @@ export interface Ressource {
   like: number;
   createdAt: Date;
   category?: string;
-}
-
-export interface Event {
-  id: string;
-  title: string;
-  content: string;
-  tchat: string;
 }

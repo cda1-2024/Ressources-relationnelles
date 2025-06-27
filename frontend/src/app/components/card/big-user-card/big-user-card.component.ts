@@ -6,17 +6,13 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-big-user-card',
-  imports: [
-    MatCardModule, 
-    MatButtonModule,
-    CommonModule,
-    MatIconModule
-  ],
+  imports: [MatCardModule, MatButtonModule, CommonModule, MatIconModule],
   templateUrl: './big-user-card.component.html',
-  styleUrl: './big-user-card.component.scss'
+  styleUrl: './big-user-card.component.scss',
 })
 export class BigUserCardComponent {
   @Input() user!: {
+    id: string,
     username: string;
     avatarUrl: string;
     bio: string;
