@@ -24,7 +24,7 @@ import {
   takeUntil,
 } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { filterRequest } from '../../../services/user/user.request';
+import { FilterRequest as FilterRequest } from '../../../services/user/user.request';
 
 @Component({
   selector: 'app-user-list',
@@ -67,7 +67,7 @@ export class UserListComponent implements OnInit {
         debounceTime(300),
         distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
         switchMap((filters) => {
-          const params: filterRequest = {
+          const params: FilterRequest = {
             username: filters.username,
             banned:
               filters.status === 'banned'

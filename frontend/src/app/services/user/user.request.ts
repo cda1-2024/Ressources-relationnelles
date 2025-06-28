@@ -1,4 +1,4 @@
-export interface filterRequest {
+export interface FilterRequest {
     username?: string;
     disabled?: boolean;
     role?: number;

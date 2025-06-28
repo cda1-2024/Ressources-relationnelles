@@ -14,9 +14,18 @@ export class CategoryMapper {
     };
   }
 
-  static toResponseListDto(categories: Category[]): ListCategoryResponseDto {
+  static toResponseListDto(
+    categories: Category[],
+    pageNumber: number,
+    pageSize: number,
+    totalNumberEvents: number,
+  ): ListCategoryResponseDto {
     return {
       categories: categories.map((category) => this.toResponseDto(category)),
+      pageNumber,
+      pageSize,
+      totalNumberEvents,
+      totalPages: Math.ceil(totalNumberEvents / pageSize),
     };
   }
 
