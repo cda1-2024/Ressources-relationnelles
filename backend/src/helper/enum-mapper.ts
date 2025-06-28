@@ -64,7 +64,7 @@ export const UserRoleToInt: Record<UserRole, number> = {
   [UserRole.VISITOR]: 4,
 };
 
-export const IntToUserRole: Record<number, UserRole> = {
+export const UserRoleFromInt: Record<number, UserRole> = {
   0: UserRole.SUPERADMIN,
   1: UserRole.ADMIN,
   2: UserRole.MODERATOR,

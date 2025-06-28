@@ -1,0 +1,55 @@
+<div class="flex flex-col h-[calc(100vh-64px)] bg-[#f8f9ff]">
+	<div class="flex flex-grow items-left">
+		<aside class="p-6 shadow-md w-64 border-r-2 border-[#e8edff]">
+			<div class="mb-6 mt-8">
+				<nav aria-label="Administration">
+					<mat-nav-list class="space-y-4 p-0">
+						<h3 mat-subheader class="text-lg font-semibold">Administration</h3>
+			
+						<mat-list-item
+							class="rounded hover:bg-[#e8edff] cursor-pointer"
+							(click)="select('users')"
+						>
+						<div class="flex items-center">
+							<mat-icon>group</mat-icon>
+							<span class="ml-2">Utilisateurs</span>
+						</div>
+						</mat-list-item>
+			
+						<mat-list-item
+							class="rounded hover:bg-[#e8edff] cursor-pointer"
+							(click)="select('moderation')"
+						>
+							<div class="flex items-center">
+								<mat-icon>shield</mat-icon>
+								<span class="ml-2">Modération</span>
+							</div>
+						</mat-list-item>
+			
+						<mat-list-item
+							class="rounded hover:bg-[#e8edff] cursor-pointer"
+							(click)="select('categories')"
+						>
+						<div class="flex items-center">
+							<mat-icon>category</mat-icon>
+							<span class="ml-2">Catégories</span>
+						</div>
+						</mat-list-item>
+			
+						<mat-list-item
+							class="rounded hover:bg-[#e8edff] cursor-pointer"
+							(click)="select('stats')"
+						>
+						<div class="flex items-center">
+							<mat-icon>bar_chart</mat-icon>
+							<span class="ml-2">Statistiques</span>
+						</div>
+						</mat-list-item>
+					</mat-nav-list>
+				</nav>
+			</div>
+		</aside>  
+	</div>
+</div>
+
+

@@ -1,7 +1,7 @@
 // core/services/api.service.ts
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -38,5 +38,49 @@ export class ApiService {
     return this.http.patch<T>(`${this.apiUrl}${url}`, body, {
       withCredentials: true,
     });
+  }
+
+  getWithParams<T>(
+    url: string,
+    options?: {
+      params?: { [key: string]: any } | HttpParams;
+      withCredentials?: boolean;
+    }
+  ): Observable<T> {
+    let httpParams: HttpParams;
+
+    if (options?.params instanceof HttpParams) {
+      httpParams = options.params;
+    } else {
+      // Crée un HttpParams à partir de l'objet littéral
+      httpParams = new HttpParams({
+        fromObject:
+          options?.params
+            ? // stringify automatiquement les valeurs (y compris tableaux)
+              Object.keys(options.params).reduce((acc, key) => {
+                const v = (options.params as { [key: string]: any })[key];
+                // on ignore les valeurs null/undefined
+                if (v !== null && v !== undefined) {
+                  // si c’est un booléen ou un nombre on toString()
+                  acc[key] = Array.isArray(v)
+                    ? v.map(x => String(x))
+                    : String(v);
+                }
+                return acc;
+              }, {} as Record<string, string | string[]>)
+            : {}
+      });
+    }
+
+    return this.http.get<T>(`${this.apiUrl}${url}`, {
+      withCredentials: options?.withCredentials ?? true,
+      params: httpParams
+    })
+    .pipe(
+      tap({
+        next: res => console.log('← Réponse GET', `${this.apiUrl}${url}`, httpParams, res),
+        error: err => console.error('← Erreur GET', `${this.apiUrl}${url}`,httpParams , err)
+      })
+    );
   }
 }

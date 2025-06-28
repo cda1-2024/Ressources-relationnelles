@@ -1,0 +1,19 @@
+<div class="flex flex-grow items-left">
+  <app-admin-sidebar (viewChange)="currentView = $event"></app-admin-sidebar>
+  <div class="w-full h-[calc(100vh-64px)]">
+    <div class="mt-8 ml-6">
+      <section class="flex-1 p-6">
+        <ng-container [ngSwitch]="currentView">
+          <app-user-list *ngSwitchCase="'users'"></app-user-list>
+          <app-moderation-panel
+            *ngSwitchCase="'moderation'"
+          ></app-moderation-panel>
+          <app-category-list *ngSwitchCase="'categories'"></app-category-list>
+          <app-statistics-dashboard
+            *ngSwitchCase="'stats'"
+          ></app-statistics-dashboard>
+        </ng-container>
+      </section>
+    </div>
+  </div>
+</div>

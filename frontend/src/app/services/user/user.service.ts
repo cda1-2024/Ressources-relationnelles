@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserResponse, UserListResponse } from './user.model';
 import { ApiService } from '../api.service';
+import { filterRequest } from './user.request';
 
 
 @Injectable({
@@ -10,8 +11,10 @@ import { ApiService } from '../api.service';
 export class UserService {
   constructor(private api: ApiService) {}
 
-  getFilterUsers(number: number, disabled: boolean): Observable<UserListResponse> {
-    return this.api.get<UserListResponse>('/users?pageSize=' + number + '&disabled=' + disabled);
+  getFilterUsers(params: filterRequest): Observable<UserListResponse> {
+    return this.api.getWithParams<UserListResponse>('/users', {
+      params
+    });
   }
 
   getAllUsers(): Observable<UserListResponse> {

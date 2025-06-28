@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/models/user.model';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './../../dto/user/request/update-user.dto';
-import { IntToUserRole } from 'src/helper/enum-mapper';
+import { UserRoleFromInt } from 'src/helper/enum-mapper';
 import { updateMyAccountDto } from 'src/dto/user/request/update-my-account.dto';
 import { FilterUserRequestDto } from 'src/dto/user/request/filter-user.dto';
 import { createLoggedRepository } from 'src/helper/safe-repository';
@@ -74,6 +74,12 @@ export class UserService {
         });
       }
 
+      if (filters?.role) {
+        queryBuilder.andWhere('user.role = :role', {
+          role: UserRoleFromInt[filters.role],
+        });
+      }
+
       const total = await queryBuilder.getCount();
 
       const users = await queryBuilder
@@ -137,7 +143,7 @@ export class UserService {
       }
       Object.assign(userToUpdate, userDto);
       if (userDto.role) {
-        userToUpdate.role = IntToUserRole[userDto.role];
+        userToUpdate.role = UserRoleFromInt[userDto.role];
       }
 
       await this.usersRepository.save(userToUpdate);
