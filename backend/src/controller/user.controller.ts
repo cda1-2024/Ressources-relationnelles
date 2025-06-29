@@ -16,11 +16,13 @@ import { FullUserResponseDto } from 'src/dto/user/response/full-user-response.dt
 import { AuthGuard } from '@nestjs/passport';
 import { updateMyAccountDto as updateMyAccountDto } from '../dto/user/request/update-my-account.dto';
 import { UserMapper } from 'src/services/user/user.mapper';
-import { User } from 'src/models/user.model';
+import { User, UserRole } from 'src/models/user.model';
 import { CurrentUser } from 'src/middleware/guards/current-user.decorator';
 import { FilterUserRequestDto } from 'src/dto/user/request/filter-user.dto';
 import { updateMyPasswordDto } from 'src/dto/user/request/update-my-password.dto';
 import { CreateUserRequestDto } from 'src/dto/user/request/create-user.dto';
+import { Roles } from 'src/middleware/guards/roles.decorator';
+import { RolesGuard } from 'src/middleware/guards/roles.guard';
 
 @ApiTags('Users')
 @ApiExtraModels(
@@ -51,6 +53,8 @@ export class UserController {
   @ApiBadRequestResponse({
     description: "La création de l'utilisateur a échoué",
   })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.ADMIN)
   async register(@Body() createUserDto: CreateUserRequestDto) {
     const result = await this.userService.createUser(createUserDto);
     return UserMapper.toResponseDto(result);

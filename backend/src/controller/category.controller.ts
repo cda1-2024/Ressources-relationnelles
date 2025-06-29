@@ -16,9 +16,11 @@ import { CreateCategoryDto } from 'src/dto/category/request/create-category.dto'
 import { Category } from 'src/models/category.model';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateCategoryDto } from 'src/dto/category/request/update-category.dto';
-import { User } from 'src/models/user.model';
+import { User, UserRole } from 'src/models/user.model';
 import { CurrentUser } from 'src/middleware/guards/current-user.decorator';
 import { FilterCategoryRequestDto } from 'src/dto/category/request/filter-category.dto';
+import { RolesGuard } from 'src/middleware/guards/roles.guard';
+import { Roles } from 'src/middleware/guards/roles.decorator';
 
 @ApiTags('Categories')
 @Controller('api/categories')
@@ -73,7 +75,8 @@ export class CategoryController {
     description: 'La catégorie a été créée avec succès',
     type: FullCategoryResponseDto,
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.USER)
   async createCategory(
     @CurrentUser() user: User,
     @Body() createCategoryDto: CreateCategoryDto,

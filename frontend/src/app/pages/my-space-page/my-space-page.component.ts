@@ -8,6 +8,7 @@ import { UserListComponent } from './user-list/user-list.component';
 import { CommonModule } from '@angular/common';
 import { AdminView } from '../../utils/admin.views';
 import { UserCreateComponent } from "./user-create/user-create.component";
+import { CategoryCreateComponent } from "./category-create/category-create.component";
 
 @Component({
   selector: 'app-home',
@@ -18,7 +19,8 @@ import { UserCreateComponent } from "./user-create/user-create.component";
     ModerationPanelComponent,
     StatisticsDashboardComponent,
     UserListComponent,
-    UserCreateComponent
+    UserCreateComponent,
+    CategoryCreateComponent
 ],
   templateUrl: './my-space-page.component.html',
   styleUrl: './my-space-page.component.scss',

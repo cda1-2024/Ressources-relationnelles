@@ -3,3 +3,9 @@ export interface FilterRequest {
 	page: number;
 	pageSize: number;
 }
+
+export interface CreateCategoryRequest {
+	name: string;
+	icon: string;
+	color: string;
+}
