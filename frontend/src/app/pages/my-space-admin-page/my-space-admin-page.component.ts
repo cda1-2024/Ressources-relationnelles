@@ -22,8 +22,8 @@ import { CategoryCreateComponent } from "./category-create/category-create.compo
     UserCreateComponent,
     CategoryCreateComponent
 ],
-  templateUrl: './my-space-page.component.html',
-  styleUrl: './my-space-page.component.scss',
+  templateUrl: './my-space-admin-page.component.html',
+  styleUrl: './my-space-admin-page.component.scss',
 })
 export class MySpacePageComponent {
   isMobile: boolean = false;

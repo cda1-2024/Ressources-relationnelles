@@ -1,0 +1,15 @@
+<div class="flex flex-grow items-left">
+  <app-user-sidebar
+    (viewChange)="currentView = $event"
+    [currentView]="currentView"
+  ></app-user-sidebar>
+  <div class="w-full h-[calc(100vh-64px)]">
+    <div>
+      <section>
+        <ng-container [ngSwitch]="currentView">
+
+        </ng-container>
+      </section>
+    </div>
+  </div>
+</div>
