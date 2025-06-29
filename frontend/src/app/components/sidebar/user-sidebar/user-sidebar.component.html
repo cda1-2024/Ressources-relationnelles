@@ -8,49 +8,49 @@
 
             <mat-list-item
               class="rounded cursor-pointer"
-              (click)="toggleSection('users')"
+              (click)="toggleSection('ressources')"
               [ngClass]="{
-                '!bg-[#e8edff]': isSectionActive('users')
+                '!bg-[#e8edff]': isSectionActive('ressources')
               }"
             >
               <div class="flex items-center justify-between w-full">
                 <div class="flex items-center">
-                  <mat-icon>group</mat-icon>
-                  <span class="ml-2">Utilisateurs</span>
+                  <mat-icon>folder</mat-icon>
+                  <span class="ml-2">Ressources</span>
                 </div>
                 <mat-icon class="text-sm">
                   {{
-                    expandedSection === "users" ? "expand_less" : "expand_more"
+                    expandedSection === "ressources" ? "expand_less" : "expand_more"
                   }}
                 </mat-icon>
               </div>
             </mat-list-item>
 
             <div
-              *ngIf="expandedSection === 'users'"
+              *ngIf="expandedSection === 'ressources'"
               class="flex flex-col ml-8 space-y-1"
             >
               <mat-list-item
                 class="rounded cursor-pointer"
-                (click)="select('users.list')"
+                (click)="select('ressources.list')"
                 [ngClass]="{
-                  '!bg-[#e8edff]': isViewActive('users.list')
+                  '!bg-[#e8edff]': isViewActive('ressources.list')
                 }"
               >
                 <div class="flex items-center">
                   <mat-icon class="text-sm">format_list_bulleted</mat-icon>
-                  <span class="ml-2 text-sm">Lister</span>
+                  <span class="ml-2 text-sm">Mes ressources</span>
                 </div>
               </mat-list-item>
               <mat-list-item
                 class="rounded cursor-pointer"
-                (click)="select('users.create')"
+                (click)="select('ressources.create')"
                 [ngClass]="{
-                  '!bg-[#eef2ff]': isViewActive('users.create')
+                  '!bg-[#eef2ff]': isViewActive('ressources.create')
                 }"
               >
                 <div class="flex items-center">
-                  <mat-icon class="text-sm">person_add</mat-icon>
+                  <mat-icon class="text-sm">library_add</mat-icon>
                   <span class="ml-2 text-sm">Créer</span>
                 </div>
               </mat-list-item>
@@ -58,19 +58,19 @@
 
             <mat-list-item
               class="rounded cursor-pointer"
-              (click)="toggleSection('categories')"
+              (click)="toggleSection('events')"
               [ngClass]="{
-                '!bg-[#e8edff]': isSectionActive('categories')
+                '!bg-[#e8edff]': isSectionActive('events')
               }"
             >
               <div class="flex items-center justify-between w-full">
                 <div class="flex items-center">
-                  <mat-icon>category</mat-icon>
-                  <span class="ml-2">Catégories</span>
+                  <mat-icon>event_note</mat-icon>
+                  <span class="ml-2">Evènements</span>
                 </div>
                 <mat-icon class="text-sm">
                   {{
-                    expandedSection === "categories"
+                    expandedSection === "events"
                       ? "expand_less"
                       : "expand_more"
                   }}
@@ -79,26 +79,26 @@
             </mat-list-item>
 
             <div
-              *ngIf="expandedSection === 'categories'"
+              *ngIf="expandedSection === 'events'"
               class="flex flex-col ml-8 space-y-1"
             >
               <mat-list-item
                 class="rounded cursor-pointer"
-                (click)="select('categories.list')"
+                (click)="select('events.list')"
                 [ngClass]="{
-                  '!bg-[#eef2ff]': isViewActive('categories.list')
+                  '!bg-[#eef2ff]': isViewActive('events.list')
                 }"
               >
                 <div class="flex items-center">
-                  <mat-icon class="text-sm">view_module</mat-icon>
-                  <span class="ml-2 text-sm">Lister</span>
+                  <mat-icon class="text-sm">event_available</mat-icon>
+                  <span class="ml-2 text-sm">Mes évènements</span>
                 </div>
               </mat-list-item>
               <mat-list-item
                 class="rounded cursor-pointer"
-                (click)="select('categories.create')"
+                (click)="select('events.create')"
                 [ngClass]="{
-                  '!bg-[#eef2ff]': isViewActive('categories.create')
+                  '!bg-[#eef2ff]': isViewActive('events.create')
                 }"
               >
                 <div class="flex items-center">
@@ -107,19 +107,6 @@
                 </div>
               </mat-list-item>
             </div>
-
-            <mat-list-item
-              class="rounded cursor-pointer"
-              (click)="select('moderation')"
-              [ngClass]="{
-                '!bg-[#e8edff]': isSectionActive('moderation')
-              }"
-            >
-              <div class="flex items-center">
-                <mat-icon>shield</mat-icon>
-                <span class="ml-2">Modération</span>
-              </div>
-            </mat-list-item>
 
             <mat-list-item
               class="rounded cursor-pointer"

@@ -19,9 +19,9 @@ export class UserSidebarComponent {
   @Input() currentView!: UserView; 
   @Output() viewChange = new EventEmitter<UserView>();
 
-  expandedSection: 'users' | 'moderation' | 'categories' | 'stats' | null = null;
+  expandedSection: 'ressources' | 'events' | 'stats' | null = null;
 
-  toggleSection(section: 'users' | 'moderation' | 'categories' | 'stats') {
+  toggleSection(section: 'ressources' | 'events' | 'stats') {
     this.expandedSection = this.expandedSection === section ? null : section;
   }
 

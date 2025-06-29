@@ -25,7 +25,7 @@ import { CategoryCreateComponent } from "./category-create/category-create.compo
   templateUrl: './my-space-admin-page.component.html',
   styleUrl: './my-space-admin-page.component.scss',
 })
-export class MySpacePageComponent {
+export class MySpaceAdminPageComponent {
   isMobile: boolean = false;
   currentView: AdminView = 'users.list';
 

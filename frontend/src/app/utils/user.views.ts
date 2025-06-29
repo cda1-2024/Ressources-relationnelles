@@ -1,7 +1,6 @@
 export type UserView =
-  | 'users.create'
-  | 'users.list'
-  | 'moderation'
-  | 'categories.list'
-  | 'categories.create'
+  | 'ressources.list'
+  | 'ressources.create'
+  | 'events.list'
+  | 'events.create'
   | 'stats';
