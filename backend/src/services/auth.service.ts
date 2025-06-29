@@ -52,7 +52,7 @@ export class AuthService {
         throw new ValidationException(errors);
       }
 
-      const UserDB = await this.userService.createUser(UserNew);
+      const UserDB = await this.userService.createUserForRegister(UserNew);
 
       const payload = {
         id: UserDB.id,

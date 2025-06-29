@@ -12,6 +12,8 @@ import { getErrorStatusCode } from 'src/helper/exception-utils';
 import { USER_NOT_FOUND } from 'src/helper/constants/constant-exception';
 import * as bcrypt from 'bcrypt';
 import { updateMyPasswordDto } from 'src/dto/user/request/update-my-password.dto';
+import { CreateUserRequestDto } from 'src/dto/user/request/create-user.dto';
+import { RegisterUserDto } from 'src/dto/user/request/register-user.dto';
 
 @Injectable()
 export class UserService {
@@ -110,9 +112,32 @@ export class UserService {
     }
   }
 
-  async createUser(user: Partial<User>): Promise<User> {
+  async createUser(user: CreateUserRequestDto): Promise<User> {
     try {
-      const newUser = this.usersRepository.create(user);
+      const newUser = new User();
+      newUser.email = user.email;
+      newUser.username = user.username;
+      newUser.password = await bcrypt.hash(user.password, 10);
+      if (user.role !== undefined && user.role in UserRoleFromInt) {
+        newUser.role = UserRoleFromInt[user.role];
+      } else {
+        throw new BadRequestException('Invalid user role provided');
+      }
+      newUser.bio = user.bio || '';
+      return await this.usersRepository.save(newUser);
+    } catch (error) {
+      throw new BusinessException("La création de l'utilisateur a échoué", getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
+
+  async createUserForRegister(user: RegisterUserDto): Promise<User> {
+    try {
+      const newUser = new User();
+      newUser.email = user.email;
+      newUser.username = user.username;
+      newUser.password = await bcrypt.hash(user.password, 10);
       return await this.usersRepository.save(newUser);
     } catch (error) {
       throw new BusinessException("La création de l'utilisateur a échoué", getErrorStatusCode(error), {

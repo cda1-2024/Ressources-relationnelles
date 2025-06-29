@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserResponse, UserListResponse } from './user.model';
 import { ApiService } from '../api.service';
-import { FilterRequest } from './user.request';
+import { CreateUserRequest, FilterRequest } from './user.request';
 
 
 @Injectable({
@@ -10,6 +10,10 @@ import { FilterRequest } from './user.request';
 })
 export class UserService {
   constructor(private api: ApiService) {}
+
+  createUser(createUserRequest: CreateUserRequest): Observable<UserResponse> {
+    return this.api.post<UserResponse>('/users', createUserRequest);
+  }
 
   getFilterUsers(params: FilterRequest): Observable<UserListResponse> {
     return this.api.getWithParams<UserListResponse>('/users', {
