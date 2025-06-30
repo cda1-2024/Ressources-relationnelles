@@ -60,4 +60,10 @@ export class CommentDto {
 
   @ApiProperty()
   created_at: string;
+
+  @ApiProperty({ type: CommentDto, isArray: true, required: false })
+  replies?: CommentDto[];
+
+  @ApiProperty({ required: false })
+  parent_comment_id?: string;
 }

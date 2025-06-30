@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { FullRessourceResponseDto } from 'src/dto/ressource/response/full-ressource-response.dto';
 import { RessourceListResponseDto, RessourceResponseDto } from 'src/dto/ressource/response/list-ressource-response.dto';
+import { CommentDto } from 'src/dto/ressource/response/common-dtos.dto';
 import { RessourceStatusToInt, RessourceTypeToInt, RessourceVisibilityToInt } from 'src/helper/enum-mapper';
 import { Ressource } from 'src/models/ressource.model';
 import { RessourceService } from 'src/services/ressource/ressource.service';
@@ -56,6 +57,54 @@ export class RessourceMapper {
     };
   }
   static toFullResponseDto(ressource: Ressource): FullRessourceResponseDto {
+    // Créer l'arborescence des commentaires
+    const commentsMap = new Map<string, CommentDto>();
+    const rootComments: CommentDto[] = [];
+
+    // Première passe : créer tous les commentaires et les indexer
+    ressource.comments?.forEach((comment) => {
+      const commentDto: CommentDto = {
+        id: comment.id,
+        content: comment.message,
+        created_at: comment.createdAt.toISOString(),
+        author: {
+          id: comment.author?.id || '',
+          username: comment.author?.username || 'Utilisateur supprimé',
+        },
+        parent_comment_id: comment.parentComment?.id || undefined,
+        replies: [],
+      };
+      commentsMap.set(comment.id, commentDto);
+    });
+
+    // Deuxième passe : construire l'arborescence
+    ressource.comments?.forEach((comment) => {
+      const commentDto = commentsMap.get(comment.id);
+      if (commentDto) {
+        if (comment.parentComment?.id) {
+          // C'est une réponse, l'ajouter aux replies du parent
+          const parentComment = commentsMap.get(comment.parentComment.id);
+          if (parentComment && parentComment.replies) {
+            parentComment.replies.push(commentDto);
+          }
+        } else {
+          // C'est un commentaire racine
+          rootComments.push(commentDto);
+        }
+      }
+    });
+
+    // Fonction pour compter récursivement tous les commentaires
+    const countAllComments = (comments: CommentDto[]): number => {
+      let count = comments.length;
+      comments.forEach(comment => {
+        if (comment.replies && comment.replies.length > 0) {
+          count += countAllComments(comment.replies);
+        }
+      });
+      return count;
+    };
+
     return {
       id: ressource.id,
       title: ressource.title,
@@ -65,6 +114,8 @@ export class RessourceMapper {
       date_time_validation: ressource.dateTimeValidation?.toISOString(),
       created_at: ressource.createdAt.toISOString(),
       like: ressource.like,
+      likeCount: ressource.like,
+      commentCount: countAllComments(rootComments),
       status: {
         id: RessourceStatusToInt[ressource.status],
         label: ressource.status,
@@ -85,15 +136,7 @@ export class RessourceMapper {
         id: ressource.validator?.id,
         username: ressource.validator?.username,
       },
-      comments: ressource.comments?.map((comment) => ({
-        id: comment.id,
-        content: comment.message,
-        created_at: comment.createdAt.toISOString(),
-        author: {
-          id: comment.author.id,
-          username: comment.author.username,
-        },
-      })),
+      comments: rootComments,
       category: {
         id: ressource.category?.id,
         title: ressource.category?.name,
