@@ -20,7 +20,9 @@ export class AuthService {
   userId$: Observable<string | null> = this.userId.asObservable();
   username$: Observable<string | null> = this.username.asObservable();
 
-  constructor(private api: ApiService) {}
+  constructor(
+    private api: ApiService
+  ) {}
 
   // Vérifie si le token est présent et valide
   private hasToken(): boolean {

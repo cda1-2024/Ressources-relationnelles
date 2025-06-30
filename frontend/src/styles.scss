@@ -17,6 +17,19 @@ html {
   );
 }
 
+.reduce-component {
+  @include mat.all-component-densities(-4);
+}
+
+.classic-component {
+  @include mat.all-component-densities(0);
+}
+
+// Entre classic et reduce
+.medium-component {
+  @include mat.all-component-densities(-2);
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
