@@ -1,0 +1,21 @@
+<div class="flex flex-grow items-left">
+  <app-user-sidebar
+    (viewChange)="currentView = $event"
+    [currentView]="currentView"
+  ></app-user-sidebar>
+  <div class="w-full h-[calc(100vh-64px)] overflow-auto">
+    <div>
+      <section>
+        <ng-container [ngSwitch]="currentView">
+					<app-my-created-ressources *ngSwitchCase="'ressources.list'"></app-my-created-ressources>
+					<app-my-saved-ressources *ngSwitchCase="'ressources.save-list'"></app-my-saved-ressources>
+          <app-my-events *ngSwitchCase="'events.list'"></app-my-events>
+					<app-event-create *ngSwitchCase="'events.create'"></app-event-create>
+          <app-statistics-dashboard
+            *ngSwitchCase="'stats'"
+          ></app-statistics-dashboard>
+        </ng-container>
+      </section>
+    </div>
+  </div>
+</div>

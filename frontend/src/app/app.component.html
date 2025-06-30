@@ -1,6 +1,6 @@
-<div class="min-h-screen flex flex-col max-w-dvw">
+<div class="h-screen flex flex-col max-w-dvw">
     <app-navbar *ngIf="!isMobile"></app-navbar>
-    <div class="flex flex-grow flex-col min-h-full h-auto">
+    <div class="flex flex-grow flex-col h-full">
         <router-outlet></router-outlet>
     </div>
     <app-navbar-mobile *ngIf="isMobile"></app-navbar-mobile>

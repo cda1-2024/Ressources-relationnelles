@@ -1,0 +1,74 @@
+<div class="flex flex-col flex-grow items-center">
+  <div
+    class="flex flex-col items-center flex-grow w-full"
+    [ngClass]="{ 'px-[5vw]': !isMobile }"
+  >
+    <div class="flex-grow w-full px-4 pb-24">
+      <div class="py-12">
+        <div>
+          <div class="flex sm:flex-row flex-col justify-between mt-[12px]">
+            <h1
+              class="text-[30px] font-bold leading-[45px] flex flex-wrap justify-start items-start"
+            >
+              Mes évènements en cours
+            </h1>
+          </div>
+          <hr />
+          <ng-container
+            *ngIf="
+              inProgressEvents && inProgressEvents.length > 0;
+              else noEvents
+            "
+          >
+            <div
+              appSwipeScroll
+              class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[300px] overflow-x-auto overflow-y-hidden touch-pan-x -webkit-overflow-scrolling-touch"
+            >
+              <app-big-event-card
+                *ngFor="let event of inProgressEvents"
+                [event]="event"
+								[showCreator]="false"
+                class="w-[30%] max-w-[350px] min-w-[290px]"
+              ></app-big-event-card>
+            </div>
+          </ng-container>
+
+          <div class="flex sm:flex-row flex-col justify-between mt-[40px]">
+            <h1
+              class="text-[30px] font-bold leading-[45px] flex flex-wrap justify-start items-start"
+            >
+              Mes évènements terminés
+            </h1>
+          </div>
+          <hr />
+          <ng-container
+            *ngIf="
+              finishedEvents && finishedEvents.length > 0;
+              else noEvents
+            "
+          >
+            <div
+							appSwipeScroll
+              class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[300px] overflow-x-auto overflow-y-hidden"
+            >
+              <app-big-event-card
+                *ngFor="let event of finishedEvents"
+                [event]="event"
+								[showCreator]="false"
+                class="w-[30%] max-w-[350px] min-w-[290px]"
+              ></app-big-event-card>
+            </div>
+          </ng-container>
+
+          <ng-template #noEvents>
+            <div
+              class="w-full h-[300px] flex items-center justify-center text-gray-500 italic"
+            >
+              Aucun évènement.
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

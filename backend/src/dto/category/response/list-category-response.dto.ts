@@ -14,4 +14,16 @@ export class CategoryResponseDto {
 export class ListCategoryResponseDto {
   @ApiProperty({ type: [CategoryResponseDto] })
   categories: CategoryResponseDto[];
+
+  @ApiProperty()
+  pageNumber: number;
+
+  @ApiProperty()
+  pageSize: number;
+
+  @ApiProperty()
+  totalNumberEvents: number;
+
+  @ApiProperty()
+  totalPages: number;
 }

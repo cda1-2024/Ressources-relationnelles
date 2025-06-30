@@ -1,0 +1,81 @@
+<div class="flex flex-col flex-grow items-center">
+  <div
+    class="flex flex-col items-center flex-grow w-full"
+    [ngClass]="{ 'px-[15vw]': !isMobile }"
+  >
+    <div
+      class="bg-[#f8f9ff] flex-grow w-full px-4 pb-24"
+      [ngClass]="{ 'border-x-2 border-[#e8edff]': !isMobile }"
+    >
+      <div class="py-4">
+				<div class="flex flex-row justify-between mt-[12px]">
+          <h1
+            class="text-[30px] font-bold leading-[45px] w-full flex flex-wrap justify-center items-center md:justify-start md:items-start"
+          >
+						Créer une catégorie de ressource
+          </h1>
+        </div>
+
+        <hr />
+				<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+					<!-- Nom -->
+					<mat-form-field appearance="fill" class="w-full">
+						<mat-label>Nom</mat-label>
+						<input matInput formControlName="name" placeholder="Nom de la catégorie"/>
+						<mat-error *ngIf="name?.touched && name?.hasError('required')">
+							Le nom est requis
+						</mat-error>
+					</mat-form-field>
+			
+					<!-- Icone -->
+					<mat-form-field appearance="fill" class="w-full">
+						<mat-label>Icône</mat-label>
+						<input
+							matInput
+							formControlName="icon"
+							placeholder="Icône (ex: fa-icon, mdi-icon)"
+						/>
+						<mat-error
+							*ngIf="icon?.touched && icon?.hasError('required')"
+						>
+							L'icône est requis
+						</mat-error>
+					</mat-form-field>
+
+					<!-- Couleur -->
+					<mat-form-field appearance="fill" class="w-full">
+						<mat-label>Couleur</mat-label>
+						<input
+							matInput
+							formControlName="color"
+							placeholder="Couleur (en hex, ex: #ff0000)"
+						/>
+						<mat-error
+							*ngIf="color?.touched && color?.hasError('required')"
+						>
+							La couleur est requise
+						</mat-error>
+					</mat-form-field>
+			
+					<!-- Erreur serveur -->
+					<div *ngIf="errorMessage" class="text-red-600 text-sm">
+						{{ errorMessage }}
+					</div>
+
+					<div class="actions">
+						<button
+							mat-flat-button
+							type="submit"
+							class="custom-button !rounded-[10px] mx-[10px]"
+							[disabled]="loading"
+						>
+						{{ loading ? "Enregistrement…" : "Créer" }}
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+

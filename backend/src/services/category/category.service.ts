@@ -9,6 +9,7 @@ import { CreateCategoryDto } from 'src/dto/category/request/create-category.dto'
 import { createLoggedRepository } from 'src/helper/safe-repository';
 import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
+import { FilterCategoryRequestDto } from 'src/dto/category/request/filter-category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -29,6 +30,31 @@ export class CategoryService {
       throw new BusinessException('La recherche des catégories a échoué', getErrorStatusCode(error), {
         cause: error,
       });
+    }
+  }
+
+  async findCategoriesBySearch(filters: FilterCategoryRequestDto): Promise<{ categories: Category[]; total: number }> {
+    try {
+      if (filters.page < 1 || filters.pageSize < 1) {
+        throw new BadRequestException('Les paramètres de pagination doivent être supérieurs à 0');
+      }
+
+      const query = this.categoriesRepository.createQueryBuilder('Category');
+
+      if (filters.name) {
+        query.andWhere('Category.name LIKE :name', {
+          name: `%${filters.name}%`,
+        });
+      }
+
+      const total = await query.getCount();
+
+      query.skip((filters.page - 1) * filters.pageSize).take(filters.pageSize);
+
+      const categories = await query.getMany();
+      return { categories, total };
+    } catch (error) {
+      throw new BusinessException('La recherche des Categories a échoué', getErrorStatusCode(error), { cause: error });
     }
   }
 
