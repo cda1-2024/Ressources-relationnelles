@@ -25,10 +25,10 @@
           <mat-form-field class="w-full">
             <mat-label>Type de ressource</mat-label>
             <mat-select formControlName="type" required>
-              <mat-option value="0" disabled>Image</mat-option>
+              <mat-option value="0">Image</mat-option>
               <mat-option value="1" disabled>PDF</mat-option>
               <mat-option value="2">Texte</mat-option>
-              <mat-option value="3" disabled>Vidéo</mat-option>
+              <mat-option value="3">Vidéo</mat-option>
             </mat-select>
             <mat-error *ngIf="ressourceForm.get('type')?.invalid && ressourceForm.get('type')?.touched">
               Le type est obligatoire.
@@ -38,9 +38,14 @@
             </div>
           </mat-form-field>
 
-          <quill-editor formControlName="contenu"></quill-editor>
-          <div *ngIf="apiErrors['content_text']" class="text-red-600 text-sm mt-1">
-            <div *ngFor="let msg of apiErrors['content_text']">{{ msg }}</div>
+
+          <quill-editor formControlName="contenu" placeholder="Contenu de la ressource" class="max-w-full">
+          </quill-editor>
+          <mat-error *ngIf="ressourceForm.get('contenu')?.hasError('required')">
+            Le contenu est obligatoire.
+          </mat-error>
+          <div *ngIf="apiErrors['contenu']" class="text-red-600 text-sm mt-1">
+            <div *ngFor="let msg of apiErrors['contenu']">{{ msg }}</div>
           </div>
 
           <mat-form-field class="w-full">
@@ -58,13 +63,34 @@
             </div>
           </mat-form-field>
 
-          <mat-form-field class="w-full">
-            <mat-label>Annexes</mat-label>
-            <input matInput formControlName="lien" placeholder="https://..." />
-            <div *ngIf="apiErrors['content_link']" class="text-red-600 text-sm mt-1">
-              <div *ngFor="let msg of apiErrors['content_link']">{{ msg }}</div>
+          <div *ngIf="selectedType === 0">
+            <div>
+              <label class="block mb-2">Télécharger une image</label>
+              <input type="file" (change)="onFileChange($event)" accept="image/jpeg, image/png" />
             </div>
-          </mat-form-field>
+            <div *ngIf="ressourceForm.get('fileUpload')?.invalid && ressourceForm.get('fileUpload')?.touched"
+              class="text-red-600">
+              Le fichier image est obligatoire.
+            </div>
+            <div *ngIf="ressourceForm.get('fileUpload')?.errors as errors" class="text-red-600 text-sm mt-1">
+              <div *ngIf="errors['required']">Le fichier image est obligatoire.</div>
+              <div *ngIf="errors['invalidType']">Le fichier doit être au format PNG ou JPEG.</div>
+              <div *ngIf="errors['tooLarge']">La taille de l’image ne doit pas dépasser 10 Mo.</div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedType === 3">
+            <mat-form-field class="w-full">
+              <mat-label>Lien YouTube</mat-label>
+              <input matInput formControlName="content_link" placeholder="https://youtube.com/..." />
+              <mat-error *ngIf="ressourceForm.get('content_link')?.hasError('required')">
+                Le lien est obligatoire pour une vidéo.
+                </mat-error>
+                <mat-error *ngIf="ressourceForm.get('content_link')?.hasError('pattern')">
+                  Le lien doit être une URL YouTube valide (youtube.com ou youtu.be).
+                </mat-error>
+            </mat-form-field>
+          </div>
 
           <mat-form-field class="w-full">
             <mat-label>Visibilité</mat-label>
@@ -81,13 +107,18 @@
             <div *ngFor="let msg of apiErrors['visibility']">{{ msg }}</div>
           </div>
 
+          <div *ngIf="apiErrors['fileUpload']" class="text-red-600 text-sm mt-1">
+            <div *ngFor="let msg of apiErrors['fileUpload']">{{ msg }}</div>
+          </div>
+
           <div class="flex justify-end pt-4">
             <button mat-flat-button type="submit" class="custom-button !rounded-[10px] mx-[10px]">
               Ajouter la ressource
             </button>
           </div>
-
         </form>
+
+
       </div>
     </div>
   </div>
