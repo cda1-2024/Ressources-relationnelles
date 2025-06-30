@@ -1,21 +1,20 @@
 <div class="flex flex-grow items-left">
   <app-admin-sidebar (viewChange)="currentView = $event" [currentView]="currentView"></app-admin-sidebar>
-  <div class="w-full h-[calc(100vh-64px)]">
+  <div class="w-full h-[calc(100vh-64px)] overflow-auto">
     <div>
-      <section>
-        <ng-container [ngSwitch]="currentView">
-          <app-user-list *ngSwitchCase="'users.list'"></app-user-list>
-          <app-user-create *ngSwitchCase="'users.create'"></app-user-create>
-					<app-category-list *ngSwitchCase="'categories.list'"></app-category-list>
-					<app-category-create *ngSwitchCase="'categories.create'"></app-category-create>
-          <app-moderation-panel
-            *ngSwitchCase="'moderation'"
-          ></app-moderation-panel>    
-          <app-statistics-dashboard
-            *ngSwitchCase="'stats'"
-          ></app-statistics-dashboard>
-        </ng-container>
-      </section>
-    </div>
+    <section>
+      <ng-container [ngSwitch]="currentView">
+        <app-user-list *ngSwitchCase="'users.list'"></app-user-list>
+        <app-user-create *ngSwitchCase="'users.create'"></app-user-create>
+        <app-category-list *ngSwitchCase="'categories.list'"></app-category-list>
+        <app-category-create *ngSwitchCase="'categories.create'"></app-category-create>
+        <app-moderation-panel
+          *ngSwitchCase="'moderation'"
+        ></app-moderation-panel>    
+        <app-statistics-dashboard
+          *ngSwitchCase="'stats'"
+        ></app-statistics-dashboard>
+      </ng-container>
+    </section>
   </div>
 </div>

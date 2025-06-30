@@ -3,7 +3,7 @@
     (viewChange)="currentView = $event"
     [currentView]="currentView"
   ></app-user-sidebar>
-  <div class="w-full h-[calc(100vh-64px)]">
+  <div class="w-full h-[calc(100vh-64px)] overflow-auto">
     <div>
       <section>
         <ng-container [ngSwitch]="currentView">
