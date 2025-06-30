@@ -42,6 +42,15 @@ export interface RessourceTypeDto {
   label: string;
 }
 
+export interface CreateRessourceRequest {
+  title: string;
+  category: string;
+  visibility: number;
+  type: number;
+  content_text: string;
+  content_link?: string;
+}
+
 export interface FilterRessourceRequest {
   query?: string;
   categoryId?: string;

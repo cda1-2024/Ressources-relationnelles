@@ -9,6 +9,7 @@ import { NgIf } from '@angular/common';
 import { NavbarMobileComponent } from './components/navbar/navbar-mobile/navbar-mobile.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -18,23 +19,27 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     RouterModule,
     NavbarComponent,
     NavbarMobileComponent,
-    NgIf
+    NgIf,
+    ReactiveFormsModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
 
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {
   title = 'angular-navigation-app';
 
-  isMobile: boolean = false;  // Variable pour détecter si c'est un mobile
-  isLoggedIn: boolean = false;  // Variable pour savoir si l'utilisateur est connecté
-    
-  constructor(private breakpointService: BreakpointService, private authService: AuthService) {
+  isMobile: boolean = false; // Variable pour détecter si c'est un mobile
+  isLoggedIn: boolean = false; // Variable pour savoir si l'utilisateur est connecté
+
+  constructor(
+    private breakpointService: BreakpointService,
+    private authService: AuthService
+  ) {
     this.isMobile = this.breakpointService.isMobile();
     this.breakpointService.isMobile$.subscribe((isMobile) => {
       this.isMobile = isMobile;
