@@ -35,7 +35,7 @@ export class RegisterUserDto {
   @IsNotEmpty({ message: 'Le mot de passe ne doit pas être vide' })
   @ApiProperty({
     example: 'Complex9*4a#',
-    description: "Le mot de passe de l'utulisateur",
+    description: "Le mot de passe de l'utilisateur",
   })
   password: string;
 }

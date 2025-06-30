@@ -23,7 +23,7 @@ export class FilterEventRequestDto {
 
   @ApiProperty({
     example: 'f5e3f135-e8c3-4008-b4f0-add664f16524',
-    description: "L'id de l'utilisateur qui a créé la ressource",
+    description: "L'id de l'utilisateur qui a créé l'événement",
     required: false,
   })
   @IsOptional()
@@ -40,7 +40,7 @@ export class FilterEventRequestDto {
 
   @ApiProperty({
     example: 10,
-    description: 'Le nombre de ressources par page',
+    description: "Le nombre d'événements par page",
   })
   @IsOptional()
   @Type(() => Number)

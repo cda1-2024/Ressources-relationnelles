@@ -106,7 +106,6 @@ export class ProfilPageComponent implements OnInit {
   ): ValidationErrors | null {
     const password = control.parent?.get('password');
     const confirmPassword = control.parent?.get('confirmPassword');
-    console.log(password?.value, confirmPassword?.value);
     return password?.value == confirmPassword?.value ? null : { notSame: true };
   }
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -11,20 +11,23 @@ import {
 } from '@nestjs/swagger';
 import { UpdateUserDto } from 'src/dto/user/request/update-user.dto';
 import { UserService } from '../services/user/user.service';
-import { ListUserRequestDto } from 'src/dto/user/request/list-user-request.dto';
 import { ListUserResponseDto, UserResponseDto } from 'src/dto/user/response/list-user-response.dto';
 import { FullUserResponseDto } from 'src/dto/user/response/full-user-response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { updateMyAccountDto as updateMyAccountDto } from '../dto/user/request/update-my-account.dto';
 import { UserMapper } from 'src/services/user/user.mapper';
-import { User } from 'src/models/user.model';
+import { User, UserRole } from 'src/models/user.model';
 import { CurrentUser } from 'src/middleware/guards/current-user.decorator';
 import { FilterUserRequestDto } from 'src/dto/user/request/filter-user.dto';
 import { updateMyPasswordDto } from 'src/dto/user/request/update-my-password.dto';
+import { CreateUserRequestDto } from 'src/dto/user/request/create-user.dto';
+import { Roles } from 'src/middleware/guards/roles.decorator';
+import { RolesGuard } from 'src/middleware/guards/roles.guard';
 
 @ApiTags('Users')
 @ApiExtraModels(
-  ListUserRequestDto,
+  FilterUserRequestDto,
+  updateMyPasswordDto,
   ListUserResponseDto,
   UserResponseDto,
   FullUserResponseDto,
@@ -34,6 +37,28 @@ import { updateMyPasswordDto } from 'src/dto/user/request/update-my-password.dto
 @Controller('api/users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Post('/')
+  @ApiOperation({
+    summary: 'Créer un utilisateur',
+    description: 'Créer un utilisateur avec un email, un surnom et un mot de passe / ou un service de connexion',
+  })
+  @ApiBody({
+    type: CreateUserRequestDto,
+    description: 'Structure du json pour créer un utilisateur',
+  })
+  @ApiOkResponse({
+    description: "L'utilisateur a été créé avec succès",
+  })
+  @ApiBadRequestResponse({
+    description: "La création de l'utilisateur a échoué",
+  })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async register(@Body() createUserDto: CreateUserRequestDto) {
+    const result = await this.userService.createUser(createUserDto);
+    return UserMapper.toResponseDto(result);
+  }
 
   @Get('/')
   @ApiOperation({
