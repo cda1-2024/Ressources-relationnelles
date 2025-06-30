@@ -1,36 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { GlobalExceptionFilter } from './filters/global-exception.filter';
+import { GlobalValidationPipe } from './validators/global-validation.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.enableCors();
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-      exceptionFactory: (errors) => {
-        const formattedErrors: Record<string, string[]> = {};
-
-        errors.forEach((error) => {
-          if (error.constraints) {
-            formattedErrors[error.property] = Object.values(error.constraints);
-          }
-        });
-
-        return new BadRequestException({
-          message: formattedErrors,
-          error: 'Bad Request',
-          statusCode: 400,
-        });
-      },
-    }),
-  );
+  app.useGlobalPipes(GlobalValidationPipe);
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   const options = new DocumentBuilder()
     .setTitle('API Ressources Relationnelles')
