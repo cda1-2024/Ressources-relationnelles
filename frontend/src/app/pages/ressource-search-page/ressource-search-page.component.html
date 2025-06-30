@@ -90,54 +90,16 @@
       </div>
 
       <div *ngIf="!isLoading" class="flex flex-wrap gap-5 px-1 pb-5 medium-component justify-center">
-
-          <mat-card class="custom-card" *ngFor="let article of articles; trackBy: trackByArticleId" [@slideUp]>
-            <div class="card-content">
-              <div class="text-section">
-                <h3 class="card-title">{{ article.title }}</h3>
-                <p class="card-subtitle text-secondary-500">
-                  Par <a class="author-link" href="#">{{ article.creator.username }}</a>
-                </p>
-                <p class="card-subtitle text-secondary-500">
-                  {{ article.created_at| date:'dd MMM yyyy' }}
-                </p>
-                <div class="actions">
-                  <!-- Bouton Voir -->
-                  <button mat-stroked-button color="primary">Voir</button>
-
-                  <div class="action-item mr-1 relative"
-                    (click)="toggleLike(article)"
-                    style="cursor: pointer;"
-                  >
-                    <mat-icon 
-                      class="like-icon"
-                      [ngClass]="{'liked': article.isLiked}"
-                    >
-                      {{ article.isLiked ? 'favorite' : 'favorite_border' }}
-                    </mat-icon>
-                    <span>{{ formatCount(article.likeCount)  }}</span>
-                  </div>
-
-                  <!-- Commentaires (affichage uniquement) -->
-                  <div class="action-item">
-                    <mat-icon class="comment-icon">chat_bubble</mat-icon>
-                    <span>{{ formatCount(article.commentCount) }}</span>
-                  </div>
-                </div>
-
-              </div>
-                <div class="article-image-placeholder">
-                <ng-container [ngSwitch]="article.type.label">
-                  <mat-icon *ngSwitchCase="'Vidéo'">play_circle</mat-icon>
-                  <mat-icon *ngSwitchCase="'Image'">image</mat-icon>
-                  <mat-icon *ngSwitchCase="'Texte'">description</mat-icon>
-                  <mat-icon *ngSwitchCase="'PDF'">picture_as_pdf</mat-icon>
-                  <mat-icon *ngSwitchDefault>description</mat-icon>
-                </ng-container>
-                </div>
-            </div>
-          </mat-card>
-        </div>
+        <app-ressource-card 
+          *ngFor="let article of articles; trackBy: trackByArticleId" 
+          [article]="article"
+          [showViewButton]="true"
+          [showActions]="true"
+          (likeToggled)="toggleLike($event)"
+          (viewClicked)="onViewRessource($event)"
+          [@slideUp]>
+        </app-ressource-card>
+      </div>
     </div>
     
     <div class="paginator-wrapper">

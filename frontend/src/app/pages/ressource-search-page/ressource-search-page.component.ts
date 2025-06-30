@@ -15,6 +15,7 @@ import { CategoryService } from '../../services/category/category.service';
 import { Ressourceservice } from '../../services/ressource/ressource.service';
 import { FilterRessourceRequest, RessourceResponse, RessourceTypeOption } from '../../services/ressource/ressource.model';
 import { CategorySimple, MultipleCategoryResponse } from '../../services/category/category.model';
+import { RessourceCardComponent } from '../../components/card/ressource-card/ressource-card.component';
 import { debounceTime, Subject } from 'rxjs';
 
 // Constants
@@ -37,6 +38,7 @@ const TODO_ICON_PLACEHOLDER = 'TODO_A_AJOUTER';
     MatButtonModule,
     CommonModule,
     MatPaginatorModule,
+    RessourceCardComponent,
   ],
   templateUrl: './ressource-search-page.component.html',
   styleUrl: './ressource-search-page.component.scss',
@@ -129,6 +131,12 @@ export class RessourceSearchPageComponent implements OnInit {
   toggleLike(article: RessourceResponse): void {
     article.isLiked = !article.isLiked;
     article.likeCount += article.isLiked ? 1 : -1;
+  }
+
+  onViewRessource(article: RessourceResponse): void {
+    console.log('👁️ Viewing ressource:', article.title);
+    // TODO: Naviguer vers la page de détail de la ressource
+    // this.router.navigate(['/ressources', article.id]);
   }
 
   isAllCategoriesSelected(): boolean {
