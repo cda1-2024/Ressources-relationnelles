@@ -1,5 +1,5 @@
 import { IProcessor } from 'typeorm-fixtures-cli';
-import { Ressource, RessourceType, Visibility ,Status} from '../../models/ressource.model';
+import { Ressource, RessourceType, Visibility, Status } from '../../models/ressource.model';
 
 export default class RessourceProcessor implements IProcessor<Ressource> {
   // Fonction à garder pour l'exemple

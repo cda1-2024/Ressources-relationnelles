@@ -8,6 +8,7 @@ import { CategoryModule } from './modules/category.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import datasource from './configuration/data-source';
 import { DataSourceOptions } from 'typeorm';
+import { EventModule } from './modules/event.module';
 import { CommentModule } from './modules/comment.module';
 
 @Module({
@@ -30,6 +31,7 @@ import { CommentModule } from './modules/comment.module';
     UserModule,
     RessourceModule,
     CategoryModule,
+    EventModule,
     CommentModule,
   ],
   providers: [AppService],

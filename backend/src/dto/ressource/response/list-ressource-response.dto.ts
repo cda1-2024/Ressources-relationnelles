@@ -33,10 +33,10 @@ export class RessourceResponseDto {
   type: RessourceTypeDto;
 
   @ApiProperty()
-  nbLike: number;
+  likeCount: number;
 
   @ApiProperty()
-  nbComment: number;
+  commentCount: number;
 
   @ApiProperty()
   isLiked?: boolean;

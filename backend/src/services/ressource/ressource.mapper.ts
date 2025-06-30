@@ -35,8 +35,8 @@ export class RessourceMapper {
         id: RessourceTypeToInt[ressource.ressourceType],
         label: ressource.ressourceType,
       },
-      nbLike: ressource.like,
-      nbComment: ressource.comments?.length || 0,
+      likeCount: ressource.like,
+      commentCount: ressource.comments?.length || 0,
       isLiked: false,
     };
   }

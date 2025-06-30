@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { BreakpointService } from '../../services/breackpoint.service';
 import { UserService } from '../../services/user/user.service';
-import { User } from '../../services/user/user.model';
+import { UserResponse } from '../../services/user/user.model';
 
 @Component({
   selector: 'app-profil-page',
@@ -39,7 +39,7 @@ export class ProfilPageComponent implements OnInit {
   profileForm: FormGroup;
   passwordForm: FormGroup;
   isMobile: boolean = false;
-  user?: User;
+  user?: UserResponse;
 
   constructor(
     private userService: UserService,

@@ -1,21 +1,84 @@
-<div class="flex flex-grow items-center justify-center">
-  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-    <h1 class="text-3xl font-bold text-center text-indigo-600 mb-4">Page d'Accueil</h1>
-    <p class="text-lg text-gray-700 text-center mb-6">Ce projet utilise Angular, Tailwind et Angular Material.</p>
-    
-    <mat-card class="mb-6">
-      <mat-card-header>
-        <mat-card-title>Présentation</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p>Ceci est un composant</p>
-      </mat-card-content>
-    </mat-card>
+<div class="flex flex-col flex-grow items-center">
+  <div
+    class="flex flex-col items-center flex-grow w-full"
+    [ngClass]="{ 'px-[10vw]': !isMobile }"
+  >
+    <div class="flex-grow w-full px-4 pb-24">
+      <div class="py-12">
+        <div>
+          <div class="flex sm:flex-row flex-col justify-between mt-[12px]">
+            <h1
+              class="text-[30px] font-bold leading-[45px] flex flex-wrap justify-start items-start"
+            >
+              Ressources à la une
+            </h1>
+            <a
+              class="text-[16px] font-bold leading-[24px] transition-all duration-300 flex flex-wrap justify-start items-end hover:text-[--mat-sys-secondary]"
+              [routerLink]="['/ressources']"
+              >Voir les 200 ressources<mat-icon class="ml-2"
+                >arrow_circle_right</mat-icon
+              >
+            </a>
+          </div>
 
-    <div class="text-center">
-      <button mat-raised-button color="primary" class="w-full">
-        Commencer
-      </button>
+          <hr />
+          <div class="flex flex-wrap justify-center items-start gap-8 mt-4">
+            <app-big-ressource-card
+              *ngFor="let ressource of ressources"
+              [ressource]="ressource"
+              class="w-[30%] max-w-[350px] min-w-[290px]"
+            ></app-big-ressource-card>
+          </div>
+        </div>
+        <div class="mt-20">
+          <div class="flex sm:flex-row flex-col justify-between mt-[12px]">
+            <h1
+              class="text-[30px] font-bold leading-[45px] flex flex-wrap justify-start items-start"
+            >
+              Évènements en cours
+            </h1>
+            <a
+              class="text-[16px] font-bold leading-[24px] transition-all duration-300 flex flex-wrap justify-start items-end hover:text-[--mat-sys-secondary]"
+              [routerLink]="['/ressources']"
+              >Voir les 20 évènements<mat-icon class="ml-2"
+                >arrow_circle_right</mat-icon
+              >
+            </a>
+          </div>
+          <hr />
+          <div class="flex flex-wrap justify-center items-start gap-8 mt-4">
+            <app-big-event-card
+              *ngFor="let event of events"
+              [event]="event"
+              class="w-[30%] max-w-[350px] min-w-[290px]"
+            ></app-big-event-card>
+          </div>
+        </div>
+        <div class="mt-20">
+          <div class="flex sm:flex-row flex-col justify-between mt-[12px]">
+            <h1
+              class="text-[30px] font-bold leading-[45px] flex flex-wrap justify-start items-start"
+            >
+              Meilleurs contributeurs
+            </h1>
+            <a
+              class="text-[16px] font-bold leading-[24px] transition-all duration-300 flex flex-wrap justify-start items-end hover:text-[--mat-sys-secondary]"
+              [routerLink]="['/ressources']"
+              >Voir les 200 contributeurs<mat-icon class="ml-2"
+                >arrow_circle_right</mat-icon
+              >
+            </a>
+          </div>
+          <hr />
+          <div class="flex flex-wrap justify-center items-start gap-8 mt-4">
+            <app-big-user-card
+              *ngFor="let user of users"
+              [user]="user"
+              class="w-[30%] max-w-[350px] min-w-[290px]"
+            ></app-big-user-card>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
