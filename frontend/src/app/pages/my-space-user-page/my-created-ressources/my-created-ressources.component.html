@@ -17,7 +17,7 @@
 					<ng-container *ngIf="draftRessources && draftRessources.length > 0; else noRessources">
 						<div 
 						appSwipeScroll
-						class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[200px] overflow-x-auto overflow-y-hidden touch-pan-x -webkit-overflow-scrolling-touch">
+						class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[200px] overflow-x-auto overflow-y-hidden medium-component touch-pan-x -webkit-overflow-scrolling-touch">
 							<app-ressource-card
 								*ngFor="let ressource of draftRessources"
 								[ressource]="ressource"
@@ -39,7 +39,7 @@
 					<ng-container *ngIf="waitingRessources && waitingRessources.length > 0; else noRessources">
 						<div 
 						appSwipeScroll
-						class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[200px] overflow-x-auto overflow-y-hidden">
+						class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[200px] overflow-x-auto overflow-y-hidden medium-component touch-pan-x -webkit-overflow-scrolling-touch">
 							<app-ressource-card
 								*ngFor="let ressource of waitingRessources"
 								[ressource]="ressource"
@@ -60,7 +60,7 @@
 					<ng-container *ngIf="rejectedRessources && rejectedRessources.length > 0; else noRessources">
 						<div 
 						appSwipeScroll
-						class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[200px] overflow-x-auto overflow-y-hidden">
+						class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[200px] overflow-x-auto overflow-y-hidden medium-component touch-pan-x -webkit-overflow-scrolling-touch">
 							<app-ressource-card
 								*ngFor="let ressource of rejectedRessources"
 								[ressource]="ressource"
@@ -81,7 +81,7 @@
 					<ng-container *ngIf="rejectedRessources && rejectedRessources.length > 0; else noRessources">
 						<div 
 						appSwipeScroll
-						class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[200px] overflow-x-auto overflow-y-hidden">
+						class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[200px] overflow-x-auto overflow-y-hidden medium-component touch-pan-x -webkit-overflow-scrolling-touch">
 							<app-ressource-card
 								*ngFor="let ressource of publishedRessources"
 								[ressource]="ressource"

@@ -7,6 +7,7 @@ import { MyCreatedRessourcesComponent } from "./my-created-ressources/my-created
 import { MyEventsComponent } from "./my-events/my-events.component";
 import { EventCreateComponent } from "./event-create/event-create.component";
 import { StatisticsDashboardComponent } from "./statistics-dashboard/statistics-dashboard.component";
+import { MySavedRessourcesComponent } from './my-saved-ressources/my-saved-ressources.component';
 
 @Component({
   selector: 'app-my-space-user-page',
@@ -14,6 +15,7 @@ import { StatisticsDashboardComponent } from "./statistics-dashboard/statistics-
     UserSidebarComponent,
     CommonModule,
     MyCreatedRessourcesComponent,
+    MySavedRessourcesComponent,
     MyEventsComponent,
     EventCreateComponent,
     StatisticsDashboardComponent

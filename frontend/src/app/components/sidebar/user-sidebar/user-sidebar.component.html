@@ -44,6 +44,18 @@
               </mat-list-item>
               <mat-list-item
                 class="rounded cursor-pointer"
+                (click)="select('ressources.save-list')"
+                [ngClass]="{
+                  '!bg-[#eef2ff]': isViewActive('ressources.save-list')
+                }"
+              >
+                <div class="flex items-center">
+                  <mat-icon class="text-sm">bookmark</mat-icon>
+                  <span class="ml-2 text-sm">Sauvegardées</span>
+                </div>
+              </mat-list-item>
+              <mat-list-item
+                class="rounded cursor-pointer"
                 (click)="select('ressources.create')"
                 [ngClass]="{
                   '!bg-[#eef2ff]': isViewActive('ressources.create')
@@ -53,7 +65,7 @@
                   <mat-icon class="text-sm">library_add</mat-icon>
                   <span class="ml-2 text-sm">Créer</span>
                 </div>
-              </mat-list-item>
+              </mat-list-item>    
             </div>
 
             <mat-list-item
