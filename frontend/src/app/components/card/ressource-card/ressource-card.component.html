@@ -1,0 +1,45 @@
+<mat-card class="custom-card">
+  <div class="card-content">
+    <div class="text-section">
+      <h3 class="card-title">{{ article.title }}</h3>
+      <p class="card-subtitle text-secondary-500">
+        Par <a class="author-link" href="#">{{ article.creator.username }}</a>
+      </p>
+      <p class="card-subtitle text-secondary-500">
+        {{ article.created_at | date:'dd MMM yyyy' }}
+      </p>
+      
+      <div class="actions" *ngIf="showActions">
+        <!-- Bouton Voir -->
+        <button 
+          *ngIf="showViewButton"
+          mat-stroked-button 
+          color="primary"
+          (click)="onViewClick()">
+          Voir
+        </button>
+
+        <div class="action-item mr-1 relative"
+          (click)="onToggleLike()"
+          style="cursor: pointer;">
+          <mat-icon 
+            class="like-icon"
+            [ngClass]="{'liked': article.isLiked}">
+            {{ article.isLiked ? 'favorite' : 'favorite_border' }}
+          </mat-icon>
+          <span>{{ formatCount(article.likeCount) }}</span>
+        </div>
+
+        <!-- Commentaires (affichage uniquement) -->
+        <div class="action-item">
+          <mat-icon class="comment-icon">chat_bubble</mat-icon>
+          <span>{{ formatCount(article.commentCount) }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="article-image-placeholder">
+      <mat-icon>{{ getResourceIcon() }}</mat-icon>
+    </div>
+  </div>
+</mat-card>

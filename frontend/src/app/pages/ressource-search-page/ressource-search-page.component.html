@@ -1,0 +1,117 @@
+<div class="flex flex-grow items-left h-full min-h-0 reduce-component" style="height: 1px;">
+  <aside class="p-6 shadow-md w-64 border-r-2 border-[#e8edff] border-solid">
+    <div class="mb-6 mt-8">
+      <p class="text-lg font-semibold mb-4">Filtrer par :</p>
+      <ul class="space-y-2 list-none">
+        <li>
+          <mat-form-field appearance="outline">
+            <mat-label>Type de ressources</mat-label>
+            <mat-select [(value)]="selectedType" (selectionChange)="onTypeChange($event.value)">
+              <mat-option *ngFor="let type of ressourceTypes; trackBy: trackByValue" [value]="type.value">
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </li>
+        <li>
+          <mat-form-field appearance="outline">
+            <mat-label>Catégorie</mat-label>
+            <mat-select [(value)]="selectedCategory" (selectionChange)="onCategoryChange($event.value)">
+              <mat-option value="">Tous</mat-option>
+              <mat-option *ngFor="let category of categories; trackBy: trackByCategoryId" [value]="category.id">
+                {{ category.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="text-lg font-semibold mb-4">Trier par :</p>
+      <mat-chip-listbox
+        aria-label="Trier par :"
+        class="mat-mdc-chip-set-stacked"
+      >
+        <mat-chip-option> Date de publication </mat-chip-option>
+        <mat-chip-option> Nombre de likes </mat-chip-option>
+        <mat-chip-option> Titre </mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+  </aside>
+  <div class="w-full h-full min-h-0 flex flex-col" @slideUp>
+    <div class="overflow-y-auto mt-4 mx-6 flex flex-col h-full min-h-0 relative">
+      <div>
+        <h1
+          class="text-4xl font-bold w-full mt-4 mb-4 flex flex-wrap justify-center items-center md:justify-start md:items-start"
+        >
+          Explorer les ressources
+        </h1>
+        <p
+          class="text-secondary-500 w-full mb-4 text-center md:text-start text-base"
+        >
+          Trouver les ressources adaptées à vos besoins
+        </p>
+      </div>
+      <div class="sticky-gradient sticky top-0 z-10">
+        <div>
+          <mat-chip-listbox>
+            <mat-chip-option 
+              class="select-filter" 
+              [class.mat-mdc-chip-selected]="isAllCategoriesSelected()"
+              (click)="selectCategory(null)">
+              Tous
+            </mat-chip-option>
+            <mat-chip-option 
+              *ngFor="let category of categories; trackBy: trackByCategoryId" 
+              [class.mat-mdc-chip-selected]="isCategorySelected(category.id)"
+              (click)="selectCategory(category.id)">
+              <mat-icon class="small-icon">{{ category.iconPath || 'category' }}</mat-icon> {{ category.name }}
+            </mat-chip-option>
+            <mat-chip-option class="select-filter">
+              <mat-icon class="small-icon">more_horiz</mat-icon> Autres
+            </mat-chip-option>
+          </mat-chip-listbox>
+
+        </div>
+
+        <div>
+          <mat-form-field appearance="outline" class="w-1/2 mt-4 custom-height">
+            <mat-label>Rechercher</mat-label>
+            <input matInput [(ngModel)]="searchQuery" (input)="onSearchChange(searchQuery)">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div *ngIf="isLoading" class="flex justify-center items-center py-8">
+        <mat-icon class="animate-spin">refresh</mat-icon>
+        <span class="ml-2">Chargement...</span>
+      </div>
+
+      <div *ngIf="!isLoading" class="flex flex-wrap gap-5 px-1 pb-5 medium-component justify-center">
+        <app-ressource-card 
+          *ngFor="let article of articles; trackBy: trackByArticleId" 
+          [article]="article"
+          [showViewButton]="true"
+          [showActions]="true"
+          (likeToggled)="toggleLike($event)"
+          (viewClicked)="onViewRessource($event)"
+          [@slideUp]>
+        </app-ressource-card>
+      </div>
+    </div>
+    
+    <div class="paginator-wrapper">
+      <mat-paginator
+        class="paginator-left border-t-2 border-[#e8edff] border-solid py-2 relative"
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 20]"
+        [showFirstLastButtons]="true"
+        (page)="onPageChange($event)">
+        <div class="gradient-paginator"></div>
+      </mat-paginator>
+    </div>
+  </div>
+</div>

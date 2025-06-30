@@ -3,13 +3,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { LoginComponent } from '../components/modal/login_modal/login_modal.component';
+import { LoginComponent } from '../../../components/modal/login_modal/login_modal.component';
 import { RouterModule } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { BreakpointService } from '../services/breackpoint.service';
+import { BreakpointService } from '../../../services/breackpoint.service';
 import { NgIf } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
-import { AuthService } from './../auth/auth.service';
+import { AuthService } from './../../../auth/auth.service';
 
 @Component({
   selector: 'app-navbar',

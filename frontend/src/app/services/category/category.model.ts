@@ -1,3 +1,4 @@
+
 export interface CategoryListResponse {
   categories: CategoryResponse[];
   pageNumber: number;

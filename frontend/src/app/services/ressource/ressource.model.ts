@@ -41,3 +41,19 @@ export interface RessourceTypeDto {
   id: number;
   label: string;
 }
+
+export interface FilterRessourceRequest {
+  query?: string;
+  categoryId?: string;
+  type?: string;
+  creatorId?: string;
+  validatorId?: string;
+  status?: number;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface RessourceTypeOption {
+  value: string;
+  label: string;
+}

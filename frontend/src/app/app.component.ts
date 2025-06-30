@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { NavbarComponent } from './navbar/navbar.component';
+import { NavbarComponent } from './components/navbar/navbar-desktop/navbar.component';
 import { ViewEncapsulation } from '@angular/core';
 import { BreakpointService } from './services/breackpoint.service';
 import { AuthService } from './auth/auth.service';
 import { NgIf } from '@angular/common';
-import { NavbarMobileComponent } from './navbar/navbar-mobile/navbar-mobile.component';
+import { NavbarMobileComponent } from './components/navbar/navbar-mobile/navbar-mobile.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth/auth.interceptor';
 
