@@ -32,7 +32,7 @@ export class CreateRessourceRequestDto {
   @IsOptional()
   @IsString()
   @ApiProperty({
-    example: "57aa6c49-31b5-4152-af65-1e6b779dc772",
+    example: '57aa6c49-31b5-4152-af65-1e6b779dc772',
     description: 'La catégorie de la ressource',
     required: false,
   })

@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { Repository, QueryFailedError, ObjectLiteral } from 'typeorm';
-import { RepositoryException } from 'src/exceptions/repository.exception';
+import { RepositoryException } from 'src/helper/exceptions/repository.exception';
 
 interface MysqlError extends Error {
   code: string;
@@ -9,6 +9,18 @@ interface MysqlError extends Error {
   sqlState: string;
 }
 
+const syncMethods = new Set([
+  'create',
+  'merge',
+  'hasId',
+  'getId',
+  'createQueryBuilder',
+  'manager',
+  'metadata',
+  'target',
+  'query',
+]);
+
 export function createLoggedRepository<T extends ObjectLiteral>(repo: Repository<T>): Repository<T> {
   const handler: ProxyHandler<Repository<T>> = {
     get(target, prop, receiver) {
@@ -16,6 +28,12 @@ export function createLoggedRepository<T extends ObjectLiteral>(repo: Repository
 
       if (typeof original !== 'function') {
         return original;
+      }
+
+      if (syncMethods.has(String(prop))) {
+        return (...args: unknown[]): unknown => {
+          return original.apply(target, args);
+        };
       }
 
       return async (...args: unknown[]): Promise<unknown> => {

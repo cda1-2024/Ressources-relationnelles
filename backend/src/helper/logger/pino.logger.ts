@@ -20,6 +20,6 @@ const prettyStream = pinoms.prettyStream({
   },
 });
 
-const streams = [{ stream: fileStream }, { stream: prettyStream }];
+const streams = [{ stream: fileStream }];
 
 export const logger: Logger = pinoms({ streams: streams });

@@ -18,11 +18,11 @@ import { EventParticipation } from './eventParticipation.model';
 import { UserReport } from './userReport.model';
 
 export enum UserRole {
-  SUPERADMIN = 'superAdmin',
-  ADMIN = 'admin',
-  MODERATOR = 'moderator',
-  USER = 'user',
-  VISITOR = 'visitor',
+  SUPERADMIN = 'Super Administrateur',
+  ADMIN = 'Administrateur',
+  MODERATOR = 'Modérateur',
+  USER = 'Utilisateur',
+  VISITOR = 'Visiteur',
 }
 
 @Entity()
@@ -42,7 +42,7 @@ export class User {
   @Column({ default: '', length: 1000 })
   bio: string;
 
-  @Column({ select: false })
+  @Column({ select: false, length: 100 })
   password: string;
 
   @Column({ default: false })
@@ -59,6 +59,9 @@ export class User {
 
   @Column({ default: '', length: 100 })
   country: string;
+
+  @Column({ length: 100, nullable: true })
+  refreshToken?: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -121,4 +124,7 @@ export class User {
     nullable: true,
   })
   reportedUsers: UserReport[];
+
+  eventsCount: number;
+  ressourcesCount: number;
 }

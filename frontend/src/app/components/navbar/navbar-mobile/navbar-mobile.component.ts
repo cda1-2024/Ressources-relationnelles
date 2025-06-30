@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatIconModule} from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 import { BreakpointService } from '../../../services/breackpoint.service';
 
 @Component({
   selector: 'app-navbar-mobile',
   imports: [
     MatToolbarModule,
-    MatIconModule
+    MatIconModule,
+    RouterModule
   ],
   templateUrl: './navbar-mobile.component.html',
   styleUrl: './navbar-mobile.component.scss'

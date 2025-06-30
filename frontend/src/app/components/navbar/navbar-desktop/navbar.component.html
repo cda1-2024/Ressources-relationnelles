@@ -2,9 +2,9 @@
     <button *ngIf="isMobile" mat-icon-button class="mx-[10px]">
         <mat-icon>menu</mat-icon>
     </button>
-    <img src="/assets/img/logos/logo-color.svg" class="!w-[70px] !h-[70px] mx-[40px] cursor-pointer" alt="Logo de l'application" >
+    <img src="/assets/img/logos/logo-color.svg" class="!w-[70px] !h-[70px] mx-[40px] cursor-pointer" alt="Logo de l'application" routerLink="accueil">
     <div *ngIf="!isMobile" class="flex flex-row gap-[10px] px-[10px]" id="links-navbar">
-        <a mat-button routerLink="" class="custom-button">Accueil</a>
+        <a mat-button routerLink="accueil" class="custom-button">Accueil</a>
         <a mat-button routerLink="ressources" class="custom-button">Ressources</a>
         <a mat-button routerLink="presentation" class="custom-button">Évènements</a>
         <a mat-button routerLink="/" class="custom-button">À propos</a>
@@ -19,7 +19,7 @@
         <div class="relative bg-white rounded-xl px-4 py-3 w-[220px] border border-[#e8edff] flex flex-col items-center justify-center">
           <mat-icon>person_outline</mat-icon>
           <p class="font-semibold">{{ username }}</p>
-          <button mat-flat-button class="mt-2 text-sm w-[75%] !bg-[#8ea2ff]">Mon profil</button>
+          <button mat-flat-button routerLink="profil" class="mt-2 text-sm w-[75%] !bg-[#8ea2ff]">Mon profil</button>
           <button mat-flat-button (click)="onLogout()" class="mt-2 text-sm w-[75%] !bg-[#8ea2ff]">Déconnexion</button>
         </div>
     </mat-menu>

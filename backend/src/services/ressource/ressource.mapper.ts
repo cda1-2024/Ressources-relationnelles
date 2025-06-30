@@ -1,9 +1,16 @@
+import { Inject } from '@nestjs/common';
 import { FullRessourceResponseDto } from 'src/dto/ressource/response/full-ressource-response.dto';
 import { RessourceListResponseDto, RessourceResponseDto } from 'src/dto/ressource/response/list-ressource-response.dto';
-import { RessourceStatusToInt, RessourceTypeToInt, RessourceVisibilityToInt } from 'src/helper/enumMapper';
+import { RessourceStatusToInt, RessourceTypeToInt, RessourceVisibilityToInt } from 'src/helper/enum-mapper';
 import { Ressource } from 'src/models/ressource.model';
+import { RessourceService } from 'src/services/ressource/ressource.service';
 
 export class RessourceMapper {
+  private readonly ressourceService: RessourceService;
+  constructor(@Inject(RessourceService) ressourceService: RessourceService) {
+    this.ressourceService = ressourceService;
+  }
+
   static toResponseDto(ressource: Ressource): RessourceResponseDto {
     return {
       id: ressource.id,
@@ -28,6 +35,9 @@ export class RessourceMapper {
         id: RessourceTypeToInt[ressource.ressourceType],
         label: ressource.ressourceType,
       },
+      likeCount: ressource.like,
+      commentCount: ressource.comments?.length || 0,
+      isLiked: false,
     };
   }
 
@@ -45,7 +55,6 @@ export class RessourceMapper {
       totalPages: Math.ceil(totalNumberRessources / pageSize),
     };
   }
-
   static toFullResponseDto(ressource: Ressource): FullRessourceResponseDto {
     return {
       id: ressource.id,

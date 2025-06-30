@@ -1,6 +1,6 @@
 import { User } from 'src/models/user.model';
 import { UserResponseDto, ListUserResponseDto } from 'src/dto/user/response/list-user-response.dto';
-import { UserRoleToInt } from 'src/helper/enumMapper';
+import { UserRoleToInt } from 'src/helper/enum-mapper';
 import { FullUserResponseDto } from 'src/dto/user/response/full-user-response.dto';
 
 export class UserMapper {
@@ -13,6 +13,8 @@ export class UserMapper {
       banned: user.banned,
       disabled: user.disabled,
       role: UserRoleToInt[user.role],
+      eventsCount: user.eventsCount,
+      ressourcesCount: user.ressourcesCount,
     };
   }
 

@@ -22,9 +22,9 @@ import { RessourceService } from 'src/services/ressource/ressource.service';
 import { RessourceMapper } from 'src/services/ressource/ressource.mapper';
 import { User, UserRole } from 'src/models/user.model';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/guards/roles.guard';
-import { Roles } from 'src/guards/roles.decorator';
-import { CurrentUser } from 'src/guards/current-user.decorator';
+import { RolesGuard } from 'src/middleware/guards/roles.guard';
+import { Roles } from 'src/middleware/guards/roles.decorator';
+import { CurrentUser } from 'src/middleware/guards/current-user.decorator';
 
 @ApiTags('Ressources')
 @Controller('api/ressources')
@@ -74,7 +74,14 @@ export class RessourceController {
   })
   async findPublicRessources(@Query() filters: FilterRessourceRequestDto): Promise<RessourceListResponseDto> {
     const { ressources, total } = await this.ressourceService.findRessourcesBySearch(null, filters, false);
-    return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, total);
+    const listRessourceLikedByUser: RessourceListResponseDto = RessourceMapper.toResponseListDto(
+      ressources,
+      filters.page,
+      filters.pageSize,
+      total,
+    );
+
+    return this.ressourceService.isRessourceLikedByUser(listRessourceLikedByUser);
   }
 
   @Get('/filter/')
@@ -96,7 +103,13 @@ export class RessourceController {
     @CurrentUser() user: User,
   ): Promise<RessourceListResponseDto> {
     const { ressources, total } = await this.ressourceService.findRessourcesBySearch(user, filters, true);
-    return RessourceMapper.toResponseListDto(ressources, filters.page, filters.pageSize, total);
+    const listRessourceLikedByUser: RessourceListResponseDto = RessourceMapper.toResponseListDto(
+      ressources,
+      filters.page,
+      filters.pageSize,
+      total,
+    );
+    return this.ressourceService.isRessourceLikedByUser(listRessourceLikedByUser, user.id);
   }
 
   // Récupérer une ressource par ID
@@ -125,7 +138,7 @@ export class RessourceController {
   @Get('/')
   @ApiOperation({
     summary: 'Récupérer la liste des ressources (publiques et restreintes)',
-    description: 'Récupérer la liste des ressourcess en fonction des critères fournis',
+    description: 'Récupérer la liste des ressources en fonction des critères fournis',
   })
   @ApiOkResponse({
     description: 'La ou les ressources ont été trouvées avec succès',
@@ -264,7 +277,7 @@ export class RessourceController {
     summary: 'Enregistrer une consultation d’une ressource par l’utilisateur connecté',
     description: 'Enregistrer une consultation d’une ressource par l’utilisateur connecté',
   })
-  @ApiQuery({ name: 'id', required: true, type: String })
+  @ApiParam({ name: 'id', required: true, type: String })
   @ApiOkResponse({
     description: 'La ressource a été consulté avec succès',
   })
@@ -285,7 +298,7 @@ export class RessourceController {
     summary: 'Supprimer une ressource par ID',
     description: 'Supprimer une ressource en fonction de l’identifiant fourni',
   })
-  @ApiQuery({ name: 'id', required: true, type: String })
+  @ApiParam({ name: 'id', required: true, type: String })
   @ApiOkResponse({
     description: 'La ressource a été supprimée avec succès',
     type: RessourceResponseDto,

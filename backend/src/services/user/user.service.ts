@@ -3,12 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/models/user.model';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './../../dto/user/request/update-user.dto';
-import { IntToUserRole } from 'src/helper/enumMapper';
+import { IntToUserRole } from 'src/helper/enum-mapper';
 import { updateMyAccountDto } from 'src/dto/user/request/update-my-account.dto';
 import { FilterUserRequestDto } from 'src/dto/user/request/filter-user.dto';
 import { createLoggedRepository } from 'src/helper/safe-repository';
-import { BusinessException } from 'src/exceptions/business.exception';
+import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
+import { USER_NOT_FOUND } from 'src/helper/constants/constant-exception';
+import * as bcrypt from 'bcrypt';
+import { updateMyPasswordDto } from 'src/dto/user/request/update-my-password.dto';
+
 @Injectable()
 export class UserService {
   private readonly usersRepository: Repository<User>;
@@ -19,7 +23,7 @@ export class UserService {
 
   async findUserAll(): Promise<User[]> {
     try {
-      return this.usersRepository.find();
+      return await this.usersRepository.find();
     } catch (error) {
       throw new BusinessException('La recherche des utilisateurs a échoué', getErrorStatusCode(error), {
         cause: error,
@@ -29,7 +33,7 @@ export class UserService {
 
   async findUserByIdentifier(identifier: string): Promise<User | null> {
     try {
-      return this.usersRepository.findOne({
+      return await this.usersRepository.findOne({
         select: {
           id: true,
           username: true,
@@ -46,28 +50,12 @@ export class UserService {
     }
   }
 
-  async findUserByUsername(username: string): Promise<User | null> {
-    try {
-      return this.usersRepository.findOne({
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          password: true,
-          role: true,
-        },
-        where: [{ username: username }],
-      });
-    } catch (error) {
-      throw new BusinessException("La recherche de l'utilisateur a échoué", getErrorStatusCode(error), {
-        cause: error,
-      });
-    }
-  }
-
   async findUsersWithFilters(filters: FilterUserRequestDto): Promise<{ users: User[]; total: number }> {
     try {
-      const queryBuilder = this.usersRepository.createQueryBuilder('user');
+      const queryBuilder = this.usersRepository
+        .createQueryBuilder('user')
+        .loadRelationCountAndMap('user.ressourcesCount', 'user.createdRessources')
+        .loadRelationCountAndMap('user.eventsCount', 'user.createdEvents');
 
       if (filters?.username) {
         queryBuilder.andWhere('user.username LIKE :username', {
@@ -101,25 +89,6 @@ export class UserService {
     }
   }
 
-  async findUserByEmail(email: string): Promise<User | null> {
-    try {
-      return this.usersRepository.findOne({
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          password: true,
-          role: true,
-        },
-        where: [{ email: email }],
-      });
-    } catch (error) {
-      throw new BusinessException("La recherche de l'utilisateur a échoué", getErrorStatusCode(error), {
-        cause: error,
-      });
-    }
-  }
-
   async findUserById(id: string): Promise<User> {
     try {
       const user = await this.usersRepository.findOneBy({ id: id });
@@ -129,7 +98,7 @@ export class UserService {
       }
       return user;
     } catch (error) {
-      throw new BusinessException("La recherche de l'utilisateur a échoué", getErrorStatusCode(error), {
+      throw new BusinessException(USER_NOT_FOUND, getErrorStatusCode(error), {
         cause: error,
       });
     }
@@ -138,7 +107,7 @@ export class UserService {
   async createUser(user: Partial<User>): Promise<User> {
     try {
       const newUser = this.usersRepository.create(user);
-      return this.usersRepository.save(newUser);
+      return await this.usersRepository.save(newUser);
     } catch (error) {
       throw new BusinessException("La création de l'utilisateur a échoué", getErrorStatusCode(error), {
         cause: error,
@@ -148,7 +117,7 @@ export class UserService {
 
   async countUsers(): Promise<number> {
     try {
-      return this.usersRepository.count();
+      return await this.usersRepository.count();
     } catch (error) {
       throw new BusinessException('Le compte des utilisateurs a échoué', getErrorStatusCode(error), {
         cause: error,
@@ -203,19 +172,80 @@ export class UserService {
     }
   }
 
-  async deleteUser(id: string): Promise<boolean> {
+  async updateMyPassword(idUser: string, updateMyPasswordDto: updateMyPasswordDto): Promise<User> {
+    try {
+      if (!updateMyPasswordDto || Object.values(updateMyPasswordDto).every((value) => value === undefined)) {
+        throw new BadRequestException('Aucune donnée à mettre à jour');
+      }
+
+      const userToUpdate = await this.usersRepository.findOne({
+        select: {
+          id: true,
+          password: true,
+        },
+        where: [{ id: idUser }],
+      });
+      if (!userToUpdate) {
+        throw new NotFoundException("L'utilisateur n'a pas été trouvé");
+      }
+      await bcrypt.compare(updateMyPasswordDto.oldPassword, userToUpdate.password).then((isMatch) => {
+        if (!isMatch) {
+          throw new BadRequestException('Le mot de passe est incorrect');
+        }
+      });
+      userToUpdate.password = await bcrypt.hash(updateMyPasswordDto.newPassword, 10);
+
+      await this.usersRepository.save(userToUpdate);
+      const userResponse = await this.usersRepository.findOneByOrFail({ id: idUser });
+      return userResponse;
+    } catch (error) {
+      throw new BusinessException('La mise à jour du mot de passe a échoué', getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
+
+  async deleteUser(id: string): Promise<User> {
     try {
       const userToDelete = await this.usersRepository.findOneBy({ id: id });
       if (!userToDelete) {
         throw new NotFoundException("L'utilisateur n'a pas été trouvé");
       }
-
-      if (await this.usersRepository.delete(userToDelete.id)) {
-        return true;
+      if (userToDelete.disabled) {
+        throw new BadRequestException("L'utilisateur est déjà désactivé");
       }
-      return false;
+
+      userToDelete.disabled = true;
+      userToDelete.bio = '';
+      userToDelete.username = 'Utilisateur supprimé ' + userToDelete.id;
+      userToDelete.email = 'email.supprime.' + userToDelete.id + '@example.com';
+      userToDelete.password = '';
+      userToDelete.refreshToken = '';
+      await this.usersRepository.save(userToDelete);
+      return userToDelete;
     } catch (error) {
       throw new BusinessException("La suppression de l'utilisateur a échoué", getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
+
+  async updateRefreshToken(userId: string, newRefreshToken: string): Promise<void> {
+    try {
+      const refreshToken = await bcrypt.hash(newRefreshToken, 10);
+      await this.usersRepository.update(userId, { refreshToken });
+    } catch (error) {
+      throw new BusinessException('La mise à jour du refresh token a échoué', getErrorStatusCode(error), {
+        cause: error,
+      });
+    }
+  }
+
+  async deleteRefreshToken(userId: string): Promise<void> {
+    try {
+      await this.usersRepository.update(userId, { refreshToken: '' });
+    } catch (error) {
+      throw new BusinessException('La suppression du refresh token a échoué', getErrorStatusCode(error), {
         cause: error,
       });
     }

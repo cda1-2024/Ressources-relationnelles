@@ -16,7 +16,7 @@ export class updateMyAccountDto {
     example: 'http://image1-1',
     description: "Phtoto de profil de l'utilisateur",
   })
-  profile_piccture?: string;
+  profilePicture?: string;
 
   @IsString()
   @IsOptional()

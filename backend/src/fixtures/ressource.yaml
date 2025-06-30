@@ -8,59 +8,54 @@ items:
     title: '{{lorem.sentence}}'
     contentText: '{{lorem.sentences}}'
     # TODO mettre autre chose
-    contentLink: 'TODO_A_AJOUTER'
+    contentLink: 'https://picsum.photos/300/200'
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
     category: '@category($current)'
     # On prends les uniquement les modérateurs ou role supérieur ici
     validator: '@user{2..15}'
+    likes: '{{number.int(0, 100)}}'
     dateTimeValidation: '{{date.past}}'
-    status: 'published'
 
   ressources_suspended{11..20}:
     index: ($current)
     title: '{{lorem.sentence}}'
     contentText: '{{lorem.sentences}}'
     # TODO mettre autre chose
-    contentLink: 'TODO_A_AJOUTER'
+    contentLink: 'https://picsum.photos/300/200'
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
     category: '@category($current-10)'
     # On prends les uniquement les modérateurs ou role supérieur ici
     validator: '@user{2..15}'
     dateTimeValidation: '{{date.past}}'
-    status: 'suspended'
 
   ressources_toValidate{21..30}:
     index: ($current)
     title: '{{lorem.sentence}}'
     contentText: '{{lorem.sentences}}'
     # TODO mettre autre chose
-    contentLink: 'TODO_A_AJOUTER'
+    contentLink: 'https://picsum.photos/300/200'
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
     category: '@category($current-20)'
-    status: 'toValidate'
 
   ressources_deleted{31..40}:
     index: ($current)
     title: '{{lorem.sentence}}'
     contentText: '{{lorem.sentences}}'
     # TODO mettre autre chose
-    contentLink: 'TODO_A_AJOUTER'
+    contentLink: 'https://picsum.photos/300/200'
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
     category: '@category($current-30)'
-    status: 'deleted'
 
   ressources_draft{41..50}:
     index: ($current)
     title: '{{lorem.sentence}}'
     contentText: '{{lorem.sentences}}'
     # TODO mettre autre chose
-    contentLink: 'TODO_A_AJOUTER'
+    contentLink: 'https://picsum.photos/300/200'
     createdAt: '{{date.past}}'
     creator: '@user{16..50}'
     category: '@category($current-40)'
-    status: 'draft'
-

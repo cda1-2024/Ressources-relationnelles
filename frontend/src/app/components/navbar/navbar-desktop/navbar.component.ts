@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatIconModule} from '@angular/material/icon';
+import { Component } from '@angular/core';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from '../../../components/modal/login_modal/login_modal.component';
@@ -20,52 +20,50 @@ import { AuthService } from './../../../auth/auth.service';
     MatButtonModule,
     RouterModule,
     MatSidenavModule,
-    NgIf
+    NgIf,
   ],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent {
-
   isMobile: boolean = false;
   isLoggedIn: boolean = false;
   userId: string | null = null;
   username: string | null = null;
-  
-  constructor(private breakpointService: BreakpointService, private authService: AuthService , private dialog: MatDialog) {
-      this.isMobile = this.breakpointService.isMobile();
-      this.breakpointService.isMobile$.subscribe((isMobile) => {
-        this.isMobile = isMobile;
-      });
 
-      this.isLoggedIn = this.authService.isLoggedIn();
-      this.authService.isLoggedIn$.subscribe((loggedIn) => {
-        this.isLoggedIn = loggedIn;
-      });
+  constructor(
+    private breakpointService: BreakpointService,
+    private authService: AuthService,
+    private dialog: MatDialog
+  ) {
+    this.isMobile = this.breakpointService.isMobile();
+    this.breakpointService.isMobile$.subscribe((isMobile) => {
+      this.isMobile = isMobile;
+    });
 
-      this.userId = this.authService.getUserId();
-      this.authService.userId$.subscribe((userId) => {
-        this.userId = userId;
-      });
+    this.isLoggedIn = this.authService.isLoggedIn();
+    this.authService.isLoggedIn$.subscribe((loggedIn) => {
+      this.isLoggedIn = loggedIn;
+    });
 
-      this.username = this.authService.getUsername();
-      this.authService.username$.subscribe((username) => {
-        this.username = username;
-      });
+    this.authService.userId$.subscribe((userId) => {
+      this.userId = userId;
+    });
+
+    this.authService.username$.subscribe((username) => {
+      this.username = username;
+    });
   }
 
   openLoginDialog(): void {
     console.log('Login button clicked');
     this.dialog.open(LoginComponent, {
-      width: '400px'
+      width: '400px',
     });
   }
 
   onLogout(): void {
     console.log('Logout button clicked');
-    this.authService.logout(); 
+    this.authService.logout();
   }
-
-  
-
 }

@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  NotFoundException,
-  Param,
-  Post,
-  Put,
-  UnauthorizedException,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CategoryService } from 'src/services/category/category.service';
 import { CategoryMapper } from 'src/services/category/category.mapper';
@@ -20,7 +9,7 @@ import { Category } from 'src/models/category.model';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateCategoryDto } from 'src/dto/category/request/update-category.dto';
 import { User } from 'src/models/user.model';
-import { CurrentUser } from 'src/guards/current-user.decorator';
+import { CurrentUser } from 'src/middleware/guards/current-user.decorator';
 
 @ApiTags('Categories')
 @Controller('api/categories')
@@ -33,11 +22,8 @@ export class CategoryController {
     description: 'La ou les catégories ont été trouvées avec succès',
     type: ListCategoryResponseDto,
   })
-  async getAllCategories(): Promise<ListCategoryResponseDto | []> {
+  async getAllCategories(): Promise<ListCategoryResponseDto> {
     const categories = await this.categoryService.getCategoryAll();
-    if (categories == undefined) {
-      return [];
-    }
     return CategoryMapper.toResponseListDto(categories);
   }
 
@@ -52,9 +38,6 @@ export class CategoryController {
   })
   async getCategoryById(@Param('id') id: string): Promise<FullCategoryResponseDto> {
     const category = await this.categoryService.findCategoryById(id);
-    if (category == null) {
-      throw new NotFoundException("La catégorie n'a pas été trouvée");
-    }
     return CategoryMapper.toResponseFullDto(category);
   }
 
@@ -71,12 +54,9 @@ export class CategoryController {
   })
   @UseGuards(AuthGuard('jwt'))
   async createCategory(
-    @CurrentUser() user: User | undefined,
+    @CurrentUser() user: User,
     @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<FullCategoryResponseDto> {
-    if (!user) {
-      throw new UnauthorizedException('Aucun utilisateur connecté');
-    }
     const category: Category = await this.categoryService.createCategory(createCategoryDto, user);
     return CategoryMapper.toResponseFullDto(category);
   }
@@ -93,13 +73,10 @@ export class CategoryController {
   })
   @UseGuards(AuthGuard('jwt'))
   async updateCategory(
-    @CurrentUser() user: User | undefined,
+    @CurrentUser() user: User,
     @Param('id') id: string,
     @Body() updateCategory: UpdateCategoryDto,
   ): Promise<FullCategoryResponseDto> {
-    if (!user) {
-      throw new UnauthorizedException('Aucun utilisateur connecté');
-    }
     const categoryUpdated = await this.categoryService.updateCategory(id, updateCategory, user);
     return CategoryMapper.toResponseFullDto(categoryUpdated);
   }

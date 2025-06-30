@@ -42,7 +42,7 @@ export class AppComponent {
 
     this.isLoggedIn = this.authService.isLoggedIn();
     this.authService.isLoggedIn$.subscribe((loggedIn) => {
-      this.isLoggedIn = loggedIn;  // Mise à jour de l'état de la connexion
+      this.isLoggedIn = loggedIn;
     });
   }
 }

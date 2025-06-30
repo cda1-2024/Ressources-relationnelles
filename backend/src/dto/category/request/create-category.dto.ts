@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsHexColor, IsNotEmpty, IsString } from 'class-validator';
-import { IsCategoryUnique } from 'src/validators/is_category_unique/is_category_unique.decorator';
+import { IsCategoryUnique } from 'src/validators/is_category_unique/is-category-unique.decorator';
 
 export class CreateCategoryDto {
   @IsCategoryUnique()

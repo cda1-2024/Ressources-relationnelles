@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { RessourceService } from './../ressource/ressource.service';
 import { CreateCategoryDto } from 'src/dto/category/request/create-category.dto';
 import { createLoggedRepository } from 'src/helper/safe-repository';
-import { BusinessException } from 'src/exceptions/business.exception';
+import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class CategoryService {
 
   async getCategoryAll(): Promise<Category[]> {
     try {
-      return this.categoriesRepository.find();
+      return await this.categoriesRepository.find();
     } catch (error) {
       throw new BusinessException('La recherche des catégories a échoué', getErrorStatusCode(error), {
         cause: error,

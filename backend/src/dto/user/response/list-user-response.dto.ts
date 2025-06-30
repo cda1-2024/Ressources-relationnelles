@@ -21,6 +21,12 @@ export class UserResponseDto {
 
   @ApiProperty()
   role: number;
+
+  @ApiProperty()
+  ressourcesCount: number;
+
+  @ApiProperty()
+  eventsCount: number;
 }
 
 export class ListUserResponseDto {
