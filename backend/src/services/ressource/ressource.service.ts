@@ -126,7 +126,7 @@ export class RessourceService {
         newRessource.contentLink = ressource.content_link;
       }
       newRessource.ressourceType = RessourceTypeFromInt[ressource.type];
-      newRessource.visibility = RessourceVisibilityFromInt[ressource.visibilty];
+      newRessource.visibility = RessourceVisibilityFromInt[ressource.visibility];
       newRessource.creator = user;
 
       const saveRessource = this.ressourcesRepository.save(newRessource);

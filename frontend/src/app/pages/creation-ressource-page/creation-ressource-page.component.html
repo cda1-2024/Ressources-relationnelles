@@ -1,0 +1,94 @@
+<div class="flex flex-col flex-grow items-center">
+  <div class="flex flex-col items-center flex-grow w-full" [ngClass]="{ 'px-[15vw]': !isMobile }">
+    <div class="bg-[#f8f9ff] flex-grow w-full px-4 pb-24" [ngClass]="{ 'border-x-2 border-[#e8edff]': !isMobile }">
+
+
+      <div class="p-8 max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-center md:text-left">
+          Créer une ressource
+          <hr />
+        </h1>
+
+        <form [formGroup]="ressourceForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+          <mat-form-field class="w-full">
+            <mat-label>Titre</mat-label>
+            <input matInput formControlName="titre" required />
+            <mat-error *ngIf="ressourceForm.get('titre')?.invalid && ressourceForm.get('titre')?.touched">
+              Le titre est obligatoire.
+            </mat-error>
+            <div *ngIf="apiErrors['title']" class="text-red-600 text-sm mt-1">
+              <div *ngFor="let msg of apiErrors['title']">{{ msg }}</div>
+            </div>
+          </mat-form-field>
+
+          <mat-form-field class="w-full">
+            <mat-label>Type de ressource</mat-label>
+            <mat-select formControlName="type" required>
+              <mat-option value="0" disabled>Image</mat-option>
+              <mat-option value="1" disabled>PDF</mat-option>
+              <mat-option value="2">Texte</mat-option>
+              <mat-option value="3" disabled>Vidéo</mat-option>
+            </mat-select>
+            <mat-error *ngIf="ressourceForm.get('type')?.invalid && ressourceForm.get('type')?.touched">
+              Le type est obligatoire.
+            </mat-error>
+            <div *ngIf="apiErrors['type']" class="text-red-600 text-sm mt-1">
+              <div *ngFor="let msg of apiErrors['type']">{{ msg }}</div>
+            </div>
+          </mat-form-field>
+
+          <quill-editor formControlName="contenu"></quill-editor>
+          <div *ngIf="apiErrors['content_text']" class="text-red-600 text-sm mt-1">
+            <div *ngFor="let msg of apiErrors['content_text']">{{ msg }}</div>
+          </div>
+
+          <mat-form-field class="w-full">
+            <mat-label>Catégorie</mat-label>
+            <mat-select formControlName="categorie" required>
+              <mat-option *ngFor="let cat of categories" [value]="cat.id">
+                {{ cat.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="ressourceForm.get('categorie')?.invalid && ressourceForm.get('categorie')?.touched">
+              La catégorie est obligatoire.
+            </mat-error>
+            <div *ngIf="apiErrors['category']" class="text-red-600 text-sm mt-1">
+              <div *ngFor="let msg of apiErrors['category']">{{ msg }}</div>
+            </div>
+          </mat-form-field>
+
+          <mat-form-field class="w-full">
+            <mat-label>Annexes</mat-label>
+            <input matInput formControlName="lien" placeholder="https://..." />
+            <div *ngIf="apiErrors['content_link']" class="text-red-600 text-sm mt-1">
+              <div *ngFor="let msg of apiErrors['content_link']">{{ msg }}</div>
+            </div>
+          </mat-form-field>
+
+          <mat-form-field class="w-full">
+            <mat-label>Visibilité</mat-label>
+            <mat-select formControlName="visibilite" required>
+              <mat-option value="0">Privé</mat-option>
+              <mat-option value="1">Publique</mat-option>
+              <mat-option value="2">Restreinte</mat-option>
+            </mat-select>
+            <mat-error *ngIf="ressourceForm.get('visibilite')?.invalid && ressourceForm.get('visibilite')?.touched">
+              La visibilité est obligatoire.
+            </mat-error>
+          </mat-form-field>
+          <div *ngIf="apiErrors['visibility']" class="text-red-600 text-sm mt-1">
+            <div *ngFor="let msg of apiErrors['visibility']">{{ msg }}</div>
+          </div>
+
+          <div class="flex justify-end pt-4">
+            <button mat-flat-button type="submit" class="custom-button !rounded-[10px] mx-[10px]">
+              Ajouter la ressource
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
