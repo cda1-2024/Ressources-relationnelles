@@ -41,3 +41,11 @@ export interface RessourceTypeDto {
   id: number;
   label: string;
 }
+export interface CreateRessourceRequest {
+  title: string;
+  category: string;
+  visibility: number;
+  type: number;
+  content_text: string;
+  content_link?: string;
+}
