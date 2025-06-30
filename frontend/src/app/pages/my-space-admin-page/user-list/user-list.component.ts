@@ -41,7 +41,7 @@ import { FilterRequest as FilterRequest } from '../../../services/user/user.requ
     MatInputModule,
   ],
   templateUrl: './user-list.component.html',
-  styleUrl: './user-list.component.scss',
+  styleUrl: './user-list.component.scss'
 })
 export class UserListComponent implements OnInit {
   displayedColumns: string[] = ['username', 'email', 'status', 'role'];
