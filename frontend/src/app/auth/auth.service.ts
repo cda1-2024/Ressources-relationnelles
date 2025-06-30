@@ -16,7 +16,9 @@ export class AuthService {
   userId$: Observable<string | null> = this.userId.asObservable();
   username$: Observable<string | null> = this.username.asObservable();
 
-  constructor(private api: ApiService) {}
+  constructor(
+    private api: ApiService
+  ) {}
 
   login(email: string, password: string, rememberMe: boolean): Observable<void> {
     const payload: LoginPayload = {

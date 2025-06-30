@@ -1,5 +1,5 @@
 <h2 mat-dialog-title class="!text-[32px] !leading-[40px] !font-bold">Se connecter</h2>
-<mat-dialog-content>
+<mat-dialog-content class="login-modal-content">
   <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
     <mat-form-field appearance="fill" class="w-full">
       <mat-label>Email ou Nom d'utilisateur</mat-label>
@@ -12,6 +12,7 @@
         required
       />
     </mat-form-field>
+
   
     <mat-form-field appearance="fill" class="w-full">
       <mat-label>Mot de passe</mat-label>
@@ -48,7 +49,7 @@
       class="!rounded-[10px] px-[35px] w-full mt-[20px]"
       [disabled]="!loginForm.form.valid"
     >
-      Se Connecter
+      Se connecter
     </button>
   
     <p class="text-secondary-500 text-center text-xs mt-3">
