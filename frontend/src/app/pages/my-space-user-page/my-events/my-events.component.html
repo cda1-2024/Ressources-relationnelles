@@ -27,6 +27,7 @@
               <app-big-event-card
                 *ngFor="let event of inProgressEvents"
                 [event]="event"
+								[showCreator]="false"
                 class="w-[30%] max-w-[350px] min-w-[290px]"
               ></app-big-event-card>
             </div>
@@ -53,6 +54,7 @@
               <app-big-event-card
                 *ngFor="let event of finishedEvents"
                 [event]="event"
+								[showCreator]="false"
                 class="w-[30%] max-w-[350px] min-w-[290px]"
               ></app-big-event-card>
             </div>

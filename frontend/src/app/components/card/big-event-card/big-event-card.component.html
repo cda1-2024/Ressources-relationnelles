@@ -6,7 +6,7 @@
     </div>
   </div>
   <div class="card-footer">
-    <div class="user-info">
+    <div class="user-info" *ngIf="showCreator">
       <img
         class="avatar"
         [src]="event.user.avatarUrl"

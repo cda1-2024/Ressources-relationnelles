@@ -14,9 +14,9 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CategoryService } from '../../services/category/category.service';
 import { Ressourceservice } from '../../services/ressource/ressource.service';
 import { FilterRessourceRequest, RessourceResponse, RessourceTypeOption } from '../../services/ressource/ressource.model';
-import { CategorySimple, MultipleCategoryResponse } from '../../services/category/category.model';
 import { RessourceCardComponent } from '../../components/card/ressource-card/ressource-card.component';
 import { debounceTime, Subject } from 'rxjs';
+import { CategoryListResponse, CategoryResponse } from '../../services/category/category.model';
 
 // Constants
 const SEARCH_DEBOUNCE_TIME = 300;
@@ -67,8 +67,8 @@ export class RessourceSearchPageComponent implements OnInit {
   selectedType = '';
 
   // Data
-  categories: CategorySimple[] = [];
-  articles: RessourceResponse[] = [];
+  categories: CategoryResponse[] = [];
+  ressources: RessourceResponse[] = [];
   isLoading = false;
 
   // Configuration
@@ -128,13 +128,13 @@ export class RessourceSearchPageComponent implements OnInit {
     this.resetPaginationAndApplyFilters();
   }
 
-  toggleLike(article: RessourceResponse): void {
-    article.isLiked = !article.isLiked;
-    article.likeCount += article.isLiked ? 1 : -1;
+  toggleLike(ressource: RessourceResponse): void {
+    ressource.isLiked = !ressource.isLiked;
+    ressource.likeCount += ressource.isLiked ? 1 : -1;
   }
 
-  onViewRessource(article: RessourceResponse): void {
-    console.log('👁️ Viewing ressource:', article.title);
+  onViewRessource(ressource: RessourceResponse): void {
+    console.log('👁️ Viewing ressource:', ressource.title);
     // TODO: Naviguer vers la page de détail de la ressource
     // this.router.navigate(['/ressources', article.id]);
   }
@@ -156,8 +156,8 @@ export class RessourceSearchPageComponent implements OnInit {
   
 
   trackByValue = (index: number, item: any) => item.value;
-  trackByCategoryId = (index: number, category: CategorySimple) => category.id;
-  trackByArticleId = (index: number, article: RessourceResponse) => article.id;
+  trackByCategoryId = (index: number, category: CategoryResponse) => category.id;
+  trackByRessourceId = (index: number, ressource: RessourceResponse) => ressource.id;
 
 
   private initializeSearchDebounce(): void {
@@ -178,8 +178,8 @@ export class RessourceSearchPageComponent implements OnInit {
 
   private fetchCategories(): void {
     
-    this.categoryService.getAll().subscribe({
-      next: (response: MultipleCategoryResponse) => {
+    this.categoryService.getAllCategories().subscribe({
+      next: (response: CategoryListResponse) => {
         this.categories = this.processCategories(response.categories || []);
       },
       error: (error: any) => {
@@ -189,7 +189,7 @@ export class RessourceSearchPageComponent implements OnInit {
     });
   }
 
-  private processCategories(categories: CategorySimple[]): CategorySimple[] {
+  private processCategories(categories: CategoryResponse[]): CategoryResponse[] {
     return categories.map(category => ({
       ...category,
       iconPath: category.iconPath === TODO_ICON_PLACEHOLDER ? FALLBACK_ICON : category.iconPath
@@ -222,14 +222,14 @@ export class RessourceSearchPageComponent implements OnInit {
   }
 
   private handleRessourcesSuccess(response: any): void {
-    this.articles = Array.isArray(response.ressources) ? response.ressources : [];
+    this.ressources = Array.isArray(response.ressources) ? response.ressources : [];
     this.totalItems = response.totalNumberRessources || 0;
     this.isLoading = false;
   }
 
   private handleRessourcesError(error: any): void {
     console.error('❌ Error fetching ressources:', error);
-    this.articles = [];
+    this.ressources = [];
     this.totalItems = 0;
     this.isLoading = false;
   }

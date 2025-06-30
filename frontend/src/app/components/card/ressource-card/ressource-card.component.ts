@@ -18,19 +18,23 @@ import { RessourceResponse } from '../../../services/ressource/ressource.model';
   styleUrl: './ressource-card.component.scss'
 })
 export class RessourceCardComponent {
-  @Input({ required: true }) article!: RessourceResponse;
+  @Input({ required: true }) ressource!: RessourceResponse;
   @Input() showViewButton = true;
   @Input() showActions = true;
+  @Input() textButton = 'Voir';
+  @Input() onClickButton = () => {};
+  @Input() isDraft = false;
+  @Input() showCreator = true;
 
   @Output() likeToggled = new EventEmitter<RessourceResponse>();
   @Output() viewClicked = new EventEmitter<RessourceResponse>();
 
   onToggleLike(): void {
-    this.likeToggled.emit(this.article);
+    this.likeToggled.emit(this.ressource);
   }
 
   onViewClick(): void {
-    this.viewClicked.emit(this.article);
+    this.viewClicked.emit(this.ressource);
   }
 
   formatCount(count: number): string {
@@ -40,7 +44,7 @@ export class RessourceCardComponent {
   }
 
   getResourceIcon(): string {
-    const type = this.article.type?.label?.toLowerCase();
+    const type = this.ressource.type?.label?.toLowerCase();
     switch (type) {
       case 'vidéo':
       case 'video':

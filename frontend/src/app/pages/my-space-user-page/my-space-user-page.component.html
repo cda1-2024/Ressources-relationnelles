@@ -7,7 +7,7 @@
     <div>
       <section>
         <ng-container [ngSwitch]="currentView">
-					<app-my-ressources *ngSwitchCase="'ressources.list'"></app-my-ressources>
+					<app-my-created-ressources *ngSwitchCase="'ressources.list'"></app-my-created-ressources>
           <app-my-events *ngSwitchCase="'events.list'"></app-my-events>
 					<app-event-create *ngSwitchCase="'events.create'"></app-event-create>
           <app-statistics-dashboard

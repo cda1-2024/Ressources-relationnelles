@@ -3,7 +3,7 @@ import { UserView } from '../../utils/user.views';
 import { BreakpointService } from '../../services/breackpoint.service';
 import { UserSidebarComponent } from "../../components/sidebar/user-sidebar/user-sidebar.component";
 import { CommonModule } from '@angular/common';
-import { MyRessourcesComponent } from "./my-ressources/my-ressources.component";
+import { MyCreatedRessourcesComponent } from "./my-created-ressources/my-created-ressources.component";
 import { MyEventsComponent } from "./my-events/my-events.component";
 import { EventCreateComponent } from "./event-create/event-create.component";
 import { StatisticsDashboardComponent } from "./statistics-dashboard/statistics-dashboard.component";
@@ -13,7 +13,7 @@ import { StatisticsDashboardComponent } from "./statistics-dashboard/statistics-
   imports: [
     UserSidebarComponent,
     CommonModule,
-    MyRessourcesComponent,
+    MyCreatedRessourcesComponent,
     MyEventsComponent,
     EventCreateComponent,
     StatisticsDashboardComponent
