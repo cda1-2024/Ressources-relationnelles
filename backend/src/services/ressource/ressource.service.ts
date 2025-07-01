@@ -45,7 +45,9 @@ export class RessourceService {
       const ressources = await this.ressourcesRepository.find({
         relations: {
           category: true,
-          comments: true,
+          comments: {
+            author: true,
+          },
           creator: true,
           validator: true,
         },
@@ -71,7 +73,8 @@ export class RessourceService {
         .leftJoinAndSelect('ressource.category', 'category')
         .leftJoinAndSelect('ressource.creator', 'creator')
         .leftJoin('ressource.validator', 'validator')
-        .leftJoinAndSelect('ressource.comments', 'comments');
+        .leftJoinAndSelect('ressource.comments', 'comments')
+        .leftJoinAndSelect('comments.author', 'commentAuthor');
 
       this.applyCommonFilters(query, filters);
 
@@ -106,6 +109,12 @@ export class RessourceService {
           category: true,
           creator: true,
           validator: true,
+          comments: {
+            author: true,
+            parentComment: {
+              author: true,
+            },
+          },
         },
       });
 

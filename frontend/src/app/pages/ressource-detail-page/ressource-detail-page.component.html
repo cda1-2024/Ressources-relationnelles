@@ -1,0 +1,276 @@
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+    
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="flex justify-center items-center py-20">
+      <mat-icon class="animate-spin mr-2">refresh</mat-icon>
+      <span>Chargement de la ressource...</span>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error && !isLoading" class="text-center py-20">
+      <mat-icon class="text-red-500 text-6xl mb-4">error_outline</mat-icon>
+      <h2 class="text-xl font-semibold text-red-600 mb-2">Erreur</h2>
+      <p class="text-gray-600 mb-4">{{ error }}</p>
+      <button mat-stroked-button (click)="goBack()">
+        <mat-icon class="mr-2">arrow_back</mat-icon>
+        Retour à la recherche
+      </button>
+    </div>
+
+    <!-- Ressource content -->
+    <div *ngIf="ressource && !isLoading && !error">
+      <!-- Header with back button -->
+      <div class="mb-8">
+        <div class="flex items-center mb-4">
+          <button mat-icon-button (click)="goBack()" class="mr-3">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <h1 class="text-2xl sm:text-3xl font-bold">{{ ressource.title }}</h1>
+        </div>
+        
+        <div class="flex flex-wrap items-center gap-4 sm:gap-6 text-gray-600 mb-6">
+          <div class="flex items-center gap-2">
+            <mat-icon class="text-lg">person</mat-icon>
+            <span class="text-sm sm:text-base">{{ ressource.creator.username || 'Auteur inconnu' }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <mat-icon class="text-lg">schedule</mat-icon>
+            <span class="text-sm sm:text-base">{{ ressource.created_at | date:'dd MMM yyyy à HH:mm' }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <mat-icon class="text-lg">{{ getResourceIcon() }}</mat-icon>
+            <span class="text-sm sm:text-base">{{ ressource.type.label || 'Type inconnu' }}</span>
+          </div>
+        </div>
+
+        <!-- Actions bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="flex items-center gap-4">
+            <button 
+              mat-icon-button 
+              (click)="toggleLike()"
+              [class.text-red-500]="ressource.isLiked"
+              class="transition-colors">
+              <mat-icon>{{ ressource.isLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
+            </button>
+            <span class="text-sm text-gray-600">{{ formatCount(ressource.likeCount || 0) }} J'aime</span>
+            
+            <div class="flex items-center gap-2 ml-4">
+              <mat-icon class="text-gray-500">chat_bubble_outline</mat-icon>
+              <span class="text-sm text-gray-600">{{ formatCount(ressource.commentCount || 0) }} Commentaires</span>
+            </div>
+          </div>
+
+          <!-- Status and visibility info -->
+          <div class="flex items-center gap-2">
+            <mat-chip-set>
+              <mat-chip [class.bg-green-100]="ressource.status.label === 'Publié'">
+                {{ ressource.status.label || 'Statut inconnu' }}</mat-chip>
+              <mat-chip class="bg-blue-100">
+                {{ ressource.visibility.label || 'Visibilité inconnue' }}</mat-chip>
+            </mat-chip-set>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content based on type -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+        
+        <!-- Type TEXTE : HTML uniquement -->
+        <div *ngIf="isTextType()">
+          <h2 class="text-xl sm:text-2xl font-semibold mb-4">Contenu</h2>
+          <div class="prose max-w-none" [innerHTML]="sanitizedContent"></div>
+        </div>
+
+        <!-- Type IMAGE : HTML à gauche, Image à droite -->
+        <div *ngIf="isImageType()" class="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
+          <!-- HTML Content -->
+          <div class="order-2 xl:order-1">
+            <h2 class="text-xl sm:text-2xl font-semibold mb-4">Description</h2>
+            <div class="prose max-w-none" [innerHTML]="sanitizedContent"></div>
+          </div>
+          
+          <!-- Image -->
+          <div class="order-1 xl:order-2">
+            <h2 class="text-xl sm:text-2xl font-semibold mb-4">Image</h2>
+            <div class="bg-gray-100 rounded-lg overflow-hidden">
+              <img 
+                [src]="ressource.content_link" 
+                [alt]="ressource.title"
+                class="w-full h-auto max-h-96 object-contain"
+                (error)="onImageError($event)"
+              />
+            </div>
+            <p class="text-sm text-gray-500 mt-2 break-all">
+              <a [href]="ressource.content_link" target="_blank" class="text-blue-600 hover:underline">
+                {{ ressource.content_link }}
+                <mat-icon class="ml-1 text-sm">open_in_new</mat-icon>
+              </a>
+            </p>
+          </div>
+        </div>
+
+        <!-- Type VIDÉO : HTML à gauche, vidéo YouTube à droite -->
+        <div *ngIf="isVideoType()" class="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
+          <!-- HTML Content -->
+          <div class="order-1">
+            <h2 class="text-xl sm:text-2xl font-semibold mb-4">Description</h2>
+            <div class="prose max-w-none" [innerHTML]="sanitizedContent"></div>
+          </div>
+          
+          <!-- YouTube Video -->
+          <div class="order-2">
+            <h2 class="text-xl sm:text-2xl font-semibold mb-4">Vidéo</h2>
+            <div class="bg-gray-100 rounded-lg overflow-hidden aspect-video">
+              <iframe
+                [src]="getYouTubeEmbedUrl()"
+                class="w-full h-full"
+                frameborder="0"
+                allowfullscreen
+                title="Vidéo YouTube">
+              </iframe>
+            </div>
+            <p class="text-sm text-gray-500 mt-2 break-all">
+              <a [href]="ressource.content_link" target="_blank" class="text-blue-600 hover:underline">
+                {{ ressource.content_link }}
+                <mat-icon class="ml-1 text-sm">open_in_new</mat-icon>
+              </a>
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Comments Section -->
+      <div *ngIf="hasComments()" class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+        <div class="mb-6">
+          <h2 class="text-xl sm:text-2xl font-semibold mb-2">
+            Commentaires ({{ getTotalCommentsCount() }})
+          </h2>
+          <div class="w-12 h-1 bg-blue-500 rounded"></div>
+        </div>
+
+        <!-- Comments List -->
+        <div class="space-y-4">
+          <ng-container *ngFor="let comment of ressource?.comments">
+            <div class="comment-thread">
+              <!-- Main Comment -->
+              <div class="flex gap-3">
+                <div class="flex-shrink-0">
+                  <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                    {{ comment.author.username.charAt(0).toUpperCase() }}
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="bg-gray-50 rounded-lg p-3">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="font-medium text-gray-900">{{ comment.author.username }}</span>
+                      <span class="text-xs text-gray-500">{{ comment.created_at | date:'dd MMM yyyy à HH:mm' }}</span>
+                    </div>
+                    <p class="text-gray-700">{{ comment.content }}</p>
+                  </div>
+                  
+                  <!-- Reply button for main comment -->
+                  <div *ngIf="canReply(comment, 0)" class="mt-2">
+                    <button 
+                      mat-button 
+                      class="text-blue-600 text-sm"
+                      (click)="showReplyForm(comment.id)"
+                      *ngIf="!isReplyFormVisible(comment.id)">
+                      <mat-icon class="mr-1 text-sm">reply</mat-icon>
+                      Répondre
+                    </button>
+                  </div>
+
+                  <!-- Reply form for main comment -->
+                  <div *ngIf="isReplyFormVisible(comment.id)" class="mt-3 bg-white border border-gray-200 rounded-lg p-3">
+                    <mat-form-field appearance="outline" class="w-full">
+                      <mat-label>Votre réponse</mat-label>
+                      <textarea 
+                        matInput 
+                        rows="3" 
+                        [(ngModel)]="replyText"
+                        placeholder="Écrivez votre réponse...">
+                      </textarea>
+                    </mat-form-field>
+                    <div class="flex justify-end gap-2 mt-2">
+                      <button 
+                        mat-button 
+                        (click)="hideReplyForm()"
+                        [disabled]="isSubmittingReply">
+                        Annuler
+                      </button>
+                      <button 
+                        mat-raised-button 
+                        color="primary"
+                        (click)="submitReply(comment.id)"
+                        [disabled]="!replyText.trim() || isSubmittingReply">
+                        <mat-icon *ngIf="isSubmittingReply" class="animate-spin mr-2">refresh</mat-icon>
+                        {{ isSubmittingReply ? 'Envoi...' : 'Répondre' }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Replies -->
+              <div *ngIf="comment.replies && comment.replies.length > 0" class="ml-8 mt-3 space-y-3">
+                <ng-container *ngFor="let reply of comment.replies">
+                  <div class="flex gap-3">
+                    <div class="flex-shrink-0">
+                      <div class="w-7 h-7 bg-gray-400 rounded-full flex items-center justify-center text-white text-xs font-medium">
+                        {{ reply.author.username.charAt(0).toUpperCase() }}
+                      </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="bg-gray-100 rounded-lg p-3">
+                        <div class="flex items-center gap-2 mb-2">
+                          <span class="font-medium text-gray-900">{{ reply.author.username }}</span>
+                          <span class="text-xs text-gray-500">{{ reply.created_at | date:'dd MMM yyyy à HH:mm' }}</span>
+                        </div>
+                        <p class="text-gray-700">{{ reply.content }}</p>
+                      </div>
+
+                      <!-- Nested Replies (level 2 - no more reply buttons) -->
+                      <div *ngIf="reply.replies && reply.replies.length > 0" class="ml-6 mt-3 space-y-2">
+                        <ng-container *ngFor="let nestedReply of reply.replies">
+                          <div class="flex gap-2">
+                            <div class="flex-shrink-0">
+                              <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-white text-xs font-medium">
+                                {{ nestedReply.author.username.charAt(0).toUpperCase() }}
+                              </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                              <div class="bg-white border border-gray-200 rounded-lg p-2">
+                                <div class="flex items-center gap-2 mb-1">
+                                  <span class="font-medium text-gray-900 text-sm">{{ nestedReply.author.username }}</span>
+                                  <span class="text-xs text-gray-500">{{ nestedReply.created_at | date:'dd MMM yyyy à HH:mm' }}</span>
+                                </div>
+                                <p class="text-gray-700 text-sm">{{ nestedReply.content }}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- No Comments Message -->
+      <div *ngIf="!hasComments() && ressource && !isLoading" class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <mat-icon class="text-gray-400 text-4xl mb-2">chat_bubble_outline</mat-icon>
+        <h3 class="text-lg font-medium text-gray-900 mb-1">Aucun commentaire</h3>
+        <p class="text-gray-500">
+          <span *ngIf="authService.isLoggedIn()">Soyez le premier à commenter cette ressource !</span>
+          <span *ngIf="!authService.isLoggedIn()">Connectez-vous pour commenter cette ressource.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

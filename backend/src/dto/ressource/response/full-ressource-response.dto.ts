@@ -33,6 +33,12 @@ export class FullRessourceResponseDto {
   @ApiProperty()
   like: number;
 
+  @ApiProperty()
+  likeCount: number;
+
+  @ApiProperty()
+  commentCount: number;
+
   @ApiProperty({ type: RessourceStatusDto })
   status: RessourceStatusDto;
 

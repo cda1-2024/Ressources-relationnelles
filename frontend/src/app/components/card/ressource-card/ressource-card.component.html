@@ -42,7 +42,20 @@
     </div>
     
     <div class="ressource-image-placeholder">
-      <mat-icon>{{ getResourceIcon() }}</mat-icon>
+      <!-- Afficher l'image si content_link est une URL d'image -->
+      <img 
+        *ngIf="shouldShowImage()" 
+        [src]="ressource.content_link" 
+        [alt]="ressource.title"
+        class="ressource-image"
+        (error)="onImageError($event)"
+      />
+      <!-- Afficher l'icône si pas d'image ou si l'image a échoué à charger -->
+      <mat-icon 
+        [style.display]="shouldShowImage() ? 'none' : 'flex'"
+        class="ressource-icon">
+        {{ getResourceIcon() }}
+      </mat-icon>
     </div>
   </div>
 </mat-card>
