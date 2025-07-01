@@ -20,6 +20,20 @@ export interface RessourceResponse {
   likeCount: number;
   commentCount: number;
   isLiked?: boolean;
+  comments?: Comment[];
+  validator?: User;
+  admin_validation?: boolean;
+  date_time_validation?: string;
+  like?: number;
+}
+
+export interface Comment {
+  id: string;
+  content: string;
+  created_at: string;
+  author: User;
+  replies?: Comment[];
+  parent_comment_id?: string;
 }
 
 export interface User {

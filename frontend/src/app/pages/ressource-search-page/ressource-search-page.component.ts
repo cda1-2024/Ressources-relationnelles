@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -16,7 +16,8 @@ import { Ressourceservice } from '../../services/ressource/ressource.service';
 import { FilterRessourceRequest, RessourceResponse, RessourceTypeOption } from '../../services/ressource/ressource.model';
 import { CategorySimple, MultipleCategoryResponse } from '../../services/category/category.model';
 import { RessourceCardComponent } from '../../components/card/ressource-card/ressource-card.component';
-import { debounceTime, Subject } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
+import { debounceTime, Subject, Subscription } from 'rxjs';
 
 // Constants
 const SEARCH_DEBOUNCE_TIME = 300;
@@ -54,7 +55,7 @@ const TODO_ICON_PLACEHOLDER = 'TODO_A_AJOUTER';
     ])
   ]
 })
-export class RessourceSearchPageComponent implements OnInit {
+export class RessourceSearchPageComponent implements OnInit, OnDestroy {
 
   // Pagination
   totalItems = 0;
@@ -68,8 +69,9 @@ export class RessourceSearchPageComponent implements OnInit {
 
   // Data
   categories: CategorySimple[] = [];
-  articles: RessourceResponse[] = [];
+  ressources: RessourceResponse[] = [];
   isLoading = false;
+  private isInitialized = false;
 
   // Configuration
   readonly ressourceTypes: RessourceTypeOption[] = [
@@ -82,16 +84,36 @@ export class RessourceSearchPageComponent implements OnInit {
 
   // Private
   private readonly searchSubject = new Subject<string>();
+  private authSubscription?: Subscription;
+
+  // Public pour accès depuis le template
+  public readonly authService: AuthService;
 
   constructor(
     private readonly categoryService: CategoryService,
-    private readonly ressourceService: Ressourceservice
+    private readonly ressourceService: Ressourceservice,
+    authService: AuthService
   ) {
+    this.authService = authService;
     this.initializeSearchDebounce();
   }
 
   ngOnInit(): void {
     this.loadInitialData();
+    
+    // Recharger les ressources quand l'état de connexion change (sauf lors de l'initialisation)
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(() => {
+      if (this.isInitialized) {
+        console.log('🔄 Auth state changed, reloading resources...');
+        this.applyFilters();
+      }
+    });
+    
+    this.isInitialized = true;
+  }
+
+  ngOnDestroy(): void {
+    this.authSubscription?.unsubscribe();
   }
 
   onSearchChange(value: string): void {
@@ -128,15 +150,15 @@ export class RessourceSearchPageComponent implements OnInit {
     this.resetPaginationAndApplyFilters();
   }
 
-  toggleLike(article: RessourceResponse): void {
-    article.isLiked = !article.isLiked;
-    article.likeCount += article.isLiked ? 1 : -1;
+  toggleLike(ressource: RessourceResponse): void {
+    ressource.isLiked = !ressource.isLiked;
+    ressource.likeCount += ressource.isLiked ? 1 : -1;
   }
 
-  onViewRessource(article: RessourceResponse): void {
-    console.log('👁️ Viewing ressource:', article.title);
+  onViewRessource(ressource: RessourceResponse): void {
+    console.log('👁️ Viewing ressource:', ressource.title);
     // TODO: Naviguer vers la page de détail de la ressource
-    // this.router.navigate(['/ressources', article.id]);
+    // this.router.navigate(['/ressources', ressource.id]);
   }
 
   isAllCategoriesSelected(): boolean {
@@ -153,11 +175,9 @@ export class RessourceSearchPageComponent implements OnInit {
     return count.toString();
   }
 
-  
-
   trackByValue = (index: number, item: any) => item.value;
   trackByCategoryId = (index: number, category: CategorySimple) => category.id;
-  trackByArticleId = (index: number, article: RessourceResponse) => article.id;
+  trackByRessourceId = (index: number, ressource: RessourceResponse) => ressource.id;
 
 
   private initializeSearchDebounce(): void {
@@ -199,10 +219,18 @@ export class RessourceSearchPageComponent implements OnInit {
   private applyFilters(): void {
     this.isLoading = true;
     const filters = this.buildFilters();
+    const isLoggedIn = this.authService.isLoggedIn();
     
     console.log('🔍 Applying filters:', filters);
+    console.log('👤 User is logged in:', isLoggedIn);
+    console.log('🌐 Using endpoint:', isLoggedIn ? '/ressources/filter' : '/ressources/filterpublic');
 
-    this.ressourceService.getFilteredPublicRessources(filters).subscribe({
+    // Utilise getFilteredRessources si l'utilisateur est connecté, sinon getFilteredPublicRessources
+    const ressourceMethod = isLoggedIn 
+      ? this.ressourceService.getFilteredRessources(filters)
+      : this.ressourceService.getFilteredPublicRessources(filters);
+
+    ressourceMethod.subscribe({
       next: (response) => this.handleRessourcesSuccess(response),
       error: (error) => this.handleRessourcesError(error)
     });
@@ -222,14 +250,14 @@ export class RessourceSearchPageComponent implements OnInit {
   }
 
   private handleRessourcesSuccess(response: any): void {
-    this.articles = Array.isArray(response.ressources) ? response.ressources : [];
+    this.ressources = Array.isArray(response.ressources) ? response.ressources : [];
     this.totalItems = response.totalNumberRessources || 0;
     this.isLoading = false;
   }
 
   private handleRessourcesError(error: any): void {
     console.error('❌ Error fetching ressources:', error);
-    this.articles = [];
+    this.ressources = [];
     this.totalItems = 0;
     this.isLoading = false;
   }

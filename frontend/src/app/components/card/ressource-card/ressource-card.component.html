@@ -1,12 +1,12 @@
 <mat-card class="custom-card">
   <div class="card-content">
     <div class="text-section">
-      <h3 class="card-title">{{ article.title }}</h3>
+      <h3 class="card-title">{{ ressource.title }}</h3>
       <p class="card-subtitle text-secondary-500">
-        Par <a class="author-link" href="#">{{ article.creator.username }}</a>
+        Par <a class="author-link" href="#">{{ ressource.creator.username }}</a>
       </p>
       <p class="card-subtitle text-secondary-500">
-        {{ article.created_at | date:'dd MMM yyyy' }}
+        {{ ressource.created_at | date:'dd MMM yyyy' }}
       </p>
       
       <div class="actions" *ngIf="showActions">
@@ -24,22 +24,35 @@
           style="cursor: pointer;">
           <mat-icon 
             class="like-icon"
-            [ngClass]="{'liked': article.isLiked}">
-            {{ article.isLiked ? 'favorite' : 'favorite_border' }}
+            [ngClass]="{'liked': ressource.isLiked}">
+            {{ ressource.isLiked ? 'favorite' : 'favorite_border' }}
           </mat-icon>
-          <span>{{ formatCount(article.likeCount) }}</span>
+          <span>{{ formatCount(ressource.likeCount) }}</span>
         </div>
 
         <!-- Commentaires (affichage uniquement) -->
         <div class="action-item">
           <mat-icon class="comment-icon">chat_bubble</mat-icon>
-          <span>{{ formatCount(article.commentCount) }}</span>
+          <span>{{ formatCount(ressource.commentCount) }}</span>
         </div>
       </div>
     </div>
     
-    <div class="article-image-placeholder">
-      <mat-icon>{{ getResourceIcon() }}</mat-icon>
+    <div class="ressource-image-placeholder">
+      <!-- Afficher l'image si content_link est une URL d'image -->
+      <img 
+        *ngIf="shouldShowImage()" 
+        [src]="ressource.content_link" 
+        [alt]="ressource.title"
+        class="ressource-image"
+        (error)="onImageError($event)"
+      />
+      <!-- Afficher l'icône si pas d'image ou si l'image a échoué à charger -->
+      <mat-icon 
+        [style.display]="shouldShowImage() ? 'none' : 'flex'"
+        class="ressource-icon">
+        {{ getResourceIcon() }}
+      </mat-icon>
     </div>
   </div>
 </mat-card>
