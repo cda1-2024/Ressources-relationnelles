@@ -14,7 +14,7 @@ import { UserService } from '../services/user/user.service';
 import { ListUserResponseDto, UserResponseDto } from 'src/dto/user/response/list-user-response.dto';
 import { FullUserResponseDto } from 'src/dto/user/response/full-user-response.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { updateMyAccountDto as updateMyAccountDto } from '../dto/user/request/update-my-account.dto';
+import { updateMyAccountDto } from '../dto/user/request/update-my-account.dto';
 import { UserMapper } from 'src/services/user/user.mapper';
 import { User, UserRole } from 'src/models/user.model';
 import { CurrentUser } from 'src/middleware/guards/current-user.decorator';

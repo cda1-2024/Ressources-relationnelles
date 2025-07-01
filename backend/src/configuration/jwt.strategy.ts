@@ -18,11 +18,11 @@ export type jwtPayload = {
 };
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private userService: UserService) {
+  constructor(private readonly userService: UserService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([(req: Request) => req?.cookies?.['access_token'] as string]),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_KEY || 'defaultSecretKey',
+      secretOrKey: process.env.JWT_KEY ?? 'defaultSecretKey',
     });
   }
 

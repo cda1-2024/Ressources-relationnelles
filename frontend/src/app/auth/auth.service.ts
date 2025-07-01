@@ -33,8 +33,8 @@ export class AuthService {
     );
   }
 
-  register(email: string, username: string, password: string, rememberMe: boolean): Observable<void> {
-    const payload = { email, username, password, rememberMe };
+  register(email: string, username: string, password: string): Observable<void> {
+    const payload = { email, username, password };
     return this.api.post<void>('/auth/register', payload).pipe(
       tap(() => {
         this.refreshUserInfo();

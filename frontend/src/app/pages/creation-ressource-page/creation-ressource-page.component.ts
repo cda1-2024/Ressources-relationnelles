@@ -43,12 +43,12 @@ export class CreationRessourcePageComponent implements OnInit {
   selectedType: number | null = null;
 
   constructor(
-    private fb: FormBuilder,
-    private breakpointService: BreakpointService,
-    private categoryService: CategoryService,
-    private ressourceService: Ressourceservice,
-    private dialog: MatDialog,
-    private router: Router
+    private readonly fb: FormBuilder,
+    private readonly breakpointService: BreakpointService,
+    private readonly categoryService: CategoryService,
+    private readonly ressourceService: Ressourceservice,
+    private readonly dialog: MatDialog,
+    private readonly router: Router
   ) {
     this.isMobile = this.breakpointService.isMobile();
     this.breakpointService.isMobile$.subscribe((isMobile) => {

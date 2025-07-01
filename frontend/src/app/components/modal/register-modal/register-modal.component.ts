@@ -100,9 +100,8 @@ export class RegisterModalComponent {
       const email = this.form.value.email;
       const username = this.form.value.username;
       const password = this.form.value.password;
-      const rememberMe = this.form.value.rememberMe;
 
-      this.auth.register(email, username, password, rememberMe).subscribe({
+      this.auth.register(email, username, password).subscribe({
         next: () => {
           this.dialogRef.close();
           this.error = null;
