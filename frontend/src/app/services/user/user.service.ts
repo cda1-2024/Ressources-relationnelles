@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UserResponse, UserListResponse } from './user.model';
+import { UserResponse, UserListResponse, FullUserResponse } from './user.model';
 import { ApiService } from '../api.service';
 import { CreateUserRequest, FilterRequest } from './user.request';
 
@@ -25,8 +25,8 @@ export class UserService {
     return this.api.get<UserListResponse>('/users/');
   }
 
-  getUserById(id: string): Observable<UserResponse> {
-    return this.api.get<UserResponse>('/users/' + id);
+  getUserById(id: string): Observable<FullUserResponse> {
+    return this.api.get<FullUserResponse>('/users/' + id);
   }
 
   getUserByIdentifier(id: string): Observable<UserResponse> {

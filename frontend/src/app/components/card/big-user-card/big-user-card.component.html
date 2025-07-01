@@ -12,5 +12,8 @@
       <span>·</span>
       <span>{{ user.events }} événements</span>
     </div>
+    <div class="signalements" *ngIf="user.signalements">
+      <span>{{ user.signalements }} signalements</span>
+    </div>
   </div>
 </mat-card>

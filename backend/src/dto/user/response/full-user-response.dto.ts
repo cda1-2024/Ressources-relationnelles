@@ -39,4 +39,13 @@ export class FullUserResponseDto {
 
   @ApiProperty()
   updatedAt: string;
+
+  @ApiProperty()
+  ressourcesCount: number;
+
+  @ApiProperty()
+  eventsCount: number;
+
+  @ApiProperty()
+  reportCount: number;
 }
