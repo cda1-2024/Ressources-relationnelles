@@ -13,7 +13,7 @@ import { AdminView } from '../../../utils/admin.views';
     NgClass
   ],
   templateUrl: './admin-sidebar.component.html',
-  styleUrls: ['./admin-sidebar.component.css'],
+  styleUrls: ['./admin-sidebar.component.scss'],
 })
 export class AdminSidebarComponent {
   @Input() currentView!: AdminView; 

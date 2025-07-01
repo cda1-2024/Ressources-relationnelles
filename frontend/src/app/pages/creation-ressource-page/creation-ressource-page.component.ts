@@ -13,13 +13,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { QuillModule } from 'ngx-quill';
 import { BreakpointService } from '../../services/breackpoint.service';
 import { CategoryService } from '../../services/category/category.service';
-import { CategorySimple } from '../../services/category/category.model';
+import { CategoryResponse } from '../../services/category/category.model';
 import { Ressourceservice } from '../../services/ressource/ressource.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { SuccessDialogComponent } from '../../components/alert/success-dialog.component';
-import { CreateRessourceRequest } from '../../services/ressource/ressource.model';
-import { from } from 'rxjs';
 
 @Component({
   selector: 'app-creation-ressource-page',
@@ -40,7 +38,7 @@ import { from } from 'rxjs';
 export class CreationRessourcePageComponent implements OnInit {
   ressourceForm!: FormGroup;
   isMobile = false;
-  categories: CategorySimple[] = [];
+  categories: CategoryResponse[] = [];
   apiErrors: { [key: string]: string[] } = {};
   selectedType: number | null = null;
 
@@ -69,7 +67,7 @@ export class CreationRessourcePageComponent implements OnInit {
       visibilite: ['', Validators.required],
     });
 
-    this.categoryService.getAll().subscribe({
+    this.categoryService.getAllCategories().subscribe({
       next: (res) => {
         this.categories = res.categories;
       },
