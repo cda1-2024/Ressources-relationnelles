@@ -20,14 +20,13 @@ import { Ressourceservice } from '../../services/ressource/ressource.service';
     BigRessourceCardComponent,
     BigEventCardComponent,
     BigUserCardComponent,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
   isMobile: boolean = false;
-  
 
   events: any[] = [];
 
@@ -48,22 +47,26 @@ export class HomeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.eventService.getFilterEvents(6).subscribe((res: EventListResponse) => {
-      this.events = res.events
-      .map(event => ({
+      this.events = res.events.map((event) => ({
         id: event.id,
         title: event.title,
         imageUrl: getImageForEventType(event.type.id),
         user: {
           name: event.manager.username,
-          avatarUrl: 'https://i.pravatar.cc/40?u='
+          avatarUrl: 'https://i.pravatar.cc/40?u=',
         },
         people: Math.floor(Math.random() * 100),
-        tchats: Math.floor(Math.random() * 20)
-      }),);
+        tchats: Math.floor(Math.random() * 20),
+      }));
     });
-    this.userService.getFilterUsers(3, false).subscribe((res) => {
-      this.users = res.users
-        .map(user => ({
+    this.userService
+      .getFilterUsers({
+        pageSize: 3,
+        page: 1,
+        disabled: false,
+      })
+      .subscribe((res) => {
+        this.users = res.users.map((user) => ({
           id: user.id,
           username: user.username,
           avatarUrl: 'https://i.pravatar.cc/40?u=' + user.id,
@@ -71,21 +74,21 @@ export class HomeComponent implements OnInit {
           events: user.ressourcesCount,
           ressources: user.eventsCount,
         }));
-    });
+      });
     this.ressourceService.getFilterRessources(6).subscribe((res) => {
-      console.log(res);
-      this.ressources = res.ressources
-        .map(ressource => ({
-          id: ressource.id,
-          title: ressource.title,
-          imageUrl: ressource.content_link || 'https://picsum.photos/300/200?random=' + ressource.id,
-          user: {
-            name: ressource.creator.username,
-            avatarUrl: 'https://i.pravatar.cc/40?u=' + ressource.creator.id
-          },
-          likes: ressource.likeCount,
-          comments: ressource.commentCount
-        }));
+      this.ressources = res.ressources.map((ressource) => ({
+        id: ressource.id,
+        title: ressource.title,
+        imageUrl:
+          ressource.content_link ||
+          'https://picsum.photos/300/200?random=' + ressource.id,
+        user: {
+          name: ressource.creator.username,
+          avatarUrl: 'https://i.pravatar.cc/40?u=' + ressource.creator.id,
+        },
+        likes: ressource.likeCount,
+        comments: ressource.commentCount,
+      }));
     });
   }
 }

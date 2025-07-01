@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RessourceResponse, RessourceListResponse, FilterRessourceRequest } from './ressource.model';
+import { RessourceResponse, RessourceListResponse, FilterRessourceRequest, CreateRessourceRequest } from './ressource.model';
 import { ApiService } from '../api.service';
 
 
@@ -25,7 +25,10 @@ export class Ressourceservice {
   deleteUser(id: string): Observable<RessourceResponse> {
     return this.api.delete<RessourceResponse>('/ressources/' + id);
   }
-
+  
+  createRessource(payload : FormData ): Observable<RessourceResponse> {
+    return this.api.post<RessourceResponse>('/ressources/', payload);
+  }
   // Récupérer les ressources filtrées (publiques uniquement)
   getFilteredPublicRessources(filters: FilterRessourceRequest): Observable<RessourceListResponse> {
     const params = this.buildFilterParams(filters);

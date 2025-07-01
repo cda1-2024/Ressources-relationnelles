@@ -33,6 +33,15 @@ export class FilterUserRequestDto {
 
   @ApiProperty({
     example: 1,
+    description: 'Le rôle de l’utilisateur',
+    required: false,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  readonly role?: number;
+
+  @ApiProperty({
+    example: 1,
     description: 'Le numéro de la page',
   })
   @IsOptional()

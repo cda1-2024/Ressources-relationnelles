@@ -1,34 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService } from './../api.service';
-import { SingleCategoryResponse, MultipleCategoryResponse, CreateCategoryRequest, UpdateCategoryRequest } from './category.model'; // Assure-toi que ce modèle existe ou adapte-le
-import { DeletedResponse } from '../api-response.model';
+import { CategoryResponse, CategoryListResponse } from './category.model';
+import { ApiService } from '../api.service';
+import { CreateCategoryRequest, FilterRequest as FilterRequest } from './category.request';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  private readonly endpoint = '/categories';
-
   constructor(private api: ApiService) {}
 
-  getAll(): Observable<MultipleCategoryResponse> {
-    return this.api.get<MultipleCategoryResponse>(this.endpoint);
+  createCategory(createCategoryRequest: CreateCategoryRequest): Observable<CategoryResponse> {
+    return this.api.post<CategoryResponse>('/categories', createCategoryRequest);
   }
 
-  getById(id: number): Observable<SingleCategoryResponse> {
-    return this.api.get<SingleCategoryResponse>(`${this.endpoint}/${id}`);
+  getFilterCategories(params: FilterRequest): Observable<CategoryListResponse> {
+    return this.api.getWithParams<CategoryListResponse>('/categories/filter', {
+      params,
+    });
   }
 
-  create(category: CreateCategoryRequest): Observable<SingleCategoryResponse> {
-    return this.api.post<SingleCategoryResponse>(this.endpoint, category);
+  getAllCategories(): Observable<CategoryListResponse> {
+    return this.api.get<CategoryListResponse>('/categories/');
   }
 
-  update(id: number, category: UpdateCategoryRequest): Observable<SingleCategoryResponse> {
-    return this.api.put<SingleCategoryResponse>(`${this.endpoint}/${id}`, category);
+  getCategoryById(id: string): Observable<CategoryResponse> {
+    return this.api.get<CategoryResponse>('/categories/' + id);
   }
 
-  delete(id: number): Observable<DeletedResponse> {
-    return this.api.delete<DeletedResponse>(`${this.endpoint}/${id}`);
+  deleteUser(id: string): Observable<CategoryResponse> {
+    return this.api.delete<CategoryResponse>('/categories/' + id);
   }
 }

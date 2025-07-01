@@ -22,4 +22,5 @@ export class BigEventCardComponent {
     people: number;
     tchats: number;
   };
+  @Input() showCreator = true;
 }

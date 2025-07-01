@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UploadedFile,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilterRessourceRequestDto } from 'src/dto/ressource/request/filter-ressource.dto';
 import { UpdateRessourceRequestDto } from 'src/dto/ressource/request/update-ressource.dto';
@@ -14,6 +20,8 @@ import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { getErrorStatusCode } from 'src/helper/exception-utils';
 import { createLoggedRepository } from 'src/helper/safe-repository';
 import { RessourceListResponseDto } from 'src/dto/ressource/response/list-ressource-response.dto';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class RessourceService {
@@ -119,8 +127,26 @@ export class RessourceService {
     }
   }
 
-  async createRessource(user: User, ressource: CreateRessourceRequestDto): Promise<Ressource> {
+  async createRessource(
+    user: User,
+    ressource: CreateRessourceRequestDto,
+    @UploadedFile() file: Express.Multer.File | undefined,
+  ): Promise<Ressource> {
     try {
+      if (file) {
+        if (file.size > 10 * 1024 * 1024) {
+          throw new BadRequestException('Le fichier est trop volumineux, la taille maximale est de 10 Mo');
+        }
+        if (!['image/jpeg', 'image/png'].includes(file.mimetype)) {
+          throw new BadRequestException("Le type de fichier n'est pas autorisé, seuls JPEG, PNG sont acceptés");
+        }
+        const uploadDir = path.join(process.cwd(), 'uploads');
+        if (!fs.existsSync(uploadDir)) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        ressource.content_link = `/uploads/${file.filename}`;
+      }
+
       const newRessource = new Ressource();
       if (ressource.category) {
         const category = await this.categoryService.findCategoryById(ressource.category);
@@ -129,13 +155,15 @@ export class RessourceService {
         }
         newRessource.category = category;
       }
-      newRessource.title = ressource.title;
       newRessource.contentText = ressource.content_text;
       if (ressource.content_link) {
         newRessource.contentLink = ressource.content_link;
       }
-      newRessource.ressourceType = RessourceTypeFromInt[ressource.type];
-      newRessource.visibility = RessourceVisibilityFromInt[ressource.visibilty];
+      newRessource.title = ressource.title;
+      const ressourceType = parseInt(ressource.type, 10);
+      const visibility = parseInt(ressource.visibility, 10);
+      newRessource.ressourceType = RessourceTypeFromInt[ressourceType];
+      newRessource.visibility = RessourceVisibilityFromInt[visibility];
       newRessource.creator = user;
 
       const saveRessource = this.ressourcesRepository.save(newRessource);

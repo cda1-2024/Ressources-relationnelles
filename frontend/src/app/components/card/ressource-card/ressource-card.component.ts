@@ -22,6 +22,10 @@ export class RessourceCardComponent {
   @Input({ required: true }) ressource!: RessourceResponse;
   @Input() showViewButton = true;
   @Input() showActions = true;
+  @Input() textButton = 'Voir';
+  @Input() onClickButton = () => {};
+  @Input() isDraft = false;
+  @Input() showCreator = true;
 
   @Output() likeToggled = new EventEmitter<RessourceResponse>();
   @Output() viewClicked = new EventEmitter<RessourceResponse>();

@@ -14,10 +14,10 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CategoryService } from '../../services/category/category.service';
 import { Ressourceservice } from '../../services/ressource/ressource.service';
 import { FilterRessourceRequest, RessourceResponse, RessourceTypeOption } from '../../services/ressource/ressource.model';
-import { CategorySimple, MultipleCategoryResponse } from '../../services/category/category.model';
 import { RessourceCardComponent } from '../../components/card/ressource-card/ressource-card.component';
 import { AuthService } from '../../auth/auth.service';
-import { debounceTime, Subject, Subscription } from 'rxjs';
+import { debounceTime, Subject, Subscription, debounceTime } from 'rxjs';
+import { CategoryListResponse, CategoryResponse } from '../../services/category/category.model';
 
 // Constants
 const SEARCH_DEBOUNCE_TIME = 300;
@@ -68,7 +68,7 @@ export class RessourceSearchPageComponent implements OnInit, OnDestroy {
   selectedType = '';
 
   // Data
-  categories: CategorySimple[] = [];
+  categories: CategoryResponse[] = [];
   ressources: RessourceResponse[] = [];
   isLoading = false;
   private isInitialized = false;
@@ -176,7 +176,7 @@ export class RessourceSearchPageComponent implements OnInit, OnDestroy {
   }
 
   trackByValue = (index: number, item: any) => item.value;
-  trackByCategoryId = (index: number, category: CategorySimple) => category.id;
+  trackByCategoryId = (index: number, category: CategoryResponse) => category.id;
   trackByRessourceId = (index: number, ressource: RessourceResponse) => ressource.id;
 
 
@@ -198,8 +198,8 @@ export class RessourceSearchPageComponent implements OnInit, OnDestroy {
 
   private fetchCategories(): void {
     
-    this.categoryService.getAll().subscribe({
-      next: (response: MultipleCategoryResponse) => {
+    this.categoryService.getAllCategories().subscribe({
+      next: (response: CategoryListResponse) => {
         this.categories = this.processCategories(response.categories || []);
       },
       error: (error: any) => {
@@ -209,7 +209,7 @@ export class RessourceSearchPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private processCategories(categories: CategorySimple[]): CategorySimple[] {
+  private processCategories(categories: CategoryResponse[]): CategoryResponse[] {
     return categories.map(category => ({
       ...category,
       iconPath: category.iconPath === TODO_ICON_PLACEHOLDER ? FALLBACK_ICON : category.iconPath

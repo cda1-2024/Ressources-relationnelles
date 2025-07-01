@@ -52,6 +52,4 @@ export class CommentController {
     await this.commentService.deleteComment(idComment);
     return { message: 'Commentaire supprimé avec succès' };
   }
-
-  
 }

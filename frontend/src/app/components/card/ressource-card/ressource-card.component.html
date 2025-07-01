@@ -2,7 +2,7 @@
   <div class="card-content">
     <div class="text-section">
       <h3 class="card-title">{{ ressource.title }}</h3>
-      <p class="card-subtitle text-secondary-500">
+      <p class="card-subtitle text-secondary-500" *ngIf="showCreator">
         Par <a class="author-link" href="#">{{ ressource.creator.username }}</a>
       </p>
       <p class="card-subtitle text-secondary-500">
@@ -16,25 +16,28 @@
           mat-stroked-button 
           color="primary"
           (click)="onViewClick()">
-          Voir
+          {{ textButton }}
         </button>
 
-        <div class="action-item mr-1 relative"
-          (click)="onToggleLike()"
-          style="cursor: pointer;">
-          <mat-icon 
-            class="like-icon"
-            [ngClass]="{'liked': ressource.isLiked}">
-            {{ ressource.isLiked ? 'favorite' : 'favorite_border' }}
-          </mat-icon>
-          <span>{{ formatCount(ressource.likeCount) }}</span>
-        </div>
+        <div *ngIf="!isDraft" class="actions">
+          <div class="action-item mr-1 relative"
+            (click)="onToggleLike()"
+            style="cursor: pointer;">
+            <mat-icon 
+              class="like-icon"
+              [ngClass]="{'liked': ressource.isLiked}">
+              {{ ressource.isLiked ? 'favorite' : 'favorite_border' }}
+            </mat-icon>
+            <span>{{ formatCount(ressource.likeCount) }}</span>
+          </div>
 
-        <!-- Commentaires (affichage uniquement) -->
-        <div class="action-item">
-          <mat-icon class="comment-icon">chat_bubble</mat-icon>
-          <span>{{ formatCount(ressource.commentCount) }}</span>
+          <!-- Commentaires (affichage uniquement) -->
+          <div class="action-item">
+            <mat-icon class="comment-icon">chat_bubble</mat-icon>
+            <span>{{ formatCount(ressource.commentCount) }}</span>
+          </div>
         </div>
+       
       </div>
     </div>
     

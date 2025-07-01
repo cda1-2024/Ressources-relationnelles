@@ -1,0 +1,102 @@
+<div class="flex flex-col flex-grow items-center">
+  <div
+    class="flex flex-col items-center flex-grow w-full"
+    [ngClass]="{ 'px-[5vw]': !isMobile }"
+  >
+    <div class="flex-grow w-full px-4 pb-24">
+      <div class="py-12">
+        <div>
+          <div class="flex sm:flex-row flex-col justify-between mt-[12px]">
+            <h1
+              class="text-[30px] font-bold leading-[45px] flex flex-wrap justify-start items-start"
+            >
+              Mes ressources en brouillon
+            </h1>
+          </div>
+          <hr />
+					<ng-container *ngIf="draftRessources && draftRessources.length > 0; else noRessources">
+						<div 
+						appSwipeScroll
+						class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[200px] overflow-x-auto overflow-y-hidden medium-component touch-pan-x -webkit-overflow-scrolling-touch">
+							<app-ressource-card
+								*ngFor="let ressource of draftRessources"
+								[ressource]="ressource"
+								[textButton]="'Modifier'"
+								[isDraft]="true"
+								[showCreator]="false"
+							></app-ressource-card>
+						</div>
+					</ng-container>
+
+					<div class="flex sm:flex-row flex-col justify-between mt-[40px]">
+            <h1
+              class="text-[30px] font-bold leading-[45px] flex flex-wrap justify-start items-start"
+            >
+              Mes ressources en attente de validation
+            </h1>
+          </div>
+          <hr />
+					<ng-container *ngIf="waitingRessources && waitingRessources.length > 0; else noRessources">
+						<div 
+						appSwipeScroll
+						class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[200px] overflow-x-auto overflow-y-hidden medium-component touch-pan-x -webkit-overflow-scrolling-touch">
+							<app-ressource-card
+								*ngFor="let ressource of waitingRessources"
+								[ressource]="ressource"
+								[isDraft]="true"
+								[showCreator]="false"
+							></app-ressource-card>
+						</div>
+					</ng-container>
+
+					<div class="flex sm:flex-row flex-col justify-between mt-[40px]">
+            <h1
+              class="text-[30px] font-bold leading-[45px] flex flex-wrap justify-start items-start"
+            >
+              Mes ressources rejetées
+            </h1>
+          </div>
+          <hr />
+					<ng-container *ngIf="rejectedRessources && rejectedRessources.length > 0; else noRessources">
+						<div 
+						appSwipeScroll
+						class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[200px] overflow-x-auto overflow-y-hidden medium-component touch-pan-x -webkit-overflow-scrolling-touch">
+							<app-ressource-card
+								*ngFor="let ressource of rejectedRessources"
+								[ressource]="ressource"
+								[isDraft]="true"
+								[showCreator]="false"
+							></app-ressource-card>
+						</div>
+					</ng-container>
+
+					<div class="flex sm:flex-row flex-col justify-between mt-[40px]">
+            <h1
+              class="text-[30px] font-bold leading-[45px] flex flex-wrap justify-start items-start"
+            >
+              Mes ressources publiées
+            </h1>
+          </div>
+          <hr />
+					<ng-container *ngIf="rejectedRessources && rejectedRessources.length > 0; else noRessources">
+						<div 
+						appSwipeScroll
+						class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[200px] overflow-x-auto overflow-y-hidden medium-component touch-pan-x -webkit-overflow-scrolling-touch">
+							<app-ressource-card
+								*ngFor="let ressource of publishedRessources"
+								[ressource]="ressource"
+								[showCreator]="false"
+							></app-ressource-card>
+						</div>
+					</ng-container>
+
+					<ng-template #noRessources>
+						<div class="w-full h-[300px] flex items-center justify-center text-gray-500 italic">
+							Aucune ressource.
+						</div>
+					</ng-template>
+        </div>		
+      </div>
+    </div>
+  </div>
+</div>
