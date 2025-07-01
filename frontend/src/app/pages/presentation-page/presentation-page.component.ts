@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-// Import module card angular
 import { MatButtonModule } from '@angular/material/button';
-import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { NgIf } from '@angular/common';
 import { BreakpointService } from '../../services/breackpoint.service';
 

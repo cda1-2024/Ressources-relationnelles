@@ -17,7 +17,7 @@ export const routes: Routes = [
   { path: 'profil', component: ProfilPageComponent },
   { path: 'events', component: MySpaceUserPageComponent },
   { path: 'ressources', component: RessourceSearchPageComponent },
-  { path: 'utilisateur/:id', component: UserViewPageComponent },
+  { path: 'utilisateurs/:id', component: UserViewPageComponent },
   { path: 'ressources/:id', component: RessourceDetailPageComponent},
   { path: 'ressources/create', component: CreationRessourcePageComponent },
   { path: 'events', component: MySpaceUserPageComponent }

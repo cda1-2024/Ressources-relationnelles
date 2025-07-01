@@ -12,10 +12,7 @@ export default class ReportProcessor implements IProcessor<UserReport> {
   postProcess(name: string, object: { reporterId: string; reportedUserId: string; [key: string]: any }): void {
     const id: number = object.index as number;
     const reasons = Object.values(ReportReason);
-    console.log(reasons);
-    console.log(Math.floor(Math.random() * reasons.length));
     const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
-    console.log(randomReason);
     object.ReportReason = randomReason;
 
     if (id % 2 == 0) {

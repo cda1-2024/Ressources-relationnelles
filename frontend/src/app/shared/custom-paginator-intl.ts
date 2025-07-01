@@ -18,7 +18,6 @@ export function getFrenchPaginatorIntl(): MatPaginatorIntl {
 
     const startIndex = page * pageSize;
 
-    // If the start index exceeds the list length, do not try and fix the end index to the end.
     const endIndex =
         startIndex < length
         ? Math.min(startIndex + pageSize, length)

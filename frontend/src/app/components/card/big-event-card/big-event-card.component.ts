@@ -16,6 +16,7 @@ export class BigEventCardComponent {
     title: string;
     imageUrl: string;
     user: {
+      id: string;
       name: string;
       avatarUrl: string;
     };
@@ -23,4 +24,8 @@ export class BigEventCardComponent {
     tchats: number;
   };
   @Input() showCreator = true;
+
+  onUserClick() {
+    window.location.href = `/utilisateurs/${this.event.user.id}`;
+  }
 }

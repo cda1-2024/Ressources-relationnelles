@@ -1,14 +1,13 @@
-// core/services/api.service.ts
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = environment.apiUrl; // Récupère l'URL de l'API depuis l'environnement
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -52,16 +51,13 @@ export class ApiService {
     if (options?.params instanceof HttpParams) {
       httpParams = options.params;
     } else {
-      // Crée un HttpParams à partir de l'objet littéral
       httpParams = new HttpParams({
         fromObject:
           options?.params
-            ? // stringify automatiquement les valeurs (y compris tableaux)
+            ?
               Object.keys(options.params).reduce((acc, key) => {
                 const v = (options.params as { [key: string]: any })[key];
-                // on ignore les valeurs null/undefined
                 if (v !== null && v !== undefined) {
-                  // si c’est un booléen ou un nombre on toString()
                   acc[key] = Array.isArray(v)
                     ? v.map(x => String(x))
                     : String(v);
@@ -75,12 +71,6 @@ export class ApiService {
     return this.http.get<T>(`${this.apiUrl}${url}`, {
       withCredentials: options?.withCredentials ?? true,
       params: httpParams
-    })
-    .pipe(
-      tap({
-        next: res => console.log('← Réponse GET', `${this.apiUrl}${url}`, httpParams, res),
-        error: err => console.error('← Erreur GET', `${this.apiUrl}${url}`,httpParams , err)
-      })
-    );
+    });
   }
 }

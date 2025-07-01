@@ -163,9 +163,7 @@ export class ProfilPageComponent implements OnInit {
   }
 
   onSubmitPassword() {
-    console.log('Form submitted:', this.passwordForm.value);
     if (this.passwordForm.valid) {
-      console.log('Form is valid, updating profile...');
       this.userService
         .updatePassword(
           this.passwordForm.value.oldPassword,

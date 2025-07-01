@@ -7,7 +7,6 @@ export class SwipeScrollDirective {
   private scrollLeft = 0;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
-    // curseur “grab” par défaut
     this.renderer.setStyle(this.el.nativeElement, 'cursor', 'grab');
   }
 
@@ -31,7 +30,7 @@ export class SwipeScrollDirective {
   onMouseMove(evt: MouseEvent) {
     if (!this.isDown) return;
     const x = evt.pageX - this.el.nativeElement.offsetLeft;
-    const walk = (x - this.startX) * 1.5; // ajustez la vitesse
+    const walk = (x - this.startX) * 1.5;
     this.el.nativeElement.scrollLeft = this.scrollLeft - walk;
     evt.preventDefault();
   }

@@ -104,7 +104,6 @@ export class RessourceSearchPageComponent implements OnInit, OnDestroy {
     // Recharger les ressources quand l'état de connexion change (sauf lors de l'initialisation)
     this.authSubscription = this.authService.isLoggedIn$.subscribe(() => {
       if (this.isInitialized) {
-        console.log('🔄 Auth state changed, reloading resources...');
         this.applyFilters();
       }
     });
@@ -140,7 +139,6 @@ export class RessourceSearchPageComponent implements OnInit, OnDestroy {
   selectCategory(categoryId: string | null): void {
     const newCategoryId = categoryId || '';
     
-    // Toggle: if clicking on already selected category, deselect it
     if (this.selectedCategory === newCategoryId && categoryId !== null) {
       this.selectedCategory = '';
     } else {
@@ -156,7 +154,6 @@ export class RessourceSearchPageComponent implements OnInit, OnDestroy {
   }
 
   onViewRessource(ressource: RessourceResponse): void {
-    console.log('👁️ Viewing ressource:', ressource.title);
     // TODO: Naviguer vers la page de détail de la ressource
     // this.router.navigate(['/ressources', ressource.id]);
   }
@@ -203,7 +200,7 @@ export class RessourceSearchPageComponent implements OnInit, OnDestroy {
         this.categories = this.processCategories(response.categories || []);
       },
       error: (error: any) => {
-        console.error('❌ Error fetching categories:', error);
+        console.error('Error fetching categories:', error);
         this.categories = [];
       }
     });
@@ -220,10 +217,6 @@ export class RessourceSearchPageComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const filters = this.buildFilters();
     const isLoggedIn = this.authService.isLoggedIn();
-    
-    console.log('🔍 Applying filters:', filters);
-    console.log('👤 User is logged in:', isLoggedIn);
-    console.log('🌐 Using endpoint:', isLoggedIn ? '/ressources/filter' : '/ressources/filterpublic');
 
     // Utilise getFilteredRessources si l'utilisateur est connecté, sinon getFilteredPublicRessources
     const ressourceMethod = isLoggedIn 
@@ -238,7 +231,7 @@ export class RessourceSearchPageComponent implements OnInit, OnDestroy {
 
   private buildFilters(): FilterRessourceRequest {
     const filters: FilterRessourceRequest = {
-      page: this.currentPage + 1, // API uses 1-based pagination
+      page: this.currentPage + 1,
       pageSize: this.pageSize
     };
 
@@ -256,7 +249,7 @@ export class RessourceSearchPageComponent implements OnInit, OnDestroy {
   }
 
   private handleRessourcesError(error: any): void {
-    console.error('❌ Error fetching ressources:', error);
+    console.error('Error fetching ressources:', error);
     this.ressources = [];
     this.totalItems = 0;
     this.isLoading = false;

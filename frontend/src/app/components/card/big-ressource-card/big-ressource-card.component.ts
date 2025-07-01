@@ -20,10 +20,15 @@ export class BigRessourceCardComponent {
     title: string;
     imageUrl: string;
     user: {
+      id: string;
       name: string;
       avatarUrl: string;
     };
     likes: number;
     comments: number;
   };
+
+  onUserClick() {
+    window.location.href = `/utilisateurs/${this.ressource.user.id}`;
+  }
 }

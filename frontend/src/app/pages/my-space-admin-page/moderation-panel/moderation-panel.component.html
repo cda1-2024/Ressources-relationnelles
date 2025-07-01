@@ -19,13 +19,13 @@
               appSwipeScroll
               class="flex flex-nowrap justify-left items-start gap-8 mt-4 h-[300px] overflow-x-auto overflow-y-hidden medium-component touch-pan-x -webkit-overflow-scrolling-touch"
             >
-              <div *ngFor="let user of susUser"
-								class="w-[500px] h-[200px]">
-								<app-big-user-card
-									[user]="user"
-									class="w-full h-full"
-								></app-big-user-card>
-							</div>
+              <div *ngFor="let user of susUser" class="w-[500px] h-[200px]">
+                <app-big-user-card
+                  [user]="user"
+                  [moderate]="true"
+                  class="w-full h-full"
+                ></app-big-user-card>
+              </div>
             </div>
           </ng-container>
 

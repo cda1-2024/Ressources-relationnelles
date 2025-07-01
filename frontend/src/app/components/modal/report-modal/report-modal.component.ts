@@ -7,7 +7,6 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angu
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { RegisterModalComponent } from '../register-modal/register-modal.component';
 import { REPORT_REASON_OPTIONS } from '../../../utils/user.util';
 import { MatSelectModule } from '@angular/material/select';
 import { ReportService } from '../../../services/report/report.service';

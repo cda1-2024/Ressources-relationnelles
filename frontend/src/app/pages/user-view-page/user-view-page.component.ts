@@ -7,7 +7,7 @@ import { Ressourceservice } from '../../services/ressource/ressource.service';
 import { RessourceCardComponent } from '../../components/card/ressource-card/ressource-card.component';
 import { SwipeScrollDirective } from '../../utils/swipe.directive';
 import { FullUserResponse } from '../../services/user/user.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReportService } from '../../services/report/report.service';
 import { ReportResponse } from '../../services/report/report.model';
 import { ReportCardComponent } from '../../components/card/report-card/report-card.component';
@@ -28,7 +28,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./user-view-page.component.scss']
 })
 export class UserViewPageComponent implements OnInit {
-  @Input() moderate: boolean = true;
+  moderate: boolean = false;
   userId: string | null = null;
   user!: FullUserResponse;
   isMobile: boolean = false;
@@ -43,11 +43,14 @@ export class UserViewPageComponent implements OnInit {
     private ressourceService: Ressourceservice,
     private reportService: ReportService,
     private route: ActivatedRoute,
+    private router: Router,
     private dialog: MatDialog
   ) {
       this.isMobile = this.breakpointService.isMobile();
       this.breakpointService.isMobile$.subscribe((isMobile) => {
       this.isMobile = isMobile;
+      const navigation = this.router.getCurrentNavigation();
+      this.moderate = navigation?.extras.state?.['moderate'];
     });
     }
 
@@ -60,18 +63,15 @@ export class UserViewPageComponent implements OnInit {
       });
       this.userService.getUserById(this.userId).subscribe((user) => {
         this.user = user;
-        console.log('User data:', this.user);
       });
       this.reportService.getReportByReportedId(this.userId).subscribe((reports) => {
         this.reports = reports;
-        console.log('Reports data:', this.reports);
       });
     }
   }
 
   openReportModal() {
     if (this.userId) {
-      console.log(this.userId, this.user.username)
       this.dialog.open(ReportModalComponent, {
         width: '600px',
         data: { user: { id: this.userId, username: this.user.username } }

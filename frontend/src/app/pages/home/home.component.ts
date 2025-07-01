@@ -52,6 +52,7 @@ export class HomeComponent implements OnInit {
         title: event.title,
         imageUrl: getImageForEventType(event.type.id),
         user: {
+          id: event.manager.id,
           name: event.manager.username,
           avatarUrl: 'https://i.pravatar.cc/40?u=',
         },
@@ -83,6 +84,7 @@ export class HomeComponent implements OnInit {
           ressource.content_link ||
           'https://picsum.photos/300/200?random=' + ressource.id,
         user: {
+          id: ressource.creator.id,
           name: ressource.creator.username,
           avatarUrl: 'https://i.pravatar.cc/40?u=' + ressource.creator.id,
         },

@@ -1,7 +1,3 @@
-// * ////////////////////
-// *  Entity 
-// * ////////////////////
-
 export interface CommentSimple {
     id: string;
     author: {

@@ -6,7 +6,7 @@
     </div>
   </div>
   <div class="card-footer">
-    <div class="user-info" *ngIf="showCreator">
+    <div class="user-info" *ngIf="showCreator" (click)="onUserClick()">
       <img
         class="avatar"
         [src]="event.user.avatarUrl"

@@ -86,18 +86,15 @@ export class CreationRessourcePageComponent implements OnInit {
     const lienControl = this.ressourceForm.get('lien');
     const fileControl = this.ressourceForm.get('fileUpload');
 
-    // Reset erreurs
     this.apiErrors['fileUpload'] = [];
 
     if (this.selectedType === 0) {
-      // Image
       lienControl?.clearValidators();
       lienControl?.updateValueAndValidity();
 
       fileControl?.setValidators([Validators.required]);
       fileControl?.updateValueAndValidity();
     } else if (this.selectedType === 3) {
-      // Vidéo (YouTube)
       fileControl?.clearValidators();
       fileControl?.updateValueAndValidity();
 
@@ -169,7 +166,6 @@ export class CreationRessourcePageComponent implements OnInit {
       const contenuLength = formValue.contenu
         ? new Blob([formValue.contenu]).size
         : 0;
-      console.log('Taille du contenu:', contenuLength);
       if (contenuLength > 10000) {
         this.apiErrors['contenu'] = [
           'La taille du contenu ne doit pas dépasser 10 000 octets.',

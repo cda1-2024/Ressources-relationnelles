@@ -57,11 +57,9 @@ export class RessourceMapper {
     };
   }
   static toFullResponseDto(ressource: Ressource): FullRessourceResponseDto {
-    // Créer l'arborescence des commentaires
     const commentsMap = new Map<string, CommentDto>();
     const rootComments: CommentDto[] = [];
 
-    // Première passe : créer tous les commentaires et les indexer
     ressource.comments?.forEach((comment) => {
       const commentDto: CommentDto = {
         id: comment.id,
@@ -77,27 +75,23 @@ export class RessourceMapper {
       commentsMap.set(comment.id, commentDto);
     });
 
-    // Deuxième passe : construire l'arborescence
     ressource.comments?.forEach((comment) => {
       const commentDto = commentsMap.get(comment.id);
       if (commentDto) {
         if (comment.parentComment?.id) {
-          // C'est une réponse, l'ajouter aux replies du parent
           const parentComment = commentsMap.get(comment.parentComment.id);
           if (parentComment && parentComment.replies) {
             parentComment.replies.push(commentDto);
           }
         } else {
-          // C'est un commentaire racine
           rootComments.push(commentDto);
         }
       }
     });
 
-    // Fonction pour compter récursivement tous les commentaires
     const countAllComments = (comments: CommentDto[]): number => {
       let count = comments.length;
-      comments.forEach(comment => {
+      comments.forEach((comment) => {
         if (comment.replies && comment.replies.length > 0) {
           count += countAllComments(comment.replies);
         }
