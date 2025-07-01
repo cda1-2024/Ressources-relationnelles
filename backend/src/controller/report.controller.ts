@@ -1,6 +1,12 @@
-import { Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ReportUserRequestDto } from 'src/dto/report/request/report-request.dto';
 import { ReportResponseDto } from 'src/dto/report/response/report-response.dto';
+import { CurrentUser } from 'src/middleware/guards/current-user.decorator';
+import { Roles } from 'src/middleware/guards/roles.decorator';
+import { RolesGuard } from 'src/middleware/guards/roles.guard';
+import { User, UserRole } from 'src/models/user.model';
 import { ReportMapper } from 'src/services/report/report.mapper';
 import { ReportService } from 'src/services/report/report.service';
 
@@ -9,10 +15,26 @@ import { ReportService } from 'src/services/report/report.service';
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
-  @Post('/:idComment')
-  @ApiQuery({ name: 'idComment', required: false, type: Number })
-  reportComment(): null {
-    return null;
+  @Post('/:idUser')
+  @ApiQuery({ name: 'idUser', required: false, type: String })
+  @ApiOperation({
+    summary: 'Signaler un commentaire',
+    description: 'Permet de signaler un commentaire en fournissant les informations nécessaires',
+  })
+  @ApiOkResponse({
+    description: 'Le commentaire a été signalé avec succès',
+  })
+  @ApiBadRequestResponse({
+    description: 'La requête de signalement a échoué',
+  })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.USER)
+  async reportUser(
+    @Param('idUser') idUser: string,
+    @Body() reportUserRequestDto: ReportUserRequestDto,
+    @CurrentUser() currentUser: User,
+  ): Promise<void> {
+    await this.reportService.reportUser(currentUser, idUser, reportUserRequestDto);
   }
 
   @Get('/:id')

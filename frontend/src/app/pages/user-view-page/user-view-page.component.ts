@@ -12,6 +12,8 @@ import { ReportService } from '../../services/report/report.service';
 import { ReportResponse } from '../../services/report/report.model';
 import { ReportCardComponent } from '../../components/card/report-card/report-card.component';
 import { MatButtonModule } from '@angular/material/button';
+import { ReportModalComponent } from '../../components/modal/report-modal/report-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-user-view',
@@ -40,7 +42,9 @@ export class UserViewPageComponent implements OnInit {
     private userService: UserService,
     private ressourceService: Ressourceservice,
     private reportService: ReportService,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private dialog: MatDialog
+  ) {
       this.isMobile = this.breakpointService.isMobile();
       this.breakpointService.isMobile$.subscribe((isMobile) => {
       this.isMobile = isMobile;
@@ -62,6 +66,18 @@ export class UserViewPageComponent implements OnInit {
         this.reports = reports;
         console.log('Reports data:', this.reports);
       });
+    }
+  }
+
+  openReportModal() {
+    if (this.userId) {
+      console.log(this.userId, this.user.username)
+      this.dialog.open(ReportModalComponent, {
+        width: '600px',
+        data: { user: { id: this.userId, username: this.user.username } }
+      });
+    } else {
+      console.error('User ID is not available for reporting.');
     }
   }
 }

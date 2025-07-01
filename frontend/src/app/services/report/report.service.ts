@@ -13,4 +13,8 @@ export class ReportService {
   getReportByReportedId(id: string): Observable<ReportResponse[]> {
     return this.api.get<ReportResponse[]>('/reports/' + id);
   }
+
+  reportUser(userId: string, reportData: { reportReason: string; content: string }): Observable<ReportResponse> {
+    return this.api.post<ReportResponse>('/reports/' + userId, reportData);
+  }
 }
