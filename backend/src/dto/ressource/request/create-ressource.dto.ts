@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateRessourceRequestDto {
   @IsNotEmpty()
@@ -11,23 +11,23 @@ export class CreateRessourceRequestDto {
   })
   readonly title: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @ApiProperty({
     example: 'culpa qui officia deserunt mollit anim id est laborum.',
     description: 'Contenu de la ressource',
-    required: true,
+    required: false,
   })
   readonly content_text: string;
 
   @IsOptional()
   @IsString()
   @ApiProperty({
-    example: 'www.youtube.com/watch?v=123456',
-    description: 'Contenu de la ressource',
+    example: 'https://monfichier.com/image.pdf',
+    description: 'Lien vers un fichier externe',
     required: false,
   })
-  readonly content_link?: string;
+  content_link: string;
 
   @IsOptional()
   @IsString()
@@ -39,18 +39,20 @@ export class CreateRessourceRequestDto {
   readonly category?: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   @ApiProperty({
     example: 1,
     description: 'La visibilité de la ressource',
+    required: true,
   })
-  readonly visibilty: number;
+  readonly visibility: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   @ApiProperty({
     example: 1,
     description: 'Le type de la ressource',
+    required: true,
   })
-  readonly type: number;
+  readonly type: string;
 }

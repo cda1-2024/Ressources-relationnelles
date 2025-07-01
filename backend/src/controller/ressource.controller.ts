@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -25,13 +37,28 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/middleware/guards/roles.guard';
 import { Roles } from 'src/middleware/guards/roles.decorator';
 import { CurrentUser } from 'src/middleware/guards/current-user.decorator';
-
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 @ApiTags('Ressources')
 @Controller('api/ressources')
 export class RessourceController {
   constructor(private readonly ressourceService: RessourceService) {}
 
   @Post('/')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, callback) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          const filename = `${file.fieldname}-${uniqueSuffix}${ext}`;
+          callback(null, filename);
+        },
+      }),
+    }),
+  )
   @ApiOperation({
     summary: 'Créer une ressource',
     description:
@@ -53,8 +80,10 @@ export class RessourceController {
   async create(
     @Body() createRessourceDto: CreateRessourceRequestDto,
     @CurrentUser() user: User,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<RessourceResponseDto> {
-    const ressource = await this.ressourceService.createRessource(user, createRessourceDto);
+    console.log('File received:', createRessourceDto);
+    const ressource = await this.ressourceService.createRessource(user, createRessourceDto, file);
     return RessourceMapper.toResponseDto(ressource);
   }
 

@@ -20,6 +20,20 @@ export interface RessourceResponse {
   likeCount: number;
   commentCount: number;
   isLiked?: boolean;
+  comments?: Comment[];
+  validator?: User;
+  admin_validation?: boolean;
+  date_time_validation?: string;
+  like?: number;
+}
+
+export interface Comment {
+  id: string;
+  content: string;
+  created_at: string;
+  author: User;
+  replies?: Comment[];
+  parent_comment_id?: string;
 }
 
 export interface User {
@@ -40,6 +54,15 @@ export interface RessourceVisiblityDto {
 export interface RessourceTypeDto {
   id: number;
   label: string;
+}
+
+export interface CreateRessourceRequest {
+  title: string;
+  category: string;
+  visibility: number;
+  type: number;
+  content_text: string;
+  content_link?: string;
 }
 
 export interface FilterRessourceRequest {

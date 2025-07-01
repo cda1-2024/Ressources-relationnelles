@@ -63,8 +63,4 @@ button {
       margin-top: 4px;
     }
   }
-
-  .sm-padding-navbar{
-    padding-bottom: 56px;
-  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -15,7 +15,8 @@ import { CategoryService } from '../../services/category/category.service';
 import { Ressourceservice } from '../../services/ressource/ressource.service';
 import { FilterRessourceRequest, RessourceResponse, RessourceTypeOption } from '../../services/ressource/ressource.model';
 import { RessourceCardComponent } from '../../components/card/ressource-card/ressource-card.component';
-import { debounceTime, Subject } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
+import { debounceTime, Subject, Subscription, debounceTime } from 'rxjs';
 import { CategoryListResponse, CategoryResponse } from '../../services/category/category.model';
 
 // Constants
@@ -54,7 +55,7 @@ const TODO_ICON_PLACEHOLDER = 'TODO_A_AJOUTER';
     ])
   ]
 })
-export class RessourceSearchPageComponent implements OnInit {
+export class RessourceSearchPageComponent implements OnInit, OnDestroy {
 
   // Pagination
   totalItems = 0;
@@ -70,6 +71,7 @@ export class RessourceSearchPageComponent implements OnInit {
   categories: CategoryResponse[] = [];
   ressources: RessourceResponse[] = [];
   isLoading = false;
+  private isInitialized = false;
 
   // Configuration
   readonly ressourceTypes: RessourceTypeOption[] = [
@@ -82,16 +84,36 @@ export class RessourceSearchPageComponent implements OnInit {
 
   // Private
   private readonly searchSubject = new Subject<string>();
+  private authSubscription?: Subscription;
+
+  // Public pour accès depuis le template
+  public readonly authService: AuthService;
 
   constructor(
     private readonly categoryService: CategoryService,
-    private readonly ressourceService: Ressourceservice
+    private readonly ressourceService: Ressourceservice,
+    authService: AuthService
   ) {
+    this.authService = authService;
     this.initializeSearchDebounce();
   }
 
   ngOnInit(): void {
     this.loadInitialData();
+    
+    // Recharger les ressources quand l'état de connexion change (sauf lors de l'initialisation)
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(() => {
+      if (this.isInitialized) {
+        console.log('🔄 Auth state changed, reloading resources...');
+        this.applyFilters();
+      }
+    });
+    
+    this.isInitialized = true;
+  }
+
+  ngOnDestroy(): void {
+    this.authSubscription?.unsubscribe();
   }
 
   onSearchChange(value: string): void {
@@ -136,7 +158,7 @@ export class RessourceSearchPageComponent implements OnInit {
   onViewRessource(ressource: RessourceResponse): void {
     console.log('👁️ Viewing ressource:', ressource.title);
     // TODO: Naviguer vers la page de détail de la ressource
-    // this.router.navigate(['/ressources', article.id]);
+    // this.router.navigate(['/ressources', ressource.id]);
   }
 
   isAllCategoriesSelected(): boolean {
@@ -152,8 +174,6 @@ export class RessourceSearchPageComponent implements OnInit {
     if (count >= 1000) return Math.floor(count / 1000) + 'k';
     return count.toString();
   }
-
-  
 
   trackByValue = (index: number, item: any) => item.value;
   trackByCategoryId = (index: number, category: CategoryResponse) => category.id;
@@ -199,10 +219,18 @@ export class RessourceSearchPageComponent implements OnInit {
   private applyFilters(): void {
     this.isLoading = true;
     const filters = this.buildFilters();
+    const isLoggedIn = this.authService.isLoggedIn();
     
     console.log('🔍 Applying filters:', filters);
+    console.log('👤 User is logged in:', isLoggedIn);
+    console.log('🌐 Using endpoint:', isLoggedIn ? '/ressources/filter' : '/ressources/filterpublic');
 
-    this.ressourceService.getFilteredPublicRessources(filters).subscribe({
+    // Utilise getFilteredRessources si l'utilisateur est connecté, sinon getFilteredPublicRessources
+    const ressourceMethod = isLoggedIn 
+      ? this.ressourceService.getFilteredRessources(filters)
+      : this.ressourceService.getFilteredPublicRessources(filters);
+
+    ressourceMethod.subscribe({
       next: (response) => this.handleRessourcesSuccess(response),
       error: (error) => this.handleRessourcesError(error)
     });
