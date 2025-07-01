@@ -18,5 +18,6 @@ export class BigUserCardComponent {
     bio: string;
     ressources: number;
     events: number;
+    signalements?: number;
   };
 }

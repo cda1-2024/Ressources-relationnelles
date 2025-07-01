@@ -127,4 +127,5 @@ export class User {
 
   eventsCount: number;
   ressourcesCount: number;
+  reportCount: number;
 }

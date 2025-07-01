@@ -1,0 +1,11 @@
+entity: UserReport
+processor: ./processor/ReportProcessor
+items:
+  userReport{1..20}:
+    index: ($current)
+    reporterId: '@user{16..50}'
+    reportedUserId: '@user{16..50}'
+    content: '{{lorem.paragraph}}'
+    moderatorView: '{{lorem.sentence}}'
+    comment: '@comment_enabled*'
+    createdAt: '{{date.past}}'

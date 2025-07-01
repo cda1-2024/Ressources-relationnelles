@@ -27,6 +27,9 @@ export class UserResponseDto {
 
   @ApiProperty()
   eventsCount: number;
+
+  @ApiProperty()
+  reportCount: number;
 }
 
 export class ListUserResponseDto {

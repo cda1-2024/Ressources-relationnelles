@@ -15,6 +15,7 @@ export class UserMapper {
       role: UserRoleToInt[user.role],
       eventsCount: user.eventsCount,
       ressourcesCount: user.ressourcesCount,
+      reportCount: user.reportCount,
     };
   }
 
@@ -48,6 +49,9 @@ export class UserMapper {
       country: user.country,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
+      ressourcesCount: user.ressourcesCount,
+      eventsCount: user.eventsCount,
+      reportCount: user.reportCount,
     };
   }
 }

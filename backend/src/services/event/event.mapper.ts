@@ -4,7 +4,7 @@ import { EventTypeToInt } from 'src/helper/enum-mapper';
 import { Event } from 'src/models/event.model';
 
 export class EventMapper {
-  static toEventDto(event: Event): EventResponseDto {
+  static toResponseDto(event: Event): EventResponseDto {
     return {
       id: event.id,
       title: event.title,
@@ -19,21 +19,21 @@ export class EventMapper {
     };
   }
 
-  static toEventListDto(
+  static toResponseListDto(
     events: Event[],
     pageNumber: number,
     pageSize: number,
     totalNumberEvents: number,
   ): EventListResponseDto {
     return {
-      events: events.map((event) => this.toEventDto(event)),
+      events: events.map((event) => this.toResponseDto(event)),
       pageNumber,
       pageSize,
       totalNumberEvents,
       totalPages: Math.ceil(totalNumberEvents / pageSize),
     };
   }
-  static toFullEventDto(event: Event): FullEventResponseDto {
+  static toFullResponseDto(event: Event): FullEventResponseDto {
     return {
       id: event.id,
       title: event.title,
