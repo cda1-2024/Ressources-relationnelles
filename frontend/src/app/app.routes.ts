@@ -6,6 +6,7 @@ import { CreationRessourcePageComponent } from './pages/creation-ressource-page/
 import { MySpaceAdminPageComponent } from './pages/my-space-admin-page/my-space-admin-page.component';
 import { MySpaceUserPageComponent } from './pages/my-space-user-page/my-space-user-page.component';
 import { RessourceSearchPageComponent } from './pages/ressource-search-page/ressource-search-page.component';
+import { UserViewPageComponent } from './pages/user-view-page/user-view-page.component';
 import { RessourceDetailPageComponent } from './pages/ressource-detail-page/ressource-detail-page.component';
 
 export const routes: Routes = [
@@ -14,8 +15,10 @@ export const routes: Routes = [
   { path: 'accueil', component: HomeComponent },
   { path: 'monEspace', component: MySpaceAdminPageComponent },
   { path: 'profil', component: ProfilPageComponent },
-  { path: 'ressources', component: RessourceSearchPageComponent},
+  { path: 'events', component: MySpaceUserPageComponent },
+  { path: 'ressources', component: RessourceSearchPageComponent },
+  { path: 'utilisateur/:id', component: UserViewPageComponent },
   { path: 'ressources/:id', component: RessourceDetailPageComponent},
   { path: 'ressources/create', component: CreationRessourcePageComponent },
   { path: 'events', component: MySpaceUserPageComponent }
-]
+];

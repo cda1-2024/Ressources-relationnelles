@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ModerationPanelComponent } from './moderation-panel.component';
+import { ReportCardComponent } from './report-card.component';
 
-describe('ModerationPanelComponent', () => {
-  let component: ModerationPanelComponent;
-  let fixture: ComponentFixture<ModerationPanelComponent>;
+describe('ReportCardComponent', () => {
+  let component: ReportCardComponent;
+  let fixture: ComponentFixture<ReportCardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModerationPanelComponent]
+      imports: [ReportCardComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ModerationPanelComponent);
+    fixture = TestBed.createComponent(ReportCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

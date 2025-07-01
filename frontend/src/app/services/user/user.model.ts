@@ -1,3 +1,5 @@
+import { RessourceResponse } from "../ressource/ressource.model";
+
 export interface UserListResponse {
   users: UserResponse[];
   pageNumber: number;
@@ -26,15 +28,15 @@ export interface Comment {
   ressourceId: string;
 }
 
-export interface Ressource {
+export interface FullUserResponse {
   id: string;
-  title: string;
-  contentText: string;
-  contentLink: string;
-  ressourceType: string;
-  visibility: string;
-  status: string;
-  like: number;
-  createdAt: Date;
-  category?: string;
+  email: string;
+  username: string;
+  bio: string;
+  banned: boolean;
+  disabled: boolean;
+  role: number;
+  ressourcesCount: number;
+  eventsCount: number;
+  ressources: RessourceResponse[];
 }

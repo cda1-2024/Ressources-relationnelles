@@ -1,0 +1,58 @@
+<h2 mat-dialog-title class="!text-[32px] !leading-[40px] !font-bold">
+  Signaler {{ user.username }}
+</h2>
+<mat-dialog-content class="pt-8">
+  <form (ngSubmit)="onSubmit()" [formGroup]="reportForm">
+		<mat-form-field appearance="outline" class="w-full">
+			<mat-label>Raison du signalement</mat-label>
+			<mat-select formControlName="reportReason">
+				<mat-option *ngFor="let r of reportReasonOptions" [value]="r.value">
+					{{ r.label }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+    <p class="text-sm text-gray-500 mb-2">
+			Veuillez fournir une brève description du problème que vous rencontrez avec
+			cet utilisateur ou cette ressource. Votre signalement sera examiné par nos
+			modérateurs.
+		</p>
+		<mat-form-field appearance="fill" class="w-full">
+			<mat-label>Description</mat-label>
+			<textarea
+				matInput
+				formControlName="description"
+				name="description"
+				required
+				rows="4"
+				class="w-full"
+			></textarea>
+		</mat-form-field>
+
+		<p class="text-sm text-gray-500 mb-2">
+			En soumettant ce signalement, vous acceptez que vos informations soient
+			partagées avec les modérateurs pour examen.
+		</p>
+
+		<mat-checkbox
+			formControlName="agreeToTerms"
+			name="agreeToTerms"
+			required
+			class="!text-[14px] !leading-[20px]"
+		>
+			J'accepte les termes et conditions
+		</mat-checkbox>
+
+    <div *ngIf="error" class="text-red-500 text-sm mt-2 text-center">
+      Erreur : {{ error }}
+    </div>
+
+    <button
+      mat-flat-button
+      color="primary"
+      class="!rounded-[10px] px-[35px] w-full mt-[20px]"
+      [disabled]="!reportForm.valid"
+    >
+      Signaler
+    </button>
+  </form>
+</mat-dialog-content>

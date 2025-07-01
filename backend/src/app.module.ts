@@ -10,6 +10,7 @@ import datasource from './configuration/data-source';
 import { DataSourceOptions } from 'typeorm';
 import { EventModule } from './modules/event.module';
 import { CommentModule } from './modules/comment.module';
+import { ReportModule } from './modules/report.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CommentModule } from './modules/comment.module';
     CategoryModule,
     EventModule,
     CommentModule,
+    ReportModule,
   ],
   providers: [AppService],
 })

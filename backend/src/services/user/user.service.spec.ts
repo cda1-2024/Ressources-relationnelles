@@ -5,6 +5,7 @@ import { User } from 'src/models/user.model';
 import { BusinessException } from 'src/helper/exceptions/business.exception';
 import { UpdateUserDto } from 'src/dto/user/request/update-user.dto';
 import { USER_NOT_FOUND } from 'src/helper/constants/constant-exception';
+import { CreateUserRequestDto } from 'src/dto/user/request/create-user.dto';
 
 describe('UserService', () => {
   let service: UserService;
@@ -53,12 +54,18 @@ describe('UserService', () => {
 
   describe('createUser', () => {
     it('should create and save user', async () => {
-      const newUser = { username: 'john', password: 'hashed' };
+      const newUser: CreateUserRequestDto = {
+        email: 'john@example.com',
+        username: 'john',
+        password: 'hashed',
+        role: 1,
+        bio: '',
+      };
       const savedUser = { id: '1', ...newUser };
       (mockRepository.create as jest.Mock).mockReturnValue(newUser);
       (mockRepository.save as jest.Mock).mockResolvedValue(savedUser);
 
-      const result = await service.createUser(newUser as Partial<User>);
+      const result = await service.createUser(newUser);
       expect(mockRepository.create).toHaveBeenCalledWith(newUser);
       expect(mockRepository.save).toHaveBeenCalledWith(newUser);
       expect(result).toEqual(savedUser);

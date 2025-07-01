@@ -1,4 +1,6 @@
 .user-card {
+  width: 100%;
+  min-width: 220px;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -49,6 +51,12 @@
       display: flex;
       gap: 0.4rem;
       justify-content: start;
+    }
+
+    .signalements {
+      font-size: 0.7rem;
+      color: #ff6b6b;
+      margin-top: 0.5rem;
     }
   }
 }
