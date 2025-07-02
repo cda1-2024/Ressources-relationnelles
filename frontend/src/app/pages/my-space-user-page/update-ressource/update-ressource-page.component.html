@@ -1,0 +1,123 @@
+<div class="flex flex-col flex-grow items-center">
+    <div class="flex flex-col items-center flex-grow w-full" [ngClass]="{ 'px-[15vw]': !isMobile }">
+        <div class="bg-[#f8f9ff] flex-grow w-full px-4 pb-24" [ngClass]="{ 'border-x-2 border-[#e8edff]': !isMobile }">
+
+
+            <div class="p-8 max-w-4xl mx-auto">
+                <h1 class="text-3xl font-bold mb-6 text-center md:text-left">
+                    Modifier une ressource
+                    <hr />
+                </h1>
+
+                <form [formGroup]="ressourceForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Titre</mat-label>
+                        <input matInput formControlName="titre" required />
+                        <mat-error *ngIf="ressourceForm.get('titre')?.invalid && ressourceForm.get('titre')?.touched">
+                            Le titre est obligatoire.
+                        </mat-error>
+                        <div *ngIf="apiErrors['title']" class="text-red-600 text-sm mt-1">
+                            <div *ngFor="let msg of apiErrors['title']">{{ msg }}</div>
+                        </div>
+                    </mat-form-field>
+
+
+                    <quill-editor formControlName="contenu" placeholder="Contenu de la ressource" class="max-w-full">
+                    </quill-editor>
+                    <mat-error *ngIf="ressourceForm.get('contenu')?.hasError('required')">
+                        Le contenu est obligatoire.
+                    </mat-error>
+                    <div *ngIf="apiErrors['contenu']" class="text-red-600 text-sm mt-1">
+                        <div *ngFor="let msg of apiErrors['contenu']">{{ msg }}</div>
+                    </div>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Catégorie</mat-label>
+                        <mat-select formControlName="categorie" required>
+                            <mat-option *ngFor="let cat of categories" [value]="cat.id">
+                                {{ cat.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error
+                            *ngIf="ressourceForm.get('categorie')?.invalid && ressourceForm.get('categorie')?.touched">
+                            La catégorie est obligatoire.
+                        </mat-error>
+                        <div *ngIf="apiErrors['category']" class="text-red-600 text-sm mt-1">
+                            <div *ngFor="let msg of apiErrors['category']">{{ msg }}</div>
+                        </div>
+                    </mat-form-field>
+
+                    <div *ngIf="selectedType === 0">
+                        <div>
+                            <label class="block mb-2">Télécharger une image</label>
+                            <input type="file" (change)="onFileChange($event)" accept="image/jpeg, image/png" />
+                        </div>
+                        <div *ngIf="ressourceForm.get('fileUpload')?.invalid && ressourceForm.get('fileUpload')?.touched"
+                            class="text-red-600">
+                            Le fichier image est obligatoire.
+                        </div>
+                        <div *ngIf="ressourceForm.get('fileUpload')?.errors as errors"
+                            class="text-red-600 text-sm mt-1">
+                            <div *ngIf="errors['invalidType']">Le fichier doit être au format PNG ou JPEG.</div>
+                            <div *ngIf="errors['tooLarge']">La taille de l’image ne doit pas dépasser 10 Mo.</div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="selectedType === 0 && imagePreviewUrl" class="mb-4">
+                        <label class="block mb-2 font-semibold">Image actuelle</label>
+                        <img [src]="imagePreviewUrl" alt="Aperçu de l’image"
+                            class="max-w-xs rounded-lg border border-gray-300" />
+                    </div>
+
+                    <div *ngIf="selectedType === 3">
+                        <mat-form-field class="w-full">
+                            <mat-label>Lien YouTube</mat-label>
+                            <input matInput formControlName="content_link" placeholder="https://youtube.com/..."
+                                (input)="updateYoutubePreview()" /> <mat-error
+                                *ngIf="ressourceForm.get('content_link')?.hasError('required')">
+                                Le lien est obligatoire pour une vidéo.
+                            </mat-error>
+                            <mat-error *ngIf="ressourceForm.get('content_link')?.hasError('pattern')">
+                                Le lien doit être une URL YouTube valide (youtube.com ou youtu.be).
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="selectedType === 3 && youtubeEmbedUrl" class="mb-4">
+                        <label class="block mb-2 font-semibold">Vidéo actuelle</label>
+                        <div class="aspect-w-16 aspect-h-9">
+                            <iframe [src]="youtubeEmbedUrl" frameborder="0" allowfullscreen
+                                class="w-full h-full"></iframe>
+                        </div>
+                    </div>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Visibilité</mat-label>
+                        <mat-select formControlName="visibilite" required>
+                            <mat-option value=0>Privé</mat-option>
+                            <mat-option value=1>Publique</mat-option>
+                            <mat-option value=2>Restreinte</mat-option>
+                        </mat-select>
+                        <mat-error
+                            *ngIf="ressourceForm.get('visibilite')?.invalid && ressourceForm.get('visibilite')?.touched">
+                            La visibilité est obligatoire.
+                        </mat-error>
+                    </mat-form-field>
+                    <div *ngIf="apiErrors['visibility']" class="text-red-600 text-sm mt-1">
+                        <div *ngFor="let msg of apiErrors['visibility']">{{ msg }}</div>
+                    </div>
+
+                    <div *ngIf="apiErrors['fileUpload']" class="text-red-600 text-sm mt-1">
+                        <div *ngFor="let msg of apiErrors['fileUpload']">{{ msg }}</div>
+                    </div>
+
+                    <div class="flex justify-end pt-4">
+                        <button mat-flat-button type="submit" class="custom-button !rounded-[10px] mx-[10px]">
+                            Enregistrer les modifications
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

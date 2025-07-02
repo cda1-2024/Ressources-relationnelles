@@ -11,15 +11,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { QuillModule } from 'ngx-quill';
-import { BreakpointService } from '../../services/breackpoint.service';
-import { CategoryService } from '../../services/category/category.service';
-import { CategorySimple } from '../../services/category/category.model';
-import { Ressourceservice } from '../../services/ressource/ressource.service';
+import { BreakpointService } from '../../../services/breackpoint.service';
+import { CategoryService } from '../../../services/category/category.service';
+import { CategoryResponse } from '../../../services/category/category.model';
+import { Ressourceservice } from '../../../services/ressource/ressource.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { SuccessDialogComponent } from '../../components/alert/success-dialog.component';
-import { CreateRessourceRequest } from '../../services/ressource/ressource.model';
-import { from } from 'rxjs';
+import { SuccessDialogComponent } from '../../../components/alert/success-dialog.component';
+import { error } from 'console';
 
 @Component({
   selector: 'app-creation-ressource-page',
@@ -34,13 +33,13 @@ import { from } from 'rxjs';
     QuillModule,
     MatDialogModule,
   ],
-  templateUrl: './creation-ressource-page.component.html',
-  styleUrls: ['./creation-ressource-page.component.scss'],
+  templateUrl: './create-ressource-page.component.html',
+  styleUrls: ['./create-ressource-page.component.scss'],
 })
 export class CreationRessourcePageComponent implements OnInit {
   ressourceForm!: FormGroup;
   isMobile = false;
-  categories: CategorySimple[] = [];
+  categories: CategoryResponse[] = [];
   apiErrors: { [key: string]: string[] } = {};
   selectedType: number | null = null;
 
@@ -69,7 +68,7 @@ export class CreationRessourcePageComponent implements OnInit {
       visibilite: ['', Validators.required],
     });
 
-    this.categoryService.getAll().subscribe({
+    this.categoryService.getAllCategories().subscribe({
       next: (res) => {
         this.categories = res.categories;
       },
@@ -125,7 +124,8 @@ export class CreationRessourcePageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.router.navigate(['/']);
+      window.history.back();
+      window.location.reload();
     });
   }
 
@@ -171,7 +171,6 @@ export class CreationRessourcePageComponent implements OnInit {
       const contenuLength = formValue.contenu
         ? new Blob([formValue.contenu]).size
         : 0;
-      console.log('Taille du contenu:', contenuLength);
       if (contenuLength > 10000) {
         this.apiErrors['contenu'] = [
           'La taille du contenu ne doit pas dépasser 10 000 octets.',
@@ -199,12 +198,14 @@ export class CreationRessourcePageComponent implements OnInit {
           this.openSuccessDialog();
         },
         error: (err) => {
+          console.log('Erreur lors de la création à jour de la ressource:', err);
           if (err?.error?.message) {
             this.apiErrors = err.error.message;
           }
         },
       });
     } else {
+      console.error('Formulaire invalide', this.ressourceForm.errors);
       console.warn('Formulaire invalide');
     }
   }

@@ -15,10 +15,10 @@ import { RessourceCardComponent } from '../../../components/card/ressource-card/
     MatIconModule,
     RessourceCardComponent,
     RouterModule,
-    SwipeScrollDirective
+    SwipeScrollDirective,
   ],
   templateUrl: './my-created-ressources.component.html',
-  styleUrl: './my-created-ressources.component.scss'
+  styleUrl: './my-created-ressources.component.scss',
 })
 export class MyCreatedRessourcesComponent implements OnInit {
   isMobile: boolean = false;
@@ -40,16 +40,20 @@ export class MyCreatedRessourcesComponent implements OnInit {
 
   ngOnInit(): void {
     this.ressourceService.getFilterRessources(6).subscribe((res) => {
-      this.draftRessources = res.ressources
+      this.draftRessources = res.ressources;
     });
     this.ressourceService.getFilterRessources(6).subscribe((res) => {
-      this.waitingRessources = res.ressources
+      this.waitingRessources = res.ressources;
     });
     this.ressourceService.getFilterRessources(6).subscribe((res) => {
-      this.rejectedRessources = res.ressources
+      this.rejectedRessources = res.ressources;
     });
     this.ressourceService.getFilterRessources(6).subscribe((res) => {
-      this.publishedRessources = res.ressources
+      this.publishedRessources = res.ressources;
     });
+  }
+
+  onEditRessource(ressourceId: string): void {
+    window.location.href = `/ressources/edit/${ressourceId}`;
   }
 }

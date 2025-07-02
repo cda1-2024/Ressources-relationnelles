@@ -16,7 +16,7 @@ import { Ressourceservice } from '../../services/ressource/ressource.service';
 import { FilterRessourceRequest, RessourceResponse, RessourceTypeOption } from '../../services/ressource/ressource.model';
 import { RessourceCardComponent } from '../../components/card/ressource-card/ressource-card.component';
 import { AuthService } from '../../auth/auth.service';
-import { debounceTime, Subject, Subscription, debounceTime } from 'rxjs';
+import { debounceTime, Subject, Subscription } from 'rxjs';
 import { CategoryListResponse, CategoryResponse } from '../../services/category/category.model';
 
 // Constants

@@ -9,7 +9,7 @@ export interface RessourceListResponse {
 export interface RessourceResponse {
   id: string;
   title: string;
-  category?: string;
+  category?: CategoryResponse;
   content_link: string;
   content_text: string;
   created_at: string;
@@ -39,6 +39,10 @@ export interface Comment {
 export interface User {
   id: string;
   username: string;
+}
+export interface CategoryResponse {
+  id: string;
+  label: string;
 }
 
 export interface RessourceStatus {

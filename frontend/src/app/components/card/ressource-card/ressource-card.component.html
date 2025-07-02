@@ -15,7 +15,7 @@
           *ngIf="showViewButton"
           mat-stroked-button 
           color="primary"
-          (click)="onViewClick()">
+          (click)="onClickButton(ressource.id)">
           {{ textButton }}
         </button>
 
@@ -45,7 +45,7 @@
       <!-- Afficher l'image si content_link est une URL d'image -->
       <img 
         *ngIf="shouldShowImage()" 
-        [src]="ressource.content_link" 
+        [src]="getImgUrl()" 
         [alt]="ressource.title"
         class="ressource-image"
         (error)="onImageError($event)"

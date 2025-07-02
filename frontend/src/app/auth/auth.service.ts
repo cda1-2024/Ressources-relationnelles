@@ -18,7 +18,9 @@ export class AuthService {
 
   constructor(
     private api: ApiService
-  ) {}
+  ) {
+    this.refreshUserInfo();
+  }
 
   login(email: string, password: string, rememberMe: boolean): Observable<void> {
     const payload: LoginPayload = {
@@ -49,10 +51,12 @@ export class AuthService {
         this.userId.next(user.id);
         this.username.next(user.username);
       },
-      error: () => {
-        this.loggedIn.next(false);
-        this.userId.next(null);
-        this.username.next(null);
+      error: (error) => {
+        if(error.status === 401 || error.status === 403) {
+          this.loggedIn.next(false);
+          this.userId.next(null);
+          this.username.next(null);
+        }
       },
     });
   }

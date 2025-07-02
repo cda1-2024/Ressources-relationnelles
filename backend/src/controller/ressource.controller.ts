@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -57,6 +58,15 @@ export class RessourceController {
           callback(null, filename);
         },
       }),
+      fileFilter: (req, file, callback) => {
+        if (!file.mimetype.match(/^image\/(png|jpeg|jpg|gif|webp)$/)) {
+          return callback(
+            new BadRequestException('Seuls les fichiers image sont autorisés (png, jpg, jpeg, gif, webp).'),
+            false,
+          );
+        }
+        callback(null, true);
+      },
     }),
   )
   @ApiOperation({
@@ -183,6 +193,19 @@ export class RessourceController {
 
   // Mettre à jour une ressource
   @Put('/:id')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, callback) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          const filename = `${file.fieldname}-${uniqueSuffix}${ext}`;
+          callback(null, filename);
+        },
+      }),
+    }),
+  )
   @ApiOperation({
     summary: 'Modifier une ressource',
     description: "Modifier une ressource en fonction de l'identifiant",
@@ -207,8 +230,9 @@ export class RessourceController {
   async updateRessource(
     @Body() updateRessourceDto: UpdateRessourceRequestDto,
     @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<RessourceResponseDto> {
-    const ressource = await this.ressourceService.updateRessource(id, updateRessourceDto);
+    const ressource = await this.ressourceService.updateRessource(id, updateRessourceDto, file);
     return RessourceMapper.toResponseDto(ressource);
   }
 
