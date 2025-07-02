@@ -96,7 +96,7 @@
             <h2 class="text-xl sm:text-2xl font-semibold mb-4">Image</h2>
             <div class="bg-gray-100 rounded-lg overflow-hidden">
               <img 
-                [src]="ressource.content_link" 
+                [src]="getImgUrl()" 
                 [alt]="ressource.title"
                 class="w-full h-auto max-h-96 object-contain"
                 (error)="onImageError($event)"
@@ -104,7 +104,7 @@
             </div>
             <p class="text-sm text-gray-500 mt-2 break-all">
               <a [href]="ressource.content_link" target="_blank" class="text-blue-600 hover:underline">
-                {{ ressource.content_link }}
+                {{ getImgUrl() }}
                 <mat-icon class="ml-1 text-sm">open_in_new</mat-icon>
               </a>
             </p>

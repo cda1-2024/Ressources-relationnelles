@@ -22,6 +22,7 @@ import { createLoggedRepository } from 'src/helper/safe-repository';
 import { RessourceListResponseDto } from 'src/dto/ressource/response/list-ressource-response.dto';
 import * as fs from 'fs';
 import * as path from 'path';
+import { ACCEPTED_IMAGE_MIME_TYPES } from 'src/helper/constants/constant-general';
 
 @Injectable()
 export class RessourceService {
@@ -90,6 +91,7 @@ export class RessourceService {
         query.andWhere('ressource.status = :status', { status: Status.PUBLISHED });
       }
 
+      query.orderBy('ressource.createdAt', 'DESC');
       const total = await query.getCount();
 
       query.skip((filters.page - 1) * filters.pageSize).take(filters.pageSize);
@@ -137,8 +139,8 @@ export class RessourceService {
         if (file.size > 10 * 1024 * 1024) {
           throw new BadRequestException('Le fichier est trop volumineux, la taille maximale est de 10 Mo');
         }
-        if (!['image/jpeg', 'image/png'].includes(file.mimetype)) {
-          throw new BadRequestException("Le type de fichier n'est pas autorisé, seuls JPEG, PNG sont acceptés");
+        if (!ACCEPTED_IMAGE_MIME_TYPES.includes(file.mimetype)) {
+          throw new BadRequestException("Le type de fichier n'est pas autorisé, seules les images sont acceptées");
         }
         const uploadDir = path.join(process.cwd(), 'uploads');
         if (!fs.existsSync(uploadDir)) {
@@ -165,27 +167,55 @@ export class RessourceService {
       newRessource.ressourceType = RessourceTypeFromInt[ressourceType];
       newRessource.visibility = RessourceVisibilityFromInt[visibility];
       newRessource.creator = user;
+      newRessource.status = Status.PUBLISHED;
 
       const saveRessource = this.ressourcesRepository.save(newRessource);
 
       return saveRessource;
     } catch (error) {
+      if (file) {
+        const filePath = path.join(__dirname, '..', '..', 'uploads', file.filename);
+        fs.unlink(filePath, () => {});
+      }
       throw new BusinessException('La création de la ressource a échoué', getErrorStatusCode(error), { cause: error });
     }
   }
 
-  async updateRessource(id: string, ressourceDto: UpdateRessourceRequestDto): Promise<Ressource> {
+  async updateRessource(
+    id: string,
+    ressourceDto: UpdateRessourceRequestDto,
+    file: Express.Multer.File | undefined,
+  ): Promise<Ressource> {
     try {
       if (!ressourceDto || Object.values(ressourceDto).every((value) => value === undefined)) {
         throw new BadRequestException('Aucune donnée à mettre à jour');
       }
-
       const ressourceToUpdate = await this.ressourcesRepository.findOneBy({ id: id });
       if (!ressourceToUpdate) {
         throw new NotFoundException("La ressource n'a pas été trouvée");
       }
 
       Object.assign(ressourceToUpdate, ressourceDto);
+
+      if (file) {
+        if (file.size > 10 * 1024 * 1024) {
+          throw new BadRequestException('Le fichier est trop volumineux, la taille maximale est de 10 Mo');
+        }
+        if (!ACCEPTED_IMAGE_MIME_TYPES.includes(file.mimetype)) {
+          throw new BadRequestException("Le type de fichier n'est pas autorisé, seules les images sont acceptées");
+        }
+        const uploadDir = path.join(process.cwd(), 'uploads');
+        if (!fs.existsSync(uploadDir)) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        if (ressourceToUpdate.contentLink && fs.existsSync(path.join(process.cwd(), ressourceToUpdate.contentLink))) {
+          fs.unlinkSync(path.join(process.cwd(), ressourceToUpdate.contentLink));
+        }
+        ressourceToUpdate.contentLink = `/uploads/${file.filename}`;
+      }
+      if (ressourceDto.content_link) {
+        ressourceToUpdate.contentLink = ressourceDto.content_link;
+      }
 
       if (ressourceDto.category) {
         const category = await this.categoryService.findCategoryById(ressourceDto.category);
@@ -196,7 +226,7 @@ export class RessourceService {
       }
 
       if (ressourceDto.visibility) {
-        ressourceToUpdate.visibility = RessourceVisibilityFromInt[ressourceDto.visibility];
+        ressourceToUpdate.visibility = RessourceVisibilityFromInt[parseInt(ressourceDto.visibility)];
       }
       if (ressourceDto.status) {
         ressourceToUpdate.status = RessourceStatusFromInt[ressourceDto.status];

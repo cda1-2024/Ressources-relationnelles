@@ -11,13 +11,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { QuillModule } from 'ngx-quill';
-import { BreakpointService } from '../../services/breackpoint.service';
-import { CategoryService } from '../../services/category/category.service';
-import { CategoryResponse } from '../../services/category/category.model';
-import { Ressourceservice } from '../../services/ressource/ressource.service';
+import { BreakpointService } from '../../../services/breackpoint.service';
+import { CategoryService } from '../../../services/category/category.service';
+import { CategoryResponse } from '../../../services/category/category.model';
+import { Ressourceservice } from '../../../services/ressource/ressource.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { SuccessDialogComponent } from '../../components/alert/success-dialog.component';
+import { SuccessDialogComponent } from '../../../components/alert/success-dialog.component';
+import { error } from 'console';
 
 @Component({
   selector: 'app-creation-ressource-page',
@@ -32,8 +33,8 @@ import { SuccessDialogComponent } from '../../components/alert/success-dialog.co
     QuillModule,
     MatDialogModule,
   ],
-  templateUrl: './creation-ressource-page.component.html',
-  styleUrls: ['./creation-ressource-page.component.scss'],
+  templateUrl: './create-ressource-page.component.html',
+  styleUrls: ['./create-ressource-page.component.scss'],
 })
 export class CreationRessourcePageComponent implements OnInit {
   ressourceForm!: FormGroup;
@@ -120,7 +121,8 @@ export class CreationRessourcePageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.router.navigate(['/']);
+      window.history.back();
+      window.location.reload();
     });
   }
 
@@ -193,12 +195,14 @@ export class CreationRessourcePageComponent implements OnInit {
           this.openSuccessDialog();
         },
         error: (err) => {
+          console.log('Erreur lors de la création à jour de la ressource:', err);
           if (err?.error?.message) {
             this.apiErrors = err.error.message;
           }
         },
       });
     } else {
+      console.error('Formulaire invalide', this.ressourceForm.errors);
       console.warn('Formulaire invalide');
     }
   }
