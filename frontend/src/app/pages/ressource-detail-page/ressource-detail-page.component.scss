@@ -4,12 +4,10 @@
   overflow: hidden;
 }
 
-// Styles pour le contenu HTML de la ressource
 .ressource-content {
   line-height: 1.7;
   color: #374151;
 
-  // Styles pour les éléments HTML du contenu
   h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     margin-top: 1.5rem;
@@ -105,7 +103,6 @@
     }
   }
 
-  // Responsive pour les très petits écrans
   @media (max-width: 640px) {
     h1 { font-size: 1.5rem; }
     h2 { font-size: 1.25rem; }
@@ -117,7 +114,6 @@
   }
 }
 
-// Animation pour le bouton like
 .mat-icon-button {
   transition: all 0.2s ease;
   
@@ -148,13 +144,11 @@
   }
 }
 
-// Améliorations des chips
 mat-chip {
   font-size: 0.75rem;
   font-weight: 500;
 }
 
-// Amélioration de la sidebar
 aside {
   background-color: #f6f8ff;
   
@@ -168,7 +162,6 @@ aside {
   }
 }
 
-// Animation du spinner
 .animate-spin {
   animation: spin 1s linear infinite;
 }

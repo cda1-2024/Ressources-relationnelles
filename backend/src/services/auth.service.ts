@@ -3,7 +3,6 @@ import { UserService } from './user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { RegisterUserDto } from '../dto/user/request/register-user.dto';
-import { ValidationException } from 'src/helper/exceptions/validation.exception';
 import { jwtPayload } from 'src/configuration/jwt.strategy';
 import { Request, Response } from 'express';
 import { BusinessException } from 'src/helper/exceptions/business.exception';
@@ -31,9 +30,7 @@ export class AuthService {
         username: user.username,
         role: user.role,
       };
-      if (loginDto.rememberMe === true) {
-        payload.rememberMe = true;
-      }
+      payload.rememberMe = loginDto.rememberMe;
 
       await this.createTokens(res, payload);
       res.send({ message: 'Connexion réussie' });
@@ -46,12 +43,6 @@ export class AuthService {
 
   async register(res: Response, UserNew: RegisterUserDto): Promise<void> {
     try {
-      const errors: Record<string, string> = {};
-
-      if (Object.keys(errors).length > 0) {
-        throw new ValidationException(errors);
-      }
-
       const UserDB = await this.userService.createUserForRegister(UserNew);
 
       const payload = {

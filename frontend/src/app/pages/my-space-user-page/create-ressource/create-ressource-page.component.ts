@@ -44,12 +44,12 @@ export class CreationRessourcePageComponent implements OnInit {
   selectedType: number | null = null;
 
   constructor(
-    private fb: FormBuilder,
-    private breakpointService: BreakpointService,
-    private categoryService: CategoryService,
-    private ressourceService: Ressourceservice,
-    private dialog: MatDialog,
-    private router: Router
+    private readonly fb: FormBuilder,
+    private readonly breakpointService: BreakpointService,
+    private readonly categoryService: CategoryService,
+    private readonly ressourceService: Ressourceservice,
+    private readonly dialog: MatDialog,
+    private readonly router: Router
   ) {
     this.isMobile = this.breakpointService.isMobile();
     this.breakpointService.isMobile$.subscribe((isMobile) => {
@@ -87,18 +87,15 @@ export class CreationRessourcePageComponent implements OnInit {
     const lienControl = this.ressourceForm.get('lien');
     const fileControl = this.ressourceForm.get('fileUpload');
 
-    // Reset erreurs
     this.apiErrors['fileUpload'] = [];
 
     if (this.selectedType === 0) {
-      // Image
       lienControl?.clearValidators();
       lienControl?.updateValueAndValidity();
 
       fileControl?.setValidators([Validators.required]);
       fileControl?.updateValueAndValidity();
     } else if (this.selectedType === 3) {
-      // Vidéo (YouTube)
       fileControl?.clearValidators();
       fileControl?.updateValueAndValidity();
 

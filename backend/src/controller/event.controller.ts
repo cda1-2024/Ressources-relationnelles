@@ -47,7 +47,7 @@ export class EventController {
   @Roles(UserRole.USER)
   async create(@Body() createEventDto: CreateEventRequestDto, @CurrentUser() user: User): Promise<EventResponseDto> {
     const event = await this.eventService.createEvent(user, createEventDto);
-    return EventMapper.toEventDto(event);
+    return EventMapper.toResponseDto(event);
   }
 
   @Get('/filter/')
@@ -65,7 +65,7 @@ export class EventController {
   })
   async findEvents(@Query() filters: FilterEventRequestDto): Promise<EventListResponseDto> {
     const { events, total } = await this.eventService.findEventsBySearch(null, filters);
-    return EventMapper.toEventListDto(events, filters.page, filters.pageSize, total);
+    return EventMapper.toResponseListDto(events, filters.page, filters.pageSize, total);
   }
 
   @Get('/:id')
@@ -86,7 +86,7 @@ export class EventController {
   })
   async getEventById(@Param('id') id: string): Promise<FullEventResponseDto> {
     const event = await this.eventService.findEventById(id);
-    return EventMapper.toFullEventDto(event);
+    return EventMapper.toFullResponseDto(event);
   }
 
   @Get('/')
@@ -103,7 +103,7 @@ export class EventController {
   })
   async getEvents(): Promise<EventListResponseDto> {
     const events = await this.eventService.findEventAll();
-    return EventMapper.toEventListDto(events, 1, 10000, events.length);
+    return EventMapper.toResponseListDto(events, 1, 10000, events.length);
   }
 
   @Post('/participate/:id')
@@ -167,6 +167,6 @@ export class EventController {
   @Roles(UserRole.USER, UserRole.MODERATOR)
   async deleteEvent(@Param('id') id: string): Promise<EventResponseDto> {
     const event = await this.eventService.deleteEvent(id);
-    return EventMapper.toEventDto(event);
+    return EventMapper.toResponseDto(event);
   }
 }

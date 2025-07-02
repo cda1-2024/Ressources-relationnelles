@@ -96,7 +96,6 @@ export class CommentService {
   async deleteComment(idComment: string): Promise<void> {
     try {
       const comment = await this.getCommentById(idComment);
-      console.log(comment);
       await this.commentRepository.update(comment.id, { deleted: true });
     } catch (error) {
       throw new BusinessException('La suppression du commentaire a échoué', getErrorStatusCode(error), {

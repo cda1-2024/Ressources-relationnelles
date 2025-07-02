@@ -1,4 +1,3 @@
-// auth/auth.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { LoginPayload, User } from './auth.model';
@@ -35,8 +34,8 @@ export class AuthService {
     );
   }
 
-  register(email: string, username: string, password: string, rememberMe: boolean): Observable<void> {
-    const payload = { email, username, password, rememberMe };
+  register(email: string, username: string, password: string): Observable<void> {
+    const payload = { email, username, password };
     return this.api.post<void>('/auth/register', payload).pipe(
       tap(() => {
         this.refreshUserInfo();

@@ -12,7 +12,7 @@ export class CommentMapper {
       postId: comment.ressource.id,
       userId: comment.author.id,
       parentId: comment.parentComment?.id ?? null,
-      childComments: comment.childComments?.slice(0, 1).map((child) => this.toResponseDto(child)), // Limite à 1
+      childComments: comment.childComments?.slice(0, 1).map((child) => this.toResponseDto(child)),
       createdAt: comment.createdAt,
     };
   }

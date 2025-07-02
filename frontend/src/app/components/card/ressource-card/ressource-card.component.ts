@@ -36,8 +36,17 @@ export class RessourceCardComponent {
 
   constructor(private router: Router) {}
 
+  onUserClick(): void {
+    this.router.navigate(['/utilisateur', this.ressource.creator.id]);
+  }
+
   onToggleLike(): void {
     this.likeToggled.emit(this.ressource);
+  }
+
+  onViewClick(): void {
+    this.router.navigate(['/ressources', this.ressource.id]);
+    this.viewClicked.emit(this.ressource);
   }
 
   formatCount(count: number): string {
@@ -70,14 +79,12 @@ export class RessourceCardComponent {
   isImageUrl(url: string): boolean {
     if (!url) return false;
     
-    // Vérifier d'abord les extensions de fichiers
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'];
     const urlLower = url.toLowerCase();
     const hasImageExtension = imageExtensions.some(ext => urlLower.includes(ext));
     
     if (hasImageExtension) return true;
     
-    // Vérifier les domaines/services d'images connus
     const imageServices = [
       'picsum.photos',
       'via.placeholder.com',
@@ -89,6 +96,7 @@ export class RessourceCardComponent {
     
     return imageServices.some(service => urlLower.includes(service));
   }
+  
 
   getImgUrl(): string {
     if (this.ressource.content_link) {

@@ -1,4 +1,3 @@
-// toBoolean.test.js
 import { plainToInstance } from 'class-transformer';
 import { ToBoolean } from './helper-validator.decorator';
 

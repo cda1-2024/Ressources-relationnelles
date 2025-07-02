@@ -1,13 +1,16 @@
-import { Entity, Column, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, PrimaryColumn, CreateDateColumn } from 'typeorm';
 import { User } from './user.model';
 import { Comment } from './comment.model';
 
 export enum ReportReason {
-  SUPERADMIN = 'superAdmin',
-  ADMIN = 'admin',
-  MODERATOR = 'moderator',
-  USER = 'user',
-  VISITOR = 'visitor',
+  SPAM = 'Spam',
+  HARASSMENT = 'Harcèlement',
+  INAPPROPRIATE_CONTENT = 'Contenu inapproprié',
+  FAKE_PROFILE = 'Profil factice',
+  VIOLATION_OF_TERMS = 'Violation des conditions d’utilisation',
+  HATE_SPEECH = 'Discours de haine',
+  SCAM = 'Arnaque',
+  OTHER = 'Autre',
 }
 
 @Entity()
@@ -18,10 +21,16 @@ export class UserReport {
   @PrimaryColumn('uuid')
   reportedUserId: string;
 
-  @Column({ type: 'longtext' })
+  @Column({
+    type: 'longtext',
+    nullable: true,
+  })
   content: string;
 
-  @Column({ type: 'longtext' })
+  @Column({
+    type: 'longtext',
+    nullable: true,
+  })
   moderatorView: string;
 
   @Column({ default: false })
@@ -30,14 +39,17 @@ export class UserReport {
   @Column({
     type: 'enum',
     enum: ReportReason,
-    default: ReportReason.USER,
+    default: ReportReason.OTHER,
   })
-  ressourceType: ReportReason;
+  reportReason: ReportReason;
 
-  @ManyToOne(() => User, (user) => user.reporters, { nullable: true })
-  reportedUser: User;
+  @CreateDateColumn()
+  createdAt: Date;
 
   @ManyToOne(() => User, (user) => user.reportedUsers)
+  reportedUser: User;
+
+  @ManyToOne(() => User, (user) => user.reporters)
   reporter: User;
 
   @ManyToOne(() => Comment, (comment) => comment.userReports, { nullable: true })

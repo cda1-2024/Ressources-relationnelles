@@ -1,4 +1,4 @@
-<mat-card class="user-card">
+<mat-card class="user-card" (click)="onUserClick(user.id)">
   <div class="profile">
     <img class="avatar" [src]="user.avatarUrl" alt="Avatar de l'utilisateur" />
   </div>
@@ -11,6 +11,9 @@
       <span>{{ user.ressources }} ressources</span>
       <span>·</span>
       <span>{{ user.events }} événements</span>
+    </div>
+    <div class="signalements" *ngIf="user.signalements">
+      <span>{{ user.signalements }} signalements</span>
     </div>
   </div>
 </mat-card>

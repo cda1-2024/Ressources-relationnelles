@@ -39,8 +39,7 @@ export class RessourceDetailPageComponent implements OnInit, OnDestroy {
   error: string | null = null;
   sanitizedContent: SafeHtml = '';
   
-  // Gestion des formulaires de réponse
-  activeReplyForm: string | null = null; // ID du commentaire pour lequel le formulaire est ouvert
+  activeReplyForm: string | null = null;
   replyText: string = '';
   isSubmittingReply = false;
   
@@ -71,11 +70,9 @@ export class RessourceDetailPageComponent implements OnInit, OnDestroy {
   }
 
   goBack(): void {
-    // Utiliser l'historique de navigation pour préserver les filtres
     if (window.history.length > 1) {
       this.location.back();
     } else {
-      // Fallback si pas d'historique (ex: accès direct à l'URL)
       this.router.navigate(['/ressources']);
     }
   }
@@ -228,19 +225,15 @@ export class RessourceDetailPageComponent implements OnInit, OnDestroy {
       parentId: parentCommentId
     };
 
-    console.log('📝 Envoi de la réponse:', createCommentRequest);
-
     this.commentService.createComment(createCommentRequest).subscribe({
       next: (response) => {
-        console.log('✅ Réponse envoyée avec succès:', response);
         this.isSubmittingReply = false;
         this.hideReplyForm();
         
-        // Recharger la ressource pour obtenir les commentaires mis à jour
         this.loadRessource(this.ressource!.id);
       },
       error: (error) => {
-        console.error('❌ Erreur lors de l\'envoi de la réponse:', error);
+        console.error('Erreur lors de l\'envoi de la réponse:', error);
         this.isSubmittingReply = false;
         
         // TODO: Afficher un message d'erreur à l'utilisateur
@@ -260,11 +253,8 @@ export class RessourceDetailPageComponent implements OnInit, OnDestroy {
         this.sanitizedContent = this.sanitizer.bypassSecurityTrustHtml(ressource.content_text || '');
         this.titleService.setTitle(`${ressource.title} - Ressources`);
         this.isLoading = false;
-        console.log('📖 Loaded ressource:', ressource.title);
-        console.log('All ressource data:', ressource);
       },
       error: (error) => {
-        console.error('❌ Error loading ressource:', error);
         this.error = 'Impossible de charger la ressource. Elle n\'existe peut-être pas ou vous n\'avez pas les droits d\'accès.';
         this.titleService.setTitle('Ressource introuvable');
         this.isLoading = false;

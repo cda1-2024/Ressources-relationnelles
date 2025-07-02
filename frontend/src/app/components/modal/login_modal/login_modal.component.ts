@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from './../../../auth/auth.service';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { RegisterModalComponent } from '../register-modal/register-modal.component'; // Adaptez le chemin si besoin
+import { RegisterModalComponent } from '../register-modal/register-modal.component';
 
 
 @Component({

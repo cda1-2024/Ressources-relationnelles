@@ -84,7 +84,6 @@ export class RegisterModalComponent {
   }
 
   ngOnInit(): void {
-    // These subscriptions need to be in ngOnInit
     this.form.get('password')?.valueChanges.subscribe(() => {
       this.form.updateValueAndValidity();
     });
@@ -96,13 +95,11 @@ export class RegisterModalComponent {
 
   onSubmit() {
     if (this.form.valid) {
-      // Access form values using this.form.value
       const email = this.form.value.email;
       const username = this.form.value.username;
       const password = this.form.value.password;
-      const rememberMe = this.form.value.rememberMe;
 
-      this.auth.register(email, username, password, rememberMe).subscribe({
+      this.auth.register(email, username, password).subscribe({
         next: () => {
           this.dialogRef.close();
           this.error = null;

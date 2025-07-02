@@ -9,6 +9,7 @@ import { EventCreateComponent } from "./event-create/event-create.component";
 import { StatisticsDashboardComponent } from "./statistics-dashboard/statistics-dashboard.component";
 import { MySavedRessourcesComponent } from './my-saved-ressources/my-saved-ressources.component';
 import { CreationRessourcePageComponent } from './create-ressource/create-ressource-page.component';
+import { ProfilPageComponent } from "../profil-page/profil-page.component";
 
 @Component({
   selector: 'app-my-space-user-page',
@@ -20,6 +21,7 @@ import { CreationRessourcePageComponent } from './create-ressource/create-ressou
     MyEventsComponent,
     EventCreateComponent,
     StatisticsDashboardComponent,
+    ProfilPageComponent,
     CreationRessourcePageComponent,
 ],
   templateUrl: './my-space-user-page.component.html',

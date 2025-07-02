@@ -1,5 +1,8 @@
 <div class="flex flex-grow items-left">
-  <app-admin-sidebar (viewChange)="currentView = $event" [currentView]="currentView"></app-admin-sidebar>
+  <app-admin-sidebar 
+    (viewChange)="currentView = $event" 
+    [currentView]="currentView"
+  ></app-admin-sidebar>
   <div class="w-full h-[calc(100vh-64px)] overflow-auto">
     <div>
     <section>
@@ -14,6 +17,7 @@
         <app-statistics-dashboard
           *ngSwitchCase="'stats'"
         ></app-statistics-dashboard>
+        <app-profil-page *ngSwitchCase="'profile'"></app-profil-page>
       </ng-container>
     </section>
   </div>

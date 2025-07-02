@@ -4,19 +4,19 @@ networks:
 
 services:
   database:
-    image: 'mariadb'
+    image: mariadb
     ports:
-      - '3306:3306'
+      - 3306:3306
     container_name: database
     networks:
       - internal
-    env_file: ".env"
+    env_file: .env
     volumes:
-      - './data/db/:/var/lib/mysql'
+      - ./data/db/:/var/lib/mysql
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
-      - '8080:80'
+      - 8080:80
     container_name: phpmyadmin
     networks:
       - internal

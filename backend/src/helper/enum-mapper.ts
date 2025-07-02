@@ -1,6 +1,7 @@
 import { EventType } from 'src/models/event.model';
 import { RessourceType, Status, Visibility } from 'src/models/ressource.model';
 import { UserRole } from 'src/models/user.model';
+import { ReportReason } from 'src/models/userReport.model';
 
 export const RessourceStatusToInt: Record<Status, number> = {
   [Status.DELETED]: 0,
@@ -70,4 +71,26 @@ export const UserRoleFromInt: Record<number, UserRole> = {
   2: UserRole.MODERATOR,
   3: UserRole.USER,
   4: UserRole.VISITOR,
+};
+
+export const ReportReasonToInt: Record<ReportReason, number> = {
+  [ReportReason.SPAM]: 0,
+  [ReportReason.HARASSMENT]: 1,
+  [ReportReason.INAPPROPRIATE_CONTENT]: 2,
+  [ReportReason.FAKE_PROFILE]: 3,
+  [ReportReason.VIOLATION_OF_TERMS]: 4,
+  [ReportReason.HATE_SPEECH]: 5,
+  [ReportReason.SCAM]: 6,
+  [ReportReason.OTHER]: 7,
+};
+
+export const ReportReasonFromInt: Record<number, ReportReason> = {
+  0: ReportReason.SPAM,
+  1: ReportReason.HARASSMENT,
+  2: ReportReason.INAPPROPRIATE_CONTENT,
+  3: ReportReason.FAKE_PROFILE,
+  4: ReportReason.VIOLATION_OF_TERMS,
+  5: ReportReason.HATE_SPEECH,
+  6: ReportReason.SCAM,
+  7: ReportReason.OTHER,
 };

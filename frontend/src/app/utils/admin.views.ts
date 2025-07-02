@@ -4,4 +4,5 @@ export type AdminView =
   | 'moderation'
   | 'categories.list'
   | 'categories.create'
+  | 'profile'
   | 'stats';

@@ -33,8 +33,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class AppComponent {
   title = 'angular-navigation-app';
 
-  isMobile: boolean = false; // Variable pour détecter si c'est un mobile
-  isLoggedIn: boolean = false; // Variable pour savoir si l'utilisateur est connecté
+  isMobile: boolean = false;
+  isLoggedIn: boolean = false;
 
   constructor(
     private breakpointService: BreakpointService,

@@ -73,7 +73,6 @@ export class CategoryListComponent implements OnInit {
             page: 1,
             pageSize: 50,
           };
-          // Appel HTTP
           return this.categoryService.getFilterCategories(params);
         }),
         takeUntil(this.destroy$)

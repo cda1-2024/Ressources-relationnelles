@@ -57,7 +57,8 @@ export class UserService {
       const queryBuilder = this.usersRepository
         .createQueryBuilder('user')
         .loadRelationCountAndMap('user.ressourcesCount', 'user.createdRessources')
-        .loadRelationCountAndMap('user.eventsCount', 'user.createdEvents');
+        .loadRelationCountAndMap('user.eventsCount', 'user.createdEvents')
+        .loadRelationCountAndMap('user.reportsCount', 'user.reportedUsers');
 
       if (filters?.username) {
         queryBuilder.andWhere('user.username LIKE :username', {
@@ -99,7 +100,16 @@ export class UserService {
 
   async findUserById(id: string): Promise<User> {
     try {
-      const user = await this.usersRepository.findOneBy({ id: id });
+      const user = await this.usersRepository.findOne({
+        relations: {
+          createdRessources: true,
+          createdEvents: true,
+          reportedUsers: true,
+        },
+        where: {
+          id: id,
+        },
+      });
 
       if (!user) {
         throw new NotFoundException("L'utilisateur n'a pas été trouvé");

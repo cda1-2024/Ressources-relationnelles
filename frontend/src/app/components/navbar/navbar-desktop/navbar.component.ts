@@ -56,14 +56,12 @@ export class NavbarComponent {
   }
 
   openLoginDialog(): void {
-    console.log('Login button clicked');
     this.dialog.open(LoginComponent, {
       width: '400px',
     });
   }
 
   onLogout(): void {
-    console.log('Logout button clicked');
     this.authService.logout();
   }
 }
