@@ -12,6 +12,7 @@ import { ReportService } from '../../services/report/report.service';
 import { ReportResponse } from '../../services/report/report.model';
 import { ReportCardComponent } from '../../components/card/report-card/report-card.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { ReportModalComponent } from '../../components/modal/report-modal/report-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -22,12 +23,16 @@ import { MatDialog } from '@angular/material/dialog';
     RessourceCardComponent,
     ReportCardComponent,
     SwipeScrollDirective,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './user-view-page.component.html',
   styleUrls: ['./user-view-page.component.scss']
 })
 export class UserViewPageComponent implements OnInit {
+  goBack(): void {
+    this.router.navigate(['/accueil']);
+  }
   moderate: boolean = false;
   userId: string | null = null;
   user!: FullUserResponse;
