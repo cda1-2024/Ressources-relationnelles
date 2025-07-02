@@ -84,7 +84,7 @@ export class RessourceService {
       });
 
       if (user?.role && [UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPERADMIN].includes(user.role)) {
-        if (filters.status) {
+        if (filters?.status !== undefined) {
           query.andWhere('ressource.status = :status', { status: filters.status });
         }
       } else {
@@ -231,7 +231,9 @@ export class RessourceService {
       if (ressourceDto.status) {
         ressourceToUpdate.status = RessourceStatusFromInt[ressourceDto.status];
       }
-
+      if (ressourceDto.content_text) {
+        ressourceToUpdate.contentText = ressourceDto.content_text;
+      }
       await this.ressourcesRepository.save(ressourceToUpdate);
       const ressource = await this.ressourcesRepository.findOneOrFail({
         where: { id },

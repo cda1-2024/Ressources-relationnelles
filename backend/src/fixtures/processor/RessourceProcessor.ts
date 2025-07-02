@@ -17,8 +17,10 @@ export default class RessourceProcessor implements IProcessor<Ressource> {
       object.status = Status.TOVALIDATE;
     } else if (id <= 40) {
       object.status = Status.DELETED;
-    } else {
+    } else if (id <= 50) {
       object.status = Status.DRAFT;
+    } else {
+      object.status = Status.PUBLISHED;
     }
 
     // Every 6 resources, the ressource doesn't have a category

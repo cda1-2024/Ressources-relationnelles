@@ -1,6 +1,7 @@
 import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
 import { Injectable } from '@nestjs/common';
 import { CategoryService } from 'src/services/category/category.service';
+import { BusinessException } from 'src/helper/exceptions/business.exception';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -8,8 +9,15 @@ export class IsCategoryUniqueConstraint implements ValidatorConstraintInterface 
   constructor(private readonly categoryService: CategoryService) {}
 
   async validate(name: string): Promise<boolean> {
-    const category = await this.categoryService.findCategoryByName(name);
-    return !category;
+    try {
+      await this.categoryService.findCategoryByName(name);
+      return false;
+    } catch (error) {
+      if (error instanceof BusinessException) {
+        return true;
+      }
+      throw error;
+    }
   }
 
   defaultMessage(args: ValidationArguments) {

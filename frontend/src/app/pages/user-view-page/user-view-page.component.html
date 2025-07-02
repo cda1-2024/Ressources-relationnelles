@@ -9,11 +9,16 @@
     >
       <div class="py-4">
         <div class="flex flex-row justify-between mt-[12px]">
-          <h1
-            class="text-[30px] font-bold leading-[45px] w-full flex flex-wrap justify-center items-center md:justify-start md:items-start"
-          >
-            Profil de {{user.username}}
-          </h1>
+          <div class="flex items-center mb-4">
+            <button mat-icon-button (click)="goBack()" class="mr-3">
+              <mat-icon>arrow_back</mat-icon>
+            </button>
+            <h1
+              class="text-[30px] font-bold leading-[45px] w-full flex flex-wrap justify-center items-center md:justify-start md:items-start"
+            >
+              Profil de {{user.username}}
+            </h1>
+          </div>
 
           <button
               mat-flat-button

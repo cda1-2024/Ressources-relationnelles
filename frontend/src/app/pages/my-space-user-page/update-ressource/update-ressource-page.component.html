@@ -85,9 +85,9 @@
                     </div>
                     <div *ngIf="selectedType === 3 && youtubeEmbedUrl" class="mb-4">
                         <label class="block mb-2 font-semibold">Vidéo actuelle</label>
-                        <div class="aspect-w-16 aspect-h-9">
-                            <iframe [src]="youtubeEmbedUrl" frameborder="0" allowfullscreen
-                                class="w-full h-full"></iframe>
+                        <div class="w-full aspect-video">
+                            <iframe class="w-full h-full" [src]="youtubeEmbedUrl" frameborder="0" allowfullscreen
+                                title="Vidéo YouTube"></iframe>
                         </div>
                     </div>
 

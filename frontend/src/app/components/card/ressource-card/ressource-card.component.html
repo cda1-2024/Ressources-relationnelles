@@ -5,7 +5,7 @@
         class="card-title pb-8"
       >{{ ressource.title }}</h3>
       <p class="card-subtitle text-secondary-500">
-        Par <a class="author-link" href="#" (click)="onUserClick()">{{ ressource.creator.username }}</a>
+        Par <span class="author-link" (click)="onUserClick()">{{ ressource.creator.username }}</span>
       </p>
       <p class="card-subtitle text-secondary-500">
         {{ ressource.created_at | date:'dd MMM yyyy' }}

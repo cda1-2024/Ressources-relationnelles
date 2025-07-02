@@ -74,11 +74,7 @@ export class RessourceDetailPageComponent implements OnInit, OnDestroy {
   }
 
   goBack(): void {
-    if (window.history.length > 1) {
-      this.location.back();
-    } else {
-      this.router.navigate(['/ressources']);
-    }
+    this.router.navigate(['/ressources']);
   }
 
   toggleLike(): void {

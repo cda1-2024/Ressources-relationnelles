@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   AbstractControl,
   FormBuilder,
@@ -45,7 +46,8 @@ export class ProfilPageComponent implements OnInit {
     private userService: UserService,
     private breakpointService: BreakpointService,
     private fb: FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {
     this.isMobile = this.breakpointService.isMobile();
     this.breakpointService.isMobile$.subscribe((isMobile) => {
@@ -198,6 +200,9 @@ export class ProfilPageComponent implements OnInit {
         });
       }
     });
+  }
+  goBack(): void {
+    this.router.navigate(['/accueil']);
   }
 }
 
