@@ -127,7 +127,7 @@ export class UserService {
       const newUser = new User();
       newUser.email = user.email;
       newUser.username = user.username;
-      newUser.password = await bcrypt.hash(user.password, 10);
+      newUser.password = user.password;
       if (user.role !== undefined && user.role in UserRoleFromInt) {
         newUser.role = UserRoleFromInt[user.role];
       } else {
