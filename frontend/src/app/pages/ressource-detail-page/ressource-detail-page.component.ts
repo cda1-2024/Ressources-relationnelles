@@ -42,6 +42,11 @@ export class RessourceDetailPageComponent implements OnInit, OnDestroy {
   replyText: string = '';
   isSubmittingReply = false;
   
+  // Propriétés pour l'ajout de nouveaux commentaires
+  newCommentText: string = '';
+  isSubmittingNewComment = false;
+  showNewCommentForm = false;
+  
   private routeSubscription?: Subscription;
 
   constructor(
@@ -240,6 +245,47 @@ export class RessourceDetailPageComponent implements OnInit, OnDestroy {
         alert('Erreur lors de l\'envoi du commentaire. Veuillez réessayer.');
       }
     });
+  }
+
+  // Méthode pour ajouter un nouveau commentaire principal
+  submitNewComment(): void {
+    if (!this.newCommentText.trim() || !this.authService.isLoggedIn() || !this.ressource) {
+      return;
+    }
+
+    this.isSubmittingNewComment = true;
+    
+    const createCommentRequest: CreateCommentRequest = {
+      message: this.newCommentText.trim(),
+      ressourceId: this.ressource.id,
+      parentId: undefined 
+    };
+
+    this.commentService.createComment(createCommentRequest).subscribe({
+      next: (response) => {
+        this.isSubmittingNewComment = false;
+        this.hideNewCommentForm();
+        
+        this.loadRessource(this.ressource!.id);
+      },
+      error: (error) => {
+        console.error('Erreur lors de l\'envoi du commentaire:', error);
+        this.isSubmittingNewComment = false;
+        
+        alert('Erreur lors de l\'envoi du commentaire. Veuillez réessayer.');
+      }
+    });
+  }
+
+  // Méthodes pour l'ajout de nouveaux commentaires
+  showNewCommentFormToggle(): void {
+    this.showNewCommentForm = true;
+    this.newCommentText = '';
+  }
+
+  hideNewCommentForm(): void {
+    this.showNewCommentForm = false;
+    this.newCommentText = '';
   }
 
   private loadRessource(id: string): void {
