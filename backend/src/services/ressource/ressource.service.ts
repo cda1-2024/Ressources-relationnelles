@@ -231,7 +231,9 @@ export class RessourceService {
       if (ressourceDto.status) {
         ressourceToUpdate.status = RessourceStatusFromInt[ressourceDto.status];
       }
-
+      if (ressourceDto.content_text) {
+        ressourceToUpdate.contentText = ressourceDto.content_text;
+      }
       await this.ressourcesRepository.save(ressourceToUpdate);
       const ressource = await this.ressourcesRepository.findOneOrFail({
         where: { id },
