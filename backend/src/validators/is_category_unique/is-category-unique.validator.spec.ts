@@ -1,7 +1,7 @@
 import { IsCategoryUniqueConstraint } from './is-category-unique.validator';
 import { CategoryService } from 'src/services/category/category.service';
-import { NotFoundException } from '@nestjs/common';
 import { ValidationArguments } from 'class-validator';
+import { BusinessException } from 'src/helper/exceptions/business.exception';
 
 describe('IsCategoryUniqueConstraint', () => {
   let isUnique: IsCategoryUniqueConstraint;
@@ -16,7 +16,9 @@ describe('IsCategoryUniqueConstraint', () => {
 
   describe('validate', () => {
     it('should return true if the category name does not exist', async () => {
-      (mockService.findCategoryByName as jest.Mock).mockRejectedValue(new NotFoundException());
+      (mockService.findCategoryByName as jest.Mock).mockRejectedValue(
+        new BusinessException('Category not found', 404, {}),
+      );
       const result = await isUnique.validate('UniqueCategory');
       expect(mockService.findCategoryByName).toHaveBeenCalledWith('UniqueCategory');
       expect(result).toBe(true);
