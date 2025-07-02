@@ -4,130 +4,142 @@
     [ngClass]="{ 'px-[15vw]': !isMobile }"
   >
     <div
-      class="bg-[#f8f9ff] flex-grow w-full px-4 pb-24"
+      class="bg-[#f8f9ff] flex-grow w-full px-4 pt-8"
       [ngClass]="{ 'border-x-2 border-[#e8edff]': !isMobile }"
     >
       <div class="py-4">
-				<div class="flex flex-row justify-between mt-[12px]">
+        <div class="flex flex-row justify-between mt-[12px]">
           <h1
             class="text-[30px] font-bold leading-[45px] w-full flex flex-wrap justify-center items-center md:justify-start md:items-start"
           >
-						Créer un utilisateur
+            Créer un utilisateur
           </h1>
         </div>
 
         <hr />
-				<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
-					<!-- Email -->
-					<mat-form-field appearance="fill" class="w-full">
-						<mat-label>Email</mat-label>
-						<input matInput formControlName="email" placeholder="email@exemple.com" />
-						<mat-error *ngIf="f['email'].touched && f['email'].hasError('required')">
-							L'email est requis
-						</mat-error>
-						<mat-error *ngIf="f['email'].touched && f['email'].hasError('email')">
-							Email invalide
-						</mat-error>
-					</mat-form-field>
-			
-					<!-- Username -->
-					<mat-form-field appearance="fill" class="w-full">
-						<mat-label>Nom d'utilisateur</mat-label>
-						<input
-							matInput
-							formControlName="username"
-							placeholder="Nom d’utilisateur"
-						/>
-						<mat-error
-							*ngIf="f['username'].touched && f['username'].hasError('required')"
-						>
-							Le nom d'utilisateur est requis
-						</mat-error>
-						<mat-error
-							*ngIf="f['username'].touched && f['username'].hasError('minlength')"
-						>
-							Minimum 3 caractères
-						</mat-error>
-					</mat-form-field>
-			
-					<!-- Mot de passe & confirmation -->
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+          <!-- Email -->
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              formControlName="email"
+              placeholder="email@exemple.com"
+            />
+            <mat-error
+              *ngIf="f['email'].touched && f['email'].hasError('required')"
+            >
+              L'email est requis
+            </mat-error>
+            <mat-error
+              *ngIf="f['email'].touched && f['email'].hasError('email')"
+            >
+              Email invalide
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Username -->
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Nom d'utilisateur</mat-label>
+            <input
+              matInput
+              formControlName="username"
+              placeholder="Nom d’utilisateur"
+            />
+            <mat-error
+              *ngIf="
+                f['username'].touched && f['username'].hasError('required')
+              "
+            >
+              Le nom d'utilisateur est requis
+            </mat-error>
+            <mat-error
+              *ngIf="
+                f['username'].touched && f['username'].hasError('minlength')
+              "
+            >
+              Minimum 3 caractères
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Mot de passe & confirmation -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <mat-form-field appearance="fill" class="w-full">
-                <mat-label>Mot de passe</mat-label>
-                <input
-                  matInput
-                  [type]="hidePassword ? 'password' : 'text'"
-                  formControlName="password"
-                />
-                <button
-                  mat-icon-button
-                  matSuffix
-                  type="button"
-                  (click)="hidePassword = !hidePassword"
-                  [disabled]="form.get('password')?.disabled"
-                  [attr.aria-label]="'Toggle password visibility'"
-                  [attr.aria-pressed]="!hidePassword"
-                >
-                  <mat-icon>{{
-                    hidePassword ? "visibility_off" : "visibility"
-                  }}</mat-icon>
-                </button>
-              </mat-form-field>
-              <mat-form-field appearance="fill" class="w-full">
-                <mat-label>Confirmez le mot de passe</mat-label>
-                <input
-                  matInput
-                  [type]="hideConfirmPassword ? 'password' : 'text'"
-                  formControlName="confirmPassword"
-                />
-                <button
-                  mat-icon-button
-                  matSuffix
-                  type="button"
-                  (click)="hideConfirmPassword = !hideConfirmPassword"
-                  [disabled]="form.get('confirmPassword')?.disabled"
-                  [attr.aria-label]="'Toggle password visibility'"
-                  [attr.aria-pressed]="!hideConfirmPassword"
-                >
-                  <mat-icon>{{
-                    hideConfirmPassword ? "visibility_off" : "visibility"
-                  }}</mat-icon>
-                </button>
-              </mat-form-field>
-					</div>
-			
-					<!-- Rôle -->
-					<mat-form-field appearance="fill" class="w-full md:w-1/2">
-						<mat-label>Rôle</mat-label>
-						<mat-select formControlName="role">
-							<mat-option *ngFor="let r of roleOptions" [value]="r.value">
-								{{ r.label }}
-							</mat-option>
-						</mat-select>
-						<mat-error *ngIf="f['role'].touched && f['role'].hasError('required')">
-							Choisissez un rôle
-						</mat-error>
-					</mat-form-field>
-			
-					<!-- Erreur serveur -->
-					<div *ngIf="errorMessage" class="text-red-600 text-sm">
-						{{ errorMessage }}
-					</div>
+              <mat-label>Mot de passe</mat-label>
+              <input
+                matInput
+                [type]="hidePassword ? 'password' : 'text'"
+                formControlName="password"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                (click)="hidePassword = !hidePassword"
+                [disabled]="form.get('password')?.disabled"
+                [attr.aria-label]="'Toggle password visibility'"
+                [attr.aria-pressed]="!hidePassword"
+              >
+                <mat-icon>{{
+                  hidePassword ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>Confirmez le mot de passe</mat-label>
+              <input
+                matInput
+                [type]="hideConfirmPassword ? 'password' : 'text'"
+                formControlName="confirmPassword"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                (click)="hideConfirmPassword = !hideConfirmPassword"
+                [disabled]="form.get('confirmPassword')?.disabled"
+                [attr.aria-label]="'Toggle password visibility'"
+                [attr.aria-pressed]="!hideConfirmPassword"
+              >
+                <mat-icon>{{
+                  hideConfirmPassword ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
 
-					<div class="actions">
-						<button
-							mat-flat-button
-							type="submit"
-							class="custom-button !rounded-[10px] mx-[10px]"
-							[disabled]="loading"
-						>
-						{{ loading ? "Enregistrement…" : "Créer" }}
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+          <!-- Rôle -->
+          <mat-form-field appearance="fill" class="w-full md:w-1/2">
+            <mat-label>Rôle</mat-label>
+            <mat-select formControlName="role">
+              <mat-option *ngFor="let r of roleOptions" [value]="r.value">
+                {{ r.label }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="f['role'].touched && f['role'].hasError('required')"
+            >
+              Choisissez un rôle
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Erreur serveur -->
+          <div *ngIf="errorMessage" class="text-red-600 text-sm">
+            {{ errorMessage }}
+          </div>
+
+          <div class="actions">
+            <button
+              mat-flat-button
+              type="submit"
+              class="custom-button !rounded-[10px] mx-[10px]"
+              [disabled]="loading"
+            >
+              {{ loading ? "Enregistrement…" : "Créer" }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
-
-

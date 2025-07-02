@@ -5,10 +5,11 @@ import { CategoryListComponent } from './category-list/category-list.component';
 import { ModerationPanelComponent } from './moderation-panel/moderation-panel.component';
 import { StatisticsDashboardComponent } from './statistics-dashboard/statistics-dashboard.component';
 import { UserListComponent } from './user-list/user-list.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { AdminView } from '../../utils/admin.views';
 import { UserCreateComponent } from "./user-create/user-create.component";
 import { CategoryCreateComponent } from "./category-create/category-create.component";
+import { ProfilPageComponent } from "../profil-page/profil-page.component";
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,8 @@ import { CategoryCreateComponent } from "./category-create/category-create.compo
     StatisticsDashboardComponent,
     UserListComponent,
     UserCreateComponent,
-    CategoryCreateComponent
+    CategoryCreateComponent,
+    ProfilPageComponent,
 ],
   templateUrl: './my-space-admin-page.component.html',
   styleUrl: './my-space-admin-page.component.scss',

@@ -4,4 +4,5 @@ export type UserView =
   | 'ressources.create'
   | 'events.list'
   | 'events.create'
+  | 'profile'
   | 'stats';

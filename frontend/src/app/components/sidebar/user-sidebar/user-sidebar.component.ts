@@ -3,6 +3,7 @@ import { UserView } from '../../../utils/user.views';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { NgIf, NgClass } from '@angular/common';
+import { BreakpointService } from '../../../services/breackpoint.service';
 
 @Component({
   selector: 'app-user-sidebar',
@@ -18,15 +19,27 @@ import { NgIf, NgClass } from '@angular/common';
 export class UserSidebarComponent {
   @Input() currentView!: UserView; 
   @Output() viewChange = new EventEmitter<UserView>();
+  isMobile: boolean = false;
+  sidebarOpen: boolean = false;
 
-  expandedSection: 'ressources' | 'events' | 'stats' | null = null;
+  expandedSection: 'ressources' | 'events' | 'stats' | 'profile' |  null = null;
 
-  toggleSection(section: 'ressources' | 'events' | 'stats') {
+  constructor(private breakpointService: BreakpointService) {
+    this.isMobile = this.breakpointService.isMobile();
+    this.breakpointService.isMobile$.subscribe((isMobile) => {
+      this.isMobile = isMobile;
+    });
+  }
+
+  toggleSection(section: 'ressources' | 'events' | 'stats' | 'profile') {
     this.expandedSection = this.expandedSection === section ? null : section;
   }
 
   select(view: UserView) {
     this.viewChange.emit(view);
+    if (this.isMobile) {
+      this.sidebarOpen = false;
+    }
   }
 
   isSectionActive(section: string) {

@@ -92,7 +92,7 @@ export class RessourceCardComponent {
     
     return imageServices.some(service => urlLower.includes(service));
   }
-
+  
   shouldShowImage(): boolean {
     return this.hasContentLink() && this.isImageUrl(this.ressource.content_link) && this.ressource.type?.label.toLowerCase() == 'image';
   }

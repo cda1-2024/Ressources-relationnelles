@@ -90,7 +90,7 @@
         <span class="ml-2">Chargement...</span>
       </div>
 
-      <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-5 px-1 pb-5 medium-component">
+      <div *ngIf="!isLoading" class="flex grow flex-wrap gap-3 sm:gap-4 lg:gap-5 px-1 pb-5 medium-component justify-center">
         <app-ressource-card 
           *ngFor="let ressource of ressources; trackBy: trackByRessourceId" 
           [ressource]="ressource"

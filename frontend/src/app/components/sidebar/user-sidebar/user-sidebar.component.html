@@ -1,10 +1,41 @@
 <div class="flex flex-col h-[calc(100vh-64px)] bg-[#f8f9ff]">
   <div class="flex flex-grow items-left">
-    <aside class="p-6 shadow-md w-64 border-r-2 border-[#e8edff] border-solid">
-      <div class="mb-6 mt-8">
+    <button
+    *ngIf="isMobile"
+    (click)="sidebarOpen = !sidebarOpen"
+    class="absolute top-4 left-4 z-50 p-2 rounded bg-white shadow-md"
+    aria-label="Ouvrir le menu"
+  >
+    <div class="flex items-center">
+      <mat-icon>menu</mat-icon>
+      <span class="ml-2 text-sm">Mon espace</span>
+    </div>
+  </button>
+
+  <div class="flex flex-grow items-left">
+    <aside
+      [ngClass]="{
+        'fixed inset-0 z-40 w-64 bg-[#f8f9ff] shadow-md border-r-2 border-[#e8edff] border-solid transition-transform duration-200': isMobile,
+        'translate-x-0': sidebarOpen,
+        '-translate-x-full': isMobile && !sidebarOpen,
+        'p-6 shadow-md w-64 border-r-2 border-[#e8edff] border-solid': !isMobile
+      }"
+      *ngIf="!isMobile || sidebarOpen"
+      (click)="isMobile ? sidebarOpen = false : null"
+    >
+      <div 
+        [ngClass]="{
+          'mb-6 mt-4': !isMobile,
+          'mb-6 mt-8 p-6': isMobile
+        }" 
+        (click)="$event.stopPropagation()"
+      >
         <nav aria-label="MySpace">
           <mat-nav-list class="space-y-4 p-0">
-            <h3 mat-subheader class="text-lg font-semibold">Mon espace</h3>
+            <h3 
+              *ngIf="!isMobile"
+              mat-subheader class="text-lg font-semibold"
+            >Mon espace</h3>
 
             <mat-list-item
               class="rounded cursor-pointer"
@@ -132,9 +163,29 @@
                 <span class="ml-2">Statistiques</span>
               </div>
             </mat-list-item>
+
+            <mat-list-item
+              *ngIf="isMobile"
+              class="rounded cursor-pointer"
+              (click)="select('profile')"
+              [ngClass]="{
+                '!bg-[#e8edff]': isSectionActive('profile')
+              }"
+            >
+              <div class="flex items-center">
+                <mat-icon>person</mat-icon>
+                <span class="ml-2">Profil</span>
+              </div>
+            </mat-list-item>
           </mat-nav-list>
         </nav>
       </div>
     </aside>
+    <!-- Overlay for mobile -->
+    <div
+      *ngIf="isMobile && sidebarOpen"
+      class="fixed inset-0 bg-black bg-opacity-30 z-30"
+      (click)="sidebarOpen = false"
+    ></div>
   </div>
 </div>
