@@ -18,11 +18,11 @@ This is the same behavior with the ressourcetype in the enum `RessourceType`
 
 50 ressources status identified by an index created by standard users:
 
-- 1 to 10: published
 - 11 to 20: suspended
 - 21 to 30: toValidate
 - 31 to 40: deleted
 - 41 to 50: draft
+- 51 to 150: published
 
 ## Comment
 
@@ -40,3 +40,10 @@ The 50 first comments are directly under a resource and the next 50 is a respons
 10 categories identified by an index:
 
 - 1 to 10: Enabled
+
+## Event
+
+50 events identified by an index:
+
+- pair: enabled
+- impair: disabled
