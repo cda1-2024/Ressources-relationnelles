@@ -3,7 +3,7 @@ import { IsHexColor, IsNotEmpty, IsString } from 'class-validator';
 import { IsCategoryUnique } from 'src/validators/is_category_unique/is-category-unique.decorator';
 
 export class CreateCategoryDto {
-  @IsCategoryUnique()
+  @IsCategoryUnique({ message: 'Le nom de la catégorie est déjà utilisé.' })
   @IsString({ message: 'Le nom doit être une chaîne de caractères.' })
   @IsNotEmpty({ message: 'Le nom ne peut pas être vide.' })
   @ApiProperty({
