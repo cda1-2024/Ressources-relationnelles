@@ -18,7 +18,7 @@ export const routes: Routes = [
   { path: 'events', component: MySpaceUserPageComponent },
   { path: 'ressources', component: RessourceSearchPageComponent },
   { path: 'utilisateurs/:id', component: UserViewPageComponent },
-  { path: 'ressources/:id', component: RessourceDetailPageComponent},
   { path: 'ressources/create', component: CreationRessourcePageComponent },
+  { path: 'ressources/:id', component: RessourceDetailPageComponent},
   { path: 'events', component: MySpaceUserPageComponent }
 ];

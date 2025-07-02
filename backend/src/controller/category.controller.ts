@@ -76,7 +76,7 @@ export class CategoryController {
     type: FullCategoryResponseDto,
   })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(UserRole.USER)
+  @Roles(UserRole.ADMIN)
   async createCategory(
     @CurrentUser() user: User,
     @Body() createCategoryDto: CreateCategoryDto,

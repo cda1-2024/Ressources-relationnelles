@@ -18,7 +18,6 @@ import { CommentService, CreateCommentRequest } from '../../services/comment/com
 
 @Component({
   selector: 'app-ressource-detail-page',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
