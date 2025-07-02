@@ -74,7 +74,7 @@
             </div>
             <div *ngIf="ressourceForm.get('fileUpload')?.errors as errors" class="text-red-600 text-sm mt-1">
               <div *ngIf="errors['required']">Le fichier image est obligatoire.</div>
-              <div *ngIf="errors['invalidType']">Le fichier doit être au format PNG ou JPEG.</div>
+              <div *ngIf="errors['invalidType']">Le fichier doit être une image.</div>
               <div *ngIf="errors['tooLarge']">La taille de l’image ne doit pas dépasser 10 Mo.</div>
             </div>
           </div>

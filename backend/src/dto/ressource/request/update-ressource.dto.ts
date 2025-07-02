@@ -39,19 +39,19 @@ export class UpdateRessourceRequestDto {
   readonly category?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsString()
   @ApiProperty({
     example: 1,
     description: 'La visibilité de la ressource',
-    required: false,
+    required: true,
   })
-  readonly visibility?: number;
+  readonly visibility?: string;
 
   @IsOptional()
   @IsNumber()
   @ApiProperty({
     example: 1,
-    description: 'Le type de la ressource',
+    description: 'Le status de la ressource',
     required: false,
   })
   readonly status?: number;

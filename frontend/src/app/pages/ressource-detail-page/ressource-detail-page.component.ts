@@ -15,6 +15,7 @@ import { Ressourceservice } from '../../services/ressource/ressource.service';
 import { RessourceResponse } from '../../services/ressource/ressource.model';
 import { AuthService } from '../../auth/auth.service';
 import { CommentService, CreateCommentRequest } from '../../services/comment/comment.service';
+import { environment } from '../../../environments/environment'; 
 
 @Component({
   selector: 'app-ressource-detail-page',
@@ -148,6 +149,18 @@ export class RessourceDetailPageComponent implements OnInit, OnDestroy {
     
     return this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
   }
+
+  getImgUrl(): string {
+      if (this.ressource?.content_link) {
+        // Si le lien est déjà complet, on le retourne tel quel
+        if (this.ressource.content_link.startsWith('http://') || this.ressource.content_link.startsWith('https://')) {
+          return this.ressource.content_link;
+        }
+        // Sinon, on le concatène avec l'URL de base
+        return `${environment.urlMedia}${this.ressource.content_link}`;
+      }
+      return '';
+    }
 
   onImageError(event: Event): void {
     const target = event.target as HTMLImageElement;

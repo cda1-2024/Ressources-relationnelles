@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RessourceResponse, RessourceListResponse, FilterRessourceRequest, CreateRessourceRequest } from './ressource.model';
+import {
+  RessourceResponse,
+  RessourceListResponse,
+  FilterRessourceRequest,
+  CreateRessourceRequest,
+} from './ressource.model';
 import { ApiService } from '../api.service';
-
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +15,9 @@ export class Ressourceservice {
   constructor(private api: ApiService) {}
 
   getFilterRessources(number: number): Observable<RessourceListResponse> {
-    return this.api.get<RessourceListResponse>('/ressources/filterPublic?pageSize=' + number);
+    return this.api.get<RessourceListResponse>(
+      '/ressources/filterPublic?pageSize=' + number
+    );
   }
 
   getAllRessources(): Observable<RessourceListResponse> {
@@ -25,25 +31,31 @@ export class Ressourceservice {
   deleteUser(id: string): Observable<RessourceResponse> {
     return this.api.delete<RessourceResponse>('/ressources/' + id);
   }
-  
-  createRessource(payload : FormData ): Observable<RessourceResponse> {
+
+  createRessource(payload: FormData): Observable<RessourceResponse> {
     return this.api.post<RessourceResponse>('/ressources/', payload);
   }
   // Récupérer les ressources filtrées (publiques uniquement)
-  getFilteredPublicRessources(filters: FilterRessourceRequest): Observable<RessourceListResponse> {
+  getFilteredPublicRessources(
+    filters: FilterRessourceRequest
+  ): Observable<RessourceListResponse> {
     const params = this.buildFilterParams(filters);
-    return this.api.get<RessourceListResponse>(`/ressources/filterpublic${params}`);
+    return this.api.get<RessourceListResponse>(
+      `/ressources/filterpublic${params}`
+    );
   }
 
   // Récupérer les ressources filtrées (publiques et restreintes - nécessite une authentification)
-  getFilteredRessources(filters: FilterRessourceRequest): Observable<RessourceListResponse> {
+  getFilteredRessources(
+    filters: FilterRessourceRequest
+  ): Observable<RessourceListResponse> {
     const params = this.buildFilterParams(filters);
     return this.api.get<RessourceListResponse>(`/ressources/filter${params}`);
   }
 
   private buildFilterParams(filters: FilterRessourceRequest): string {
     const params = new URLSearchParams();
-    
+
     if (filters.query) {
       params.append('query', filters.query);
     }
@@ -71,5 +83,11 @@ export class Ressourceservice {
 
     const paramString = params.toString();
     return paramString ? `?${paramString}` : '';
+  }
+  updateRessource(
+    id: string,
+    payload: FormData
+  ): Observable<RessourceResponse> {
+    return this.api.put<RessourceResponse>(`/ressources/${id}`, payload);
   }
 }

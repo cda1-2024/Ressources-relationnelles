@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { RessourceResponse } from '../../../services/ressource/ressource.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-ressource-card',
@@ -23,7 +24,10 @@ export class RessourceCardComponent {
   @Input() showViewButton = true;
   @Input() showActions = true;
   @Input() textButton = 'Voir';
-  @Input() onClickButton = () => {};
+  @Input() onClickButton = (id:string) => {
+    this.router.navigate(['/ressources', id]);  
+    this.viewClicked.emit(this.ressource);
+  };
   @Input() isDraft = false;
   @Input() showCreator = true;
 
@@ -93,6 +97,19 @@ export class RessourceCardComponent {
     return imageServices.some(service => urlLower.includes(service));
   }
   
+
+  getImgUrl(): string {
+    if (this.ressource.content_link) {
+      // Si le lien est déjà complet, on le retourne tel quel
+      if (this.ressource.content_link.startsWith('http://') || this.ressource.content_link.startsWith('https://')) {
+        return this.ressource.content_link;
+      }
+      // Sinon, on le concatène avec l'URL de base
+      return `${environment.urlMedia}${this.ressource.content_link}`;
+    }
+    return '';
+  }
+
   shouldShowImage(): boolean {
     return this.hasContentLink() && this.isImageUrl(this.ressource.content_link) && this.ressource.type?.label.toLowerCase() == 'image';
   }
