@@ -1,6 +1,7 @@
 import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CategoryService } from 'src/services/category/category.service';
+import { BusinessException } from 'src/helper/exceptions/business.exception';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -12,7 +13,7 @@ export class IsCategoryUniqueConstraint implements ValidatorConstraintInterface 
       await this.categoryService.findCategoryByName(name);
       return false;
     } catch (error) {
-      if (error instanceof NotFoundException) {
+      if (error instanceof BusinessException) {
         return true;
       }
       throw error;
