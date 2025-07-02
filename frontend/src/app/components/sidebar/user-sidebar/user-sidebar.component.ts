@@ -48,4 +48,8 @@ export class UserSidebarComponent {
   isViewActive(view: string) {
     return this.currentView === view;
   }
+
+  onAdministrationClick() {
+    window.location.href = '/monEspace/administration';
+  }
 }

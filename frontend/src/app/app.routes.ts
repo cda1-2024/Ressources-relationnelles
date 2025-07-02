@@ -3,19 +3,19 @@ import { HomeComponent } from './pages/home/home.component';
 import { PresentationPageComponent } from './pages/presentation-page/presentation-page.component';
 import { ProfilPageComponent } from './pages/profil-page/profil-page.component';
 import { CreationRessourcePageComponent } from './pages/my-space-user-page/create-ressource/create-ressource-page.component';
-import { MySpaceAdminPageComponent } from './pages/my-space-admin-page/my-space-admin-page.component';
 import { MySpaceUserPageComponent } from './pages/my-space-user-page/my-space-user-page.component';
 import { RessourceSearchPageComponent } from './pages/ressource-search-page/ressource-search-page.component';
 import { UserViewPageComponent } from './pages/user-view-page/user-view-page.component';
 import { RessourceDetailPageComponent } from './pages/ressource-detail-page/ressource-detail-page.component';
 import { UpdateRessourcePageComponent } from './pages/my-space-user-page/update-ressource/update-ressource-page.component';
 import { EventSearchPageComponent } from './pages/event-search-page/event-search-page.component';
+import { MySpaceAdminPageComponent } from './pages/my-space-admin-page/my-space-admin-page.component';
 
 export const routes: Routes = [
   { path: '', component: PresentationPageComponent },
   { path: 'presentation', component: PresentationPageComponent },
   { path: 'accueil', component: HomeComponent },
-  { path: 'monEspace', component: MySpaceAdminPageComponent },
+  { path: 'monEspace', component: MySpaceUserPageComponent },
   { path: 'profil', component: ProfilPageComponent },
   { path: 'events', component: EventSearchPageComponent },
   { path: 'ressources', component: RessourceSearchPageComponent },
@@ -23,4 +23,5 @@ export const routes: Routes = [
   { path: 'ressources/create', component: CreationRessourcePageComponent },
   { path: 'ressources/edit/:id', component: UpdateRessourcePageComponent },  
   { path: 'ressources/:id', component: RessourceDetailPageComponent},
+  { path: 'monEspace/administration', component: MySpaceAdminPageComponent },
 ];

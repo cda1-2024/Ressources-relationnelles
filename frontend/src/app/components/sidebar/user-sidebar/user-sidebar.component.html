@@ -165,6 +165,16 @@
             </mat-list-item>
 
             <mat-list-item
+              class="rounded cursor-pointer"
+              (click)="onAdministrationClick()"
+            >
+              <div class="flex items-center">
+                <mat-icon>manage_accounts</mat-icon>
+                <span class="ml-2">Administration</span>
+              </div>
+            </mat-list-item>
+
+            <mat-list-item
               *ngIf="isMobile"
               class="rounded cursor-pointer"
               (click)="select('profile')"
