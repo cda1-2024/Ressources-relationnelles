@@ -9,6 +9,7 @@ import { RessourceSearchPageComponent } from './pages/ressource-search-page/ress
 import { UserViewPageComponent } from './pages/user-view-page/user-view-page.component';
 import { RessourceDetailPageComponent } from './pages/ressource-detail-page/ressource-detail-page.component';
 import { UpdateRessourcePageComponent } from './pages/my-space-user-page/update-ressource/update-ressource-page.component';
+import { EventSearchPageComponent } from './pages/event-search-page/event-search-page.component';
 
 export const routes: Routes = [
   { path: '', component: PresentationPageComponent },
@@ -16,11 +17,10 @@ export const routes: Routes = [
   { path: 'accueil', component: HomeComponent },
   { path: 'monEspace', component: MySpaceAdminPageComponent },
   { path: 'profil', component: ProfilPageComponent },
-  { path: 'events', component: MySpaceUserPageComponent },
+  { path: 'events', component: EventSearchPageComponent },
   { path: 'ressources', component: RessourceSearchPageComponent },
   { path: 'utilisateurs/:id', component: UserViewPageComponent },
   { path: 'ressources/create', component: CreationRessourcePageComponent },
   { path: 'ressources/edit/:id', component: UpdateRessourcePageComponent },  
   { path: 'ressources/:id', component: RessourceDetailPageComponent},
-  { path: 'events', component: MySpaceUserPageComponent }
 ];
