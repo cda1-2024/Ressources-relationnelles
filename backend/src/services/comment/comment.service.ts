@@ -14,9 +14,9 @@ import { RessourceService } from './../ressource/ressource.service';
 export class CommentService {
   private readonly commentRepository: Repository<Comment>;
   private readonly ressourceService: RessourceService;
-  constructor(@InjectRepository(Comment) commentRepository: Repository<Comment>, ressrourceService: RessourceService) {
+  constructor(@InjectRepository(Comment) commentRepository: Repository<Comment>, ressourceService: RessourceService) {
     this.commentRepository = createLoggedRepository(commentRepository);
-    this.ressourceService = ressrourceService;
+    this.ressourceService = ressourceService;
   }
 
   async getAllCommentsByRessource(idRessource: string): Promise<Comment[]> {
