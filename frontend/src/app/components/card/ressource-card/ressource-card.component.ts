@@ -37,7 +37,7 @@ export class RessourceCardComponent {
   constructor(private router: Router) {}
 
   onUserClick(): void {
-    this.router.navigate(['/utilisateur', this.ressource.creator.id]);
+    this.router.navigate(['/utilisateurs', this.ressource.creator.id]);
   }
 
   onToggleLike(): void {
