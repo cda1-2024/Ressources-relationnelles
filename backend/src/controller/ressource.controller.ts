@@ -86,13 +86,12 @@ export class RessourceController {
     description: 'La création de la ressource a échoué',
   })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(UserRole.USER)
+  @Roles(UserRole.USER, UserRole.ADMIN)
   async create(
     @Body() createRessourceDto: CreateRessourceRequestDto,
     @CurrentUser() user: User,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<RessourceResponseDto> {
-    console.log('File received:', createRessourceDto);
     const ressource = await this.ressourceService.createRessource(user, createRessourceDto, file);
     return RessourceMapper.toResponseDto(ressource);
   }
@@ -204,6 +203,15 @@ export class RessourceController {
           callback(null, filename);
         },
       }),
+      fileFilter: (req, file, callback) => {
+        if (!file.mimetype.match(/^image\/(png|jpeg|jpg|gif|webp)$/)) {
+          return callback(
+            new BadRequestException('Seuls les fichiers image sont autorisés (png, jpg, jpeg, gif, webp).'),
+            false,
+          );
+        }
+        callback(null, true);
+      },
     }),
   )
   @ApiOperation({
@@ -226,7 +234,7 @@ export class RessourceController {
     description: "La ressource n'a pas été trouvée",
   })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(UserRole.USER)
+  @Roles(UserRole.USER, UserRole.ADMIN)
   async updateRessource(
     @Body() updateRessourceDto: UpdateRessourceRequestDto,
     @Param('id') id: string,
