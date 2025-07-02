@@ -77,7 +77,7 @@ export class UserService {
         });
       }
 
-      if (filters?.role) {
+      if (filters?.role !== undefined) {
         queryBuilder.andWhere('user.role = :role', {
           role: UserRoleFromInt[filters.role],
         });

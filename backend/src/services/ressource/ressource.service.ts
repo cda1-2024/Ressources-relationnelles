@@ -84,7 +84,7 @@ export class RessourceService {
       });
 
       if (user?.role && [UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPERADMIN].includes(user.role)) {
-        if (filters.status) {
+        if (filters?.status !== undefined) {
           query.andWhere('ressource.status = :status', { status: filters.status });
         }
       } else {
