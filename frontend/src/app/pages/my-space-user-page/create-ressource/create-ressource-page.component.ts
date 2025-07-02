@@ -84,7 +84,7 @@ export class CreationRessourcePageComponent implements OnInit {
   }
 
   updateValidators() {
-    const lienControl = this.ressourceForm.get('lien');
+    const lienControl = this.ressourceForm.get('content_link');
     const fileControl = this.ressourceForm.get('fileUpload');
 
     this.apiErrors['fileUpload'] = [];
