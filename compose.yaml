@@ -10,15 +10,10 @@ services:
     container_name: database
     networks:
       - internal
-    env_file: "front.env"
+    env_file:
+      - backend.env
     volumes:
       - './data/db/:/var/lib/mysql'
-    healthcheck:
-      test: "mariadb --user=$MARIADB_USER --password=$MARIADB_PASSWORD --execute 'SHOW DATABASES;' || exit 1"
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 0s
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -35,19 +30,13 @@ services:
     
   backend:
     build:
-      context: .
-      dockerfile: Dockerfile.dev
+      context: ./backend/
+      dockerfile: backend.Dockerfile
     container_name: backend
     networks:
       - internal
     ports:
       - '3000:3000'
-    depends_on:
-      database :
-        condition: service_healthy
-    env_file: "front.env"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    command: "./start-dev.sh"
-    # command: ["sleep", "infinity"]
+    env_file:
+      - backend.env
+    command: ["sh", "run.sh"]
