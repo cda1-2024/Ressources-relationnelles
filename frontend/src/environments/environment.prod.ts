@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://ton-api-de-production.com/api',
+  apiUrl: 'http://backend:3000/api',
+  urlMedia: 'http://cacaboudin',
 };
