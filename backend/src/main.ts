@@ -14,7 +14,7 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   // app.enableCors()
   app.enableCors({
-    origin: 'http://127.0.0.1:4200',
+    origin: 'http://92.112.192.100',
     credentials: true,
   });
   app.useGlobalPipes(GlobalValidationPipe);
