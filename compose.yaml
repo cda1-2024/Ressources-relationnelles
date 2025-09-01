@@ -5,8 +5,6 @@ networks:
 services:
   database:
     image: 'mariadb'
-    # ports:
-    #   - '3306:3306'
     container_name: database
     networks:
       - internal
@@ -17,8 +15,6 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    # ports:
-    #   - '8080:80'
     container_name: phpmyadmin
     networks:
       - internal
@@ -29,22 +25,22 @@ services:
       - database
 
   backend:
-    build:
-      context: ./backend/
-      dockerfile: backend.Dockerfile
+    image: sneaxiii/resources-relationnelles-api:latest
+    # build:
+      # context: ./backend/
+      # dockerfile: backend.Dockerfile
     container_name: backend
     networks:
       - internal
-    # ports:
-    #   - '3000:3000'
     env_file:
       - backend.env
     command: ["sh", "run.sh"]
 
   frontend:
-    build:
-      context: ./frontend/
-      dockerfile: frontend.Dockerfile
+    image: sneaxiii/resources-relationnelles-front:latest
+    # build:
+    #   context: ./frontend/
+    #   dockerfile: frontend.Dockerfile
     container_name: frontend
     networks:
       - internal
