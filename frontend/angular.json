@@ -36,12 +36,7 @@
               "node_modules/quill/dist/quill.snow.css",
               "node_modules/quill/dist/quill.core.css"
             ],
-            "scripts": [],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
