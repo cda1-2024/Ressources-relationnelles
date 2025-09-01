@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api',
-  urlMedia: 'http://localhost:3000',
+  // Warning : désolé ca casse le setup de test :/
+  apiUrl: 'http://92.112.192.100/backend/api',
+  urlMedia: 'http://92.112.192.100',
 };

@@ -1,0 +1,70 @@
+networks:
+  internal:
+    driver: bridge
+
+services:
+  database:
+    image: 'mariadb'
+    # ports:
+    #   - '3306:3306'
+    container_name: database
+    networks:
+      - internal
+    env_file:
+      - backend.env
+    volumes:
+      - './data/db/:/var/lib/mysql'
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    # ports:
+    #   - '8080:80'
+    container_name: phpmyadmin
+    networks:
+      - internal
+    environment:
+      - PMA_HOST=database
+      - PMA_PORT=3306
+    depends_on:
+      - database
+
+  backend:
+    build:
+      context: ./backend/
+      dockerfile: backend.Dockerfile
+    container_name: backend
+    networks:
+      - internal
+    # ports:
+    #   - '3000:3000'
+    env_file:
+      - backend.env
+    command: ["sh", "run.sh"]
+
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: frontend.Dockerfile
+    container_name: frontend
+    networks:
+      - internal
+    # ports:
+    #   - '4200:4200'
+    command: [ "sh", "run.sh" ]
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - internal
+
+volumes:
+  caddy_data:
+  caddy_config:

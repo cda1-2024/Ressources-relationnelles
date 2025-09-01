@@ -1,7 +1,7 @@
 *.env
 
 #Docker mounted volume
-backend/data/db/*
+data/**
 
 # Jetbrains
 .idea

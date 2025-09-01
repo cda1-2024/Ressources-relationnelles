@@ -12,8 +12,9 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  // app.enableCors()
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: 'http://92.112.192.100',
     credentials: true,
   });
   app.useGlobalPipes(GlobalValidationPipe);
